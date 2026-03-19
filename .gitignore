@@ -1,0 +1,19 @@
+# build
+/build/
+/keys/
+*.pdb
+
+# IDE
+.idea/
+.vscode/
+.vs/
+
+#.NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+*.vspscc
+*.vssscc
