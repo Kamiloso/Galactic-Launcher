@@ -1,5 +1,6 @@
 using GalacticLauncher.Core.Records;
 using System.Text.Json;
+using System.Threading.RateLimiting;
 using GalacticLauncher.Core.Enums;
 using GalacticLauncher.Core;
 using Microsoft.AspNetCore.RateLimiting;
@@ -13,7 +14,38 @@ class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // TODO: Create rate limiter
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            options.AddPolicy("AntiSpamPolicy", context =>
+            {
+                var ip = context.Connection.RemoteIpAddress;
+                string partitionKey = "unknown_ip";
+
+                if (ip != null)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                    {
+                        var bytes = ip.GetAddressBytes();
+                        partitionKey = BitConverter.ToString(bytes, 0, 8);
+                    }
+                    else
+                    {
+                        partitionKey = ip.ToString();
+                    }
+                }
+
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: partitionKey,
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromSeconds(5),
+                        QueueLimit = 0
+                    });
+            });
+        });
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -35,7 +67,7 @@ class Program
             );
 #endif
 
-        // app.UseRateLimiter();
+        app.UseRateLimiter();
         app.UseHttpsRedirection();
 
 
@@ -51,6 +83,7 @@ class Program
 
             return gameInfo;
         })
+        .RequireRateLimiting("AntiSpamPolicy")
         .WithName("GetTestAnyGame")
         .WithOpenApi(operation => new OpenApiOperation(operation)
         {
