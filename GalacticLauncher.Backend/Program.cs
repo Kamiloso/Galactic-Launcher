@@ -1,10 +1,11 @@
-using GalacticLauncher.Core.Records;
-using System.Text.Json;
-using System.Threading.RateLimiting;
-using GalacticLauncher.Core.Enums;
+using GalacticLauncher.Backend.Endpoints;
 using GalacticLauncher.Core;
+using GalacticLauncher.Core.Enums;
+using GalacticLauncher.Core.Records;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
+using System.Text.Json;
+using System.Threading.RateLimiting;
 
 namespace GalacticLauncher.Backend;
 
@@ -69,28 +70,10 @@ class Program
 
         app.UseRateLimiter();
         app.UseHttpsRedirection();
-
-
-        // ----- END POINTS BELOW -----
-        // TODO: Make strategy pattern here
-
-        app.MapGet("/anygame", (ILogger<Program> logger) =>
-        {
-            logger.LogInformation("Hello! Someone asked for game!");
-
-            GameInfo gameInfo = new(
-                "Space Eternity 3", "Big Ball of Mud", GameTag.None, [], ["xxx", "yyy"]);
-
-            return gameInfo;
-        })
-        .RequireRateLimiting("AntiSpamPolicy")
-        .WithName("GetTestAnyGame")
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Summary = "Pobiera informacje o grze",
-            Description = "Ten endpoint zwraca testowe dane o grze Space Eternity 3 w formacie JSON.",
-        });
+        
+        app.MapAllEndpoints();
 
         app.Run();
+
     }
 }
