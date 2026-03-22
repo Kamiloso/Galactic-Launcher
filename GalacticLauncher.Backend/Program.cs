@@ -1,9 +1,11 @@
-using GalacticLauncher.Core.Records;
-using System.Text.Json;
-using GalacticLauncher.Core.Enums;
+using GalacticLauncher.Backend.Endpoints;
 using GalacticLauncher.Core;
+using GalacticLauncher.Core.Enums;
+using GalacticLauncher.Core.Records;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi.Models;
+using System.Text.Json;
+using System.Threading.RateLimiting;
 
 namespace GalacticLauncher.Backend;
 
@@ -13,7 +15,38 @@ class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // TODO: Create rate limiter
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+            options.AddPolicy("AntiSpamPolicy", context =>
+            {
+                var ip = context.Connection.RemoteIpAddress;
+                string partitionKey = "unknown_ip";
+
+                if (ip != null)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                    {
+                        var bytes = ip.GetAddressBytes();
+                        partitionKey = BitConverter.ToString(bytes, 0, 8);
+                    }
+                    else
+                    {
+                        partitionKey = ip.ToString();
+                    }
+                }
+
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: partitionKey,
+                    factory: partition => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromSeconds(5),
+                        QueueLimit = 0
+                    });
+            });
+        });
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -35,29 +68,12 @@ class Program
             );
 #endif
 
-        // app.UseRateLimiter();
+        app.UseRateLimiter();
         app.UseHttpsRedirection();
-
-
-        // ----- END POINTS BELOW -----
-        // TODO: Make strategy pattern here
-
-        app.MapGet("/anygame", (ILogger<Program> logger) =>
-        {
-            logger.LogInformation("Hello! Someone asked for game!");
-
-            GameInfo gameInfo = new(
-                "Space Eternity 3", "Big Ball of Mud", GameTag.None, [], ["xxx", "yyy"]);
-
-            return gameInfo;
-        })
-        .WithName("GetTestAnyGame")
-        .WithOpenApi(operation => new OpenApiOperation(operation)
-        {
-            Summary = "Pobiera informacje o grze",
-            Description = "Ten endpoint zwraca testowe dane o grze Space Eternity 3 w formacie JSON.",
-        });
+        
+        app.MapAllEndpoints();
 
         app.Run();
+
     }
 }
