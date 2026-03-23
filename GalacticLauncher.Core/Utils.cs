@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Net.Sockets;
+using System.Net;
 using System.Runtime.InteropServices;
 using GalacticLauncher.Core.Enums;
 
 namespace GalacticLauncher.Core;
 
-// This class stores universal static methods.
-// Put anything you want in here...
 public static class Utils
 {
     

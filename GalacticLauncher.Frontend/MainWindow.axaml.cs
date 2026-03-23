@@ -1,8 +1,5 @@
-using System;
-using System.Net.Http;
 using Avalonia.Controls;
 using GalacticLauncher.Frontend.Network;
-using GalacticLauncher.Frontend.Services;
 
 namespace GalacticLauncher.Frontend;
 

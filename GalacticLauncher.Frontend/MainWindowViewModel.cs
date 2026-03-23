@@ -1,10 +1,10 @@
-﻿using GalacticLauncher.Frontend.Services;
-using GalacticLauncher.Core.Records;
+﻿using GalacticLauncher.Core.Records;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Text.Json;
+using GalacticLauncher.Frontend.Network;
 
 namespace GalacticLauncher.Frontend
 {
@@ -24,7 +24,14 @@ namespace GalacticLauncher.Frontend
             ResponseJson = "Pobieranie danych z serwera...";
             try
             {
-                GameInfo gameInfo = await Api.DownloadJsonAsync<GameInfo>("anygame");
+                GameInfo gameInfo = await Api.PostJsonAsync<GameInfo, GameInfo>("game-echo", new GameInfo(
+                    "SE3",
+                    "xxx",
+                    Core.Enums.GameTag.Adventure,
+                    [],
+                    ["", "", ""]
+                    ));
+
                 ResponseJson = JsonSerializer.Serialize(gameInfo);
             }
             catch (Exception ex)
