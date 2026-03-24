@@ -1,7 +1,7 @@
 ﻿using GalacticLauncher.Core.Enums;
 using System;
 
-namespace GalacticLauncher.Core.Records;
+namespace GalacticLauncher.Core.DbRecords;
 
 public record GameInfo(
     ulong Id, // PK

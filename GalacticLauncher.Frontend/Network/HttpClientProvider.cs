@@ -7,7 +7,7 @@ namespace GalacticLauncher.Frontend.Network
 {
     internal static class HttpClientProvider
     {
-        private static double HttpTimeout => 5.0;
+        private static double HttpTimeout => 10.0;
 
         private static readonly Lazy<HttpClient> _httpClient = new(() =>
         {

@@ -11,7 +11,6 @@ internal sealed class RecvBuilder(string? Address = null)
     private record LimiterPolicy(TimeSpan Period, int Limit);
 
     private readonly List<Action<IServiceCollection>> _serviceConfigurations = [];
-    private readonly List<Action<WebApplication>> _endpointMappings = [];
     private readonly Dictionary<string, LimiterPolicy> _rateLimits = [];
 
     private bool _running;
@@ -39,13 +38,6 @@ internal sealed class RecvBuilder(string? Address = null)
         return this;
     }
 
-    public RecvBuilder MapEndpoints(Action<WebApplication> map)
-    {
-        EnsureNotRunning();
-        _endpointMappings.Add(map);
-        return this;
-    }
-
     public RecvBuilder WithRateLimit(string key, TimeSpan period, int limit)
     {
         EnsureNotRunning();
@@ -65,7 +57,8 @@ internal sealed class RecvBuilder(string? Address = null)
         var logger = app.Services.GetRequiredService<ILogger<RecvBuilder>>();
 
         ConfigureMiddleware(app);
-        MapEndpointsInternal(app);
+        app.MapControllers();
+
         LogStartup(logger);
 
         _running = true;
@@ -105,6 +98,8 @@ internal sealed class RecvBuilder(string? Address = null)
             });
         }
 
+        services.AddControllers();
+
         foreach (var configure in _serviceConfigurations)
         {
             configure(services);
@@ -129,14 +124,6 @@ internal sealed class RecvBuilder(string? Address = null)
         if (_rateLimits.Count > 0)
         {
             app.UseRateLimiter();
-        }
-    }
-
-    private void MapEndpointsInternal(WebApplication app)
-    {
-        foreach (var map in _endpointMappings)
-        {
-            map(app);
         }
     }
 

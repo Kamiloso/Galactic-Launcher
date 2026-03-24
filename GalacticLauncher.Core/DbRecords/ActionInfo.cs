@@ -1,6 +1,6 @@
 ﻿using GalacticLauncher.Core.Enums;
 
-namespace GalacticLauncher.Core.Records;
+namespace GalacticLauncher.Core.DbRecords;
 
 internal record ActionInfo(
     ulong Id, // PK

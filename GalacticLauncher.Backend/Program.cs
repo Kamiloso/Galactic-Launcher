@@ -17,10 +17,10 @@ class Program
 
             .SetConfig(PrefixIPv4, PrefixIPv6, UseForwardedFor)
 
-            .WithRateLimit(Def.FREE, TimeSpan.FromSeconds(1), int.MaxValue)
-            .WithRateLimit(Def.LOW_COST, TimeSpan.FromSeconds(1), 20)
-            .WithRateLimit(Def.MEDIUM_COST, TimeSpan.FromSeconds(3), 3)
-            .WithRateLimit(Def.HIGH_COST, TimeSpan.FromSeconds(3), 3)
+            .WithRateLimit(Utils.FREE, TimeSpan.FromSeconds(1), int.MaxValue)
+            .WithRateLimit(Utils.LOW_COST, TimeSpan.FromSeconds(1), 20)
+            .WithRateLimit(Utils.MEDIUM_COST, TimeSpan.FromSeconds(3), 3)
+            .WithRateLimit(Utils.HIGH_COST, TimeSpan.FromSeconds(3), 3)
 
             .ConfigureServices(srv =>
             {
@@ -29,12 +29,6 @@ class Program
                 // For example:
                 // ------------------------------------------
                 // srv.AddSingleton<IEndpoint, AnyGameEndpoint>();
-            })
-
-            .MapEndpoints(app =>
-            {
-                IEndpoint.MapEndpoint<AnyGameEndpoint>(app);
-                IEndpoint.MapEndpoint<GameEcho>(app);
             })
 
             .RunForever();

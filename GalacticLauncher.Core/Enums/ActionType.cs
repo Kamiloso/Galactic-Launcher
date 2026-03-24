@@ -2,8 +2,8 @@
 
 internal enum ActionType
 {
-    Login,
-    DownloadGame,
-    PlayGame,
-    UninstallGame,
+    Login = 0,
+    DownloadGame = 1,
+    PlayGame = 2,
+    UninstallGame = 3,
 }

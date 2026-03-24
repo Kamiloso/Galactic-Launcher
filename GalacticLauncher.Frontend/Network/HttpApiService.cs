@@ -13,7 +13,7 @@ namespace GalacticLauncher.Frontend.Network
     {
         private static void EnsureEndpoint(string endpoint)
         {
-            if (!Regex.IsMatch(endpoint, "^[a-z0-9-]+$"))
+            if (!Regex.IsMatch(endpoint, "^[a-z0-9-]+(/[a-z0-9-]+)*$"))
                 throw new ArgumentException($"Invalid endpoint format: {endpoint}");
         }
 

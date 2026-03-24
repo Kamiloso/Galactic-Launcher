@@ -1,4 +1,4 @@
-﻿using GalacticLauncher.Core.Records;
+﻿using GalacticLauncher.Core.DbRecords;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -10,6 +10,11 @@ namespace GalacticLauncher.Frontend
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
+        // THIS IS A SECURITY CONCERN
+        // ------------------------------
+        // TODO: Use "#define DEBUG" to display a LARGE warning
+        // indicating that the debug build is currently active!!!
+
         public required IApiService Api { get; init; }
 
         private string _responseJson = "";
@@ -24,13 +29,10 @@ namespace GalacticLauncher.Frontend
             ResponseJson = "Pobieranie danych z serwera...";
             try
             {
-                GameInfo gameInfo = await Api.PostJsonAsync<GameInfo, GameInfo>("game-echo", new GameInfo(
-                    "SE3",
-                    "xxx",
-                    Core.Enums.GameTag.Adventure,
-                    [],
-                    ["", "", ""]
-                    ));
+                GameInfo gameInfo = await Api.PostJsonAsync<GameInfo, GameInfo>(
+                    "testing/game-echo",
+                    new GameInfo(123, "Space Eternity 3", "Some Description...")
+                    );
 
                 ResponseJson = JsonSerializer.Serialize(gameInfo);
             }
