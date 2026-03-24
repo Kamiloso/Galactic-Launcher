@@ -1,14 +1,14 @@
 ﻿using GalacticLauncher.Core.Enums;
-using System;
 
 namespace GalacticLauncher.Core.DbRecords;
 
-public record ExecInfo(
-    ulong Id, // PK
-    string DownloadUrl, // where is it in web?
-    string ExecLocation, // where is it in folder?
-    string FileHashSHA256, // for integrity & auto-patching
-    PlatformType Platform, // Windows / Linux / macOS etc.
-    AlertType Alert, // how safe is it to run?
-    ulong IdVersion // FK
-    );
+public record ExecInfo
+{
+    public ulong Id { get; init; } // PK
+    public string DownloadUrl { get; init; } = string.Empty; // where is it in web?
+    public string ExecLocation { get; init; } = string.Empty; // where is it in folder?
+    public string FileHashSHA256 { get; init; } = string.Empty; // for integrity & auto-patching
+    public PlatformType Platform { get; init; } // Windows / Linux / macOS etc.
+    public AlertType Alert { get; init; } // how safe is it to run?
+    public ulong IdVersion { get; init; } // FK
+}
