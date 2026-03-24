@@ -1,3 +1,4 @@
+using GalacticLauncher.Core;
 using GalacticLauncher.Core.Enums;
 using GalacticLauncher.Core.Records;
 
@@ -7,7 +8,7 @@ internal class AnyGameEndpoint : IEndpoint
 {
     public string Name => "anygame";
     public string HttpMethod => "GET";
-    public string? RateLimitingPolicy => Policy.LOW_COST;
+    public string? RateLimitingPolicy => Def.LOW_COST;
     public string Summary => "Returns random game information.";
 
     public Delegate HandleRequest => (

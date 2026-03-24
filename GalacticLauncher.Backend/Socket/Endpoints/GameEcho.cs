@@ -1,4 +1,4 @@
-using GalacticLauncher.Core.Enums;
+using GalacticLauncher.Core;
 using GalacticLauncher.Core.Records;
 using Microsoft.Extensions.Logging;
 
@@ -8,7 +8,7 @@ internal class GameEcho : IEndpoint
 {
     public string Name => "game-echo";
     public string HttpMethod => "POST";
-    public string? RateLimitingPolicy => Policy.LOW_COST;
+    public string? RateLimitingPolicy => Def.LOW_COST;
     public string Summary => "Sends back a given game.";
     public Delegate HandleRequest => (
         GameInfo gameInfo

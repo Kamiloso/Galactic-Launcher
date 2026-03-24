@@ -1,7 +1,12 @@
-﻿namespace GalacticLauncher.Backend.Socket;
+﻿namespace GalacticLauncher.Core;
 
-internal record Policy(TimeSpan Period, int Limit)
+/// <summary>
+/// This class is designed to hold enum-like types that
+/// are more convinient to just be strings.
+/// </summary>
+public static class Def
 {
+    // --- Policy Names ---
     public const string FREE = nameof(FREE);
     public const string LOW_COST = nameof(LOW_COST);
     public const string MEDIUM_COST = nameof(MEDIUM_COST);
