@@ -15,6 +15,8 @@ public static class Utils
 #elif DEBUG
     public static string Address => "https://localhost:7279";
     public static string CertThumbprint => "36c629df8c377e205faff25b2907d3cca05b0a06534d6c6322a5d04c5275e30e";
+#else
+#error RELEASE or DEBUG mode must be chosen.
 #endif
 
     public static PlatformType CurrentPlatform
