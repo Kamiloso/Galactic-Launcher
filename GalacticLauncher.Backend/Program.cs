@@ -1,3 +1,4 @@
+using GalacticLauncher.Backend.Database;
 using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Backend.Socket;
 using GalacticLauncher.Backend.Socket.Endpoints;
@@ -26,26 +27,7 @@ class Program
 
             .ConfigureServices(srv =>
             {
-                // TODO: ADD Valid live connection for the Database in the appsettings for example (in the connectino string MySql is assumed)
-                srv.AddDbContext<Database.AppDbContext>((provider, options) =>
-                {
-                    var config = provider.GetRequiredService<IConfiguration>();
-                    
-#if DEBUG
-                    var connection = config.GetConnectionString("LocalConnection") ?? throw new InvalidOperationException("LocalConnection string is missing!");
-#else
-                    var connection = config.GetConnectionString("LiveConnection") ?? throw new InvalidOperationException("LiveConnection string is missing!");
-#endif
-                    // Version can be changed depending on which one gets chosen (e.g., MySQL 8.0.45)
-                    var serverVersion = new MySqlServerVersion(new Version(8, 0, 45));
-    
-                    options.UseMySql(connection, serverVersion) // For now it is set to MySql as an example
-                        .UseSnakeCaseNamingConvention(); // snake_case!
-                });
-
-                srv.AddScoped<ILauncherRepository, LauncherRepository>();// Instead of Singleton so that the database doesnt break
-                
-                // srv.AddSingleton<IEndpoint, AnyGameEndpoint>();
+                srv.AddGalacticDatabase();
             })
 
             .RunForever();
