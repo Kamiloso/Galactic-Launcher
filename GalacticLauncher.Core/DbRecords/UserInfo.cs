@@ -2,10 +2,10 @@
 
 public record UserInfo
 {
-    public ulong Id { get; init; } // PK
-    public string GoogleKey { get; init; } = string.Empty; // google auth identity
-    public string Email { get; init; } = string.Empty; // email
-    public string Name { get; init; } = string.Empty; // full name
-    public string ProfileUrl { get; init; } = string.Empty; // url to profile picture
+    public required ulong Id { get; init; } // PK
+    public required string GoogleKey { get; init; } // google auth identity
+    public required string Email { get; init; } // email
+    public required string Name { get; init; } // full name
+    public required string ProfileUrl { get; init; } // url to profile picture
     // TODO: Add the tags logic
 }

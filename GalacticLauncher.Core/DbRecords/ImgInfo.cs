@@ -2,7 +2,7 @@
 
 public record ImgInfo
 {
-    public ulong Id { get; init; } // PK
-    public string Url { get; init; } = string.Empty; // where to download from
-    public ulong IdGame { get; init; } // FK
+    public required ulong Id { get; init; } // PK
+    public required string Url { get; init; } // where to download from
+    public required ulong IdGame { get; init; } // FK
 }
