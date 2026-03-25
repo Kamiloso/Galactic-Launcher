@@ -3,16 +3,16 @@ using System;
 
 namespace GalacticLauncher.Core.DbRecords;
 
-public record VersionInfo(
-    ulong Id, // PK
-    string VersionText, // example: "2.3b"
-    string Description, // changelog for example
-    bool IsPrimary, // the main game version
-    DateTime ReleaseDate, // upload date
-    VersionType VersionType, // Alpha, Beta, Release etc.
-    ulong IdGame // FK
-    )
+public record VersionInfo
 {
-    public bool IsRelease() =>
+    public required ulong Id { get; init; } // PK
+    public required string VersionText { get; init; } // example: "2.3b"
+    public required string Description { get; init; } // changelog for example
+    public required bool IsPrimary { get; init; } // the main game version
+    public required DateTime ReleaseDate { get; init; } // upload date
+    public required VersionType VersionType { get; init; } // Alpha, Beta, Release etc.
+    public required ulong IdGame { get; init; } // FK
+
+    public bool IsRelease() => 
         VersionType == VersionType.Release;
 }

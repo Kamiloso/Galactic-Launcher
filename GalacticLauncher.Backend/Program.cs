@@ -1,6 +1,9 @@
+using GalacticLauncher.Backend.Database;
+using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Backend.Socket;
 using GalacticLauncher.Backend.Socket.Endpoints;
 using GalacticLauncher.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace GalacticLauncher.Backend;
 
@@ -24,11 +27,7 @@ class Program
 
             .ConfigureServices(srv =>
             {
-                // Register singletons and other services here
-                // Then use them inside IEndpoint Delegate
-                // For example:
-                // ------------------------------------------
-                // srv.AddSingleton<IEndpoint, AnyGameEndpoint>();
+                srv.AddGalacticDatabase();
             })
 
             .RunForever();

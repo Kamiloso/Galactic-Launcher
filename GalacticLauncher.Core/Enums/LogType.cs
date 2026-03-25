@@ -1,6 +1,6 @@
 ﻿namespace GalacticLauncher.Core.Enums;
 
-internal enum ActionType
+public enum LogType
 {
     Login = 0,
     DownloadGame = 1,

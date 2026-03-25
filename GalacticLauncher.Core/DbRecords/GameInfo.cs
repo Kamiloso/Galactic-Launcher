@@ -3,8 +3,9 @@ using System;
 
 namespace GalacticLauncher.Core.DbRecords;
 
-public record GameInfo(
-    ulong Id, // PK
-    string Name, // name of the game
-    string Description // why you should play etc.
-    );
+public record GameInfo
+{
+    public required ulong Id { get; init; } // PK
+    public required string Name { get; init; } // name of the game
+    public required string Description { get; init; } // why you should play etc.
+}

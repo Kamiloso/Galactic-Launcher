@@ -1,7 +1,8 @@
 ﻿namespace GalacticLauncher.Core.DbRecords;
 
-internal record ImgInfo(
-    ulong Id, // PK
-    string Url, // where to download from
-    ulong IdGame // FK
-    );
+public record ImgInfo
+{
+    public required ulong Id { get; init; } // PK
+    public required string Url { get; init; } // where to download from
+    public required ulong IdGame { get; init; } // FK
+}

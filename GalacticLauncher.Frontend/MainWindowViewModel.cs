@@ -31,7 +31,7 @@ namespace GalacticLauncher.Frontend
             {
                 GameInfo gameInfo = await Api.PostJsonAsync<GameInfo, GameInfo>(
                     "testing/game-echo",
-                    new GameInfo(123, "Space Eternity 3", "Some Description...")
+                    new GameInfo{ Id = 123, Name = "Space Eternity 3", Description = "Some Description..." }
                     );
 
                 ResponseJson = JsonSerializer.Serialize(gameInfo);
