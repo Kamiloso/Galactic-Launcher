@@ -7,15 +7,20 @@ namespace GalacticLauncher.Backend.Socket.Endpoints;
 
 [ApiController]
 [Route("testing")]
-public class Testing(ILogger<Testing> Logger) : ControllerBase
+public class TestingController(ILogger<TestingController> Logger) : ControllerBase
 {
     [HttpPost("game-echo")] // may be GET as well (prefer GET), but POST gives more possibilities
-    [EnableRateLimiting(Utils.LOW_COST)]
+    [EnableRateLimiting("LowCost")]
     [EndpointSummary("Returns sent game.")]
     [EndpointDescription("This is a robust description...")]
     public ActionResult<GameInfo> GameEcho([FromBody] GameInfo gameInfo)
     {
-        Logger.LogInformation("Returned game.");
+        if (Utils.IsRelease)
+        {
+            return NotFound();
+        }
+
+        Logger.LogInformation("Testing: GameEcho called.");
         return Ok(gameInfo);
     }
 

@@ -1,57 +1,54 @@
-﻿using Microsoft.AspNetCore.HttpOverrides;
+﻿using GalacticLauncher.Core;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.RateLimiting;
+using RateLimitRule = GalacticLauncher.Backend.AppConfig.RateLimitingSection.RateLimitRule;
 
 namespace GalacticLauncher.Backend.Socket;
 
-internal sealed class RecvBuilder(string? Address = null)
+internal sealed class RecvBuilder
 {
-    private record LimiterPolicy(TimeSpan Period, int Limit);
+    private readonly List<Action<IServiceCollection>> _serviceConfigs = [];
 
-    private readonly List<Action<IServiceCollection>> _serviceConfigurations = [];
-    private readonly Dictionary<string, LimiterPolicy> _rateLimits = [];
+    private AppConfig? _appConfig = null;
+
+    public AppConfig FullConfig => _appConfig ?? throw NoConfig();
+    public AppConfig.DatabaseSection DatabaseConfig => _appConfig?.DatabaseConfig ?? throw NoConfig();
+    public AppConfig.ListenerSection ListenerConfig => _appConfig?.ListenerConfig ?? throw NoConfig();
+    public AppConfig.RateLimitingSection LimiterPolicyConfig => _appConfig?.LimiterPolicyConfig ?? throw NoConfig();
+
+    private static InvalidOperationException NoConfig() =>
+        new("Configuration not loaded. Ensure that RunForever has been called.");
 
     private bool _running;
-
-    public int PrefixIPv4 { get; private set; } = 32;
-    public int PrefixIPv6 { get; private set; } = 56;
-    public bool UseForwardedFor { get; private set; } = false;
-
     public bool Running => _running;
-    public bool SwaggerEnabled { get; private set; }
-
-    public RecvBuilder SetConfig(int prefixIPv4, int prefixIPv6, bool useForwardedFor)
-    {
-        EnsureNotRunning();
-        PrefixIPv4 = prefixIPv4;
-        PrefixIPv6 = prefixIPv6;
-        UseForwardedFor = useForwardedFor;
-        return this;
-    }
 
     public RecvBuilder ConfigureServices(Action<IServiceCollection> configure)
     {
         EnsureNotRunning();
-        _serviceConfigurations.Add(configure);
+
+        _serviceConfigs.Add(configure);
         return this;
     }
 
-    public RecvBuilder WithRateLimit(string key, TimeSpan period, int limit)
-    {
-        EnsureNotRunning();
-        _rateLimits[key] = new LimiterPolicy(period, limit);
-        return this;
-    }
-
-    public void RunForever()
+    public void RunForever(string[] args)
     {
         EnsureNotRunning();
 
-        var builder = WebApplication.CreateBuilder();
+        var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+        {
+            Args = args,
+            EnvironmentName = Utils.IsDebug ? "Development" : "Production"
+        });
+
+        _appConfig = AppConfig.ObtainFrom(builder.Configuration) ?? throw new ArgumentException(
+            "Failed to load configuration. Check if the configuration file is present and valid."
+            );
 
         ConfigureServicesInternal(builder.Services);
+        InjectDependencies(builder.Services);
 
         var app = builder.Build();
         var logger = app.Services.GetRequiredService<ILogger<RecvBuilder>>();
@@ -69,11 +66,12 @@ internal sealed class RecvBuilder(string? Address = null)
     {
         services.AddEndpointsApiExplorer();
 
-#if DEBUG
-        services.AddSwaggerGen();
-#endif
+        if (Utils.IsDebug)
+        {
+            services.AddSwaggerGen();
+        }
 
-        if (UseForwardedFor)
+        if (ListenerConfig.UseForwardedFor)
         {
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -85,22 +83,26 @@ internal sealed class RecvBuilder(string? Address = null)
             });
         }
 
-        if (_rateLimits.Count > 0)
+        services.AddRateLimiter(options =>
         {
-            services.AddRateLimiter(options =>
-            {
-                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-                foreach (var (key, policy) in _rateLimits)
-                {
-                    AddRateLimiter(options, key, policy);
-                }
-            });
-        }
+            AddRateLimiter(options, nameof(LimiterPolicyConfig.LowCost), LimiterPolicyConfig.LowCost);
+            AddRateLimiter(options, nameof(LimiterPolicyConfig.MediumCost), LimiterPolicyConfig.MediumCost);
+            AddRateLimiter(options, nameof(LimiterPolicyConfig.HighCost), LimiterPolicyConfig.HighCost);
+        });
 
         services.AddControllers();
+    }
 
-        foreach (var configure in _serviceConfigurations)
+    private void InjectDependencies(IServiceCollection services)
+    {
+        services.AddSingleton(FullConfig);
+        services.AddSingleton(DatabaseConfig);
+        services.AddSingleton(ListenerConfig);
+        services.AddSingleton(LimiterPolicyConfig);
+
+        foreach (var configure in _serviceConfigs)
         {
             configure(services);
         }
@@ -108,52 +110,39 @@ internal sealed class RecvBuilder(string? Address = null)
 
     private void ConfigureMiddleware(WebApplication app)
     {
-        if (UseForwardedFor)
+        if (ListenerConfig.UseForwardedFor)
         {
             app.UseForwardedHeaders();
         }
 
-#if DEBUG
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        SwaggerEnabled = true;
-#endif
+        if (Utils.IsDebug)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
         app.UseHttpsRedirection();
-
-        if (_rateLimits.Count > 0)
-        {
-            app.UseRateLimiter();
-        }
+        app.UseRateLimiter();
     }
 
-    private void LogStartup(ILogger logger)
+    private void AddRateLimiter(RateLimiterOptions options, string key, RateLimitRule policy)
     {
-        logger.LogInformation("Backend is running on: {Address}", Address ?? "???");
-
-        if (SwaggerEnabled)
-        {
-            logger.LogInformation(
-                "Swagger initialized. Open: {Address}/swagger/index.html", Address ?? "???");
-        }
-
-        if (PrefixIPv4 % 8 != 0 || PrefixIPv6 % 8 != 0)
-        {
-            logger.LogWarning("Network prefixes should be divisible by 8 to work properly.");
-        }
-    }
-
-    private void AddRateLimiter(RateLimiterOptions options, string key, LimiterPolicy policy)
-    {
-        var (period, limit) = policy;
+        TimeSpan period = TimeSpan.FromSeconds(policy.Seconds);
+        int limit = policy.Limit;
 
         options.AddPolicy(key, context =>
         {
             IPAddress? ip = context.Connection.RemoteIpAddress;
+
+            if (ip?.IsIPv4MappedToIPv6 == true)
+            {
+                ip = ip.MapToIPv4();
+            }
+
             AddressFamily family = ip?.AddressFamily ?? AddressFamily.Unknown;
 
-            int lenV4 = Math.Clamp(PrefixIPv4, 0, 32) / 8;
-            int lenV6 = Math.Clamp(PrefixIPv6, 0, 128) / 8;
+            int lenV4 = Math.Clamp(ListenerConfig.PrefixIPv4, 0, 32) / 8;
+            int lenV6 = Math.Clamp(ListenerConfig.PrefixIPv6, 0, 128) / 8;
 
             string uniqueNetworkString = family switch
             {
@@ -177,9 +166,25 @@ internal sealed class RecvBuilder(string? Address = null)
         });
     }
 
+    private void LogStartup(ILogger logger)
+    {
+        logger.LogInformation("Backend is running on: {Address}", Utils.Address);
+
+        if (Utils.IsDebug)
+        {
+            logger.LogInformation(
+                "Swagger initialized. Open: {Address}/swagger/index.html", Utils.Address);
+        }
+
+        if (ListenerConfig.PrefixIPv4 % 8 != 0 || ListenerConfig.PrefixIPv6 % 8 != 0)
+        {
+            logger.LogWarning("Network prefixes should be divisible by 8 to work properly.");
+        }
+    }
+
     private void EnsureNotRunning()
     {
         if (_running)
-            throw new InvalidOperationException("RecvBuilder has already been run.");
+            throw new InvalidOperationException($"{nameof(RecvBuilder)} has already been run.");
     }
 }

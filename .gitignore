@@ -1,6 +1,5 @@
 # build
 /build/
-/keys/
 *.pdb
 
 # IDE
@@ -17,3 +16,6 @@ obj/
 *.log
 *.vspscc
 *.vssscc
+
+# Keys
+**/release_cert.pfx

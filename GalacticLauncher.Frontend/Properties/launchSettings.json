@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GalacticLauncher.Frontend": {
+      "commandName": "Project",
+      "commandLineArgs": "--debug"
+    }
+  }
+}

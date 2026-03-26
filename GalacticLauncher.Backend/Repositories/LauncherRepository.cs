@@ -6,8 +6,8 @@ namespace GalacticLauncher.Backend.Repositories;
 
 public class LauncherRepository(AppDbContext db) : ILauncherRepository
 {
-    public async Task<IEnumerable<GameInfo>> GetAllGamesAsync(CancellationToken token = default) 
-        => await db.Games.ToListAsync(cancellationToken: token);
+    public async Task<IEnumerable<GameInfo>> GetAllGamesAsync() 
+        => await db.Games.ToListAsync();
 
     public async Task<IEnumerable<ImgInfo>> GetImagesByGameIdAsync(ulong gameId) 
         => await db.Images.Where(i => i.IdGame == gameId).ToListAsync();

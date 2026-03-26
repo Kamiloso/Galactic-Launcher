@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GalacticLauncher.Backend.Database;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
     public DbSet<GameInfo> Games { get; set; }
     public DbSet<ImgInfo> Images { get; set; }
     public DbSet<VersionInfo> Versions { get; set; }

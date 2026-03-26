@@ -2,68 +2,73 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using GalacticLauncher.Core;
 using GalacticLauncher.Core.DbRecords;
-using GalacticLauncher.Backend.Database;
 using GalacticLauncher.Backend.Repositories;
-using GalacticLauncher.Backend.Responses;
 
 namespace GalacticLauncher.Backend.Socket.Endpoints;
 
 [ApiController]
-[Route("games")] // TODO: Should be changed 
-public class LauncherController(ILauncherRepository repository, ILogger<LauncherRepository> logger) : ControllerBase
+[Route("launcher")]
+public class LauncherController(
+    ILauncherRepository repository/*, ILogger<LauncherRepository> logger*/) : ControllerBase
 {
     // 1. All game information
-    [HttpGet("all")]
-    [EnableRateLimiting(Utils.LOW_COST)]
+    [HttpGet("all-games")]
+    [EnableRateLimiting("LowCost")]
     [EndpointSummary("Retrieves a list of all games.")]
     [EndpointDescription("Returns a DataList of all games for easier deserialization.")]
-    public async Task<ActionResult<DataList<GameInfo>>> GetAllGames()
+    public async Task<ActionResult<IEnumerable<GameInfo>>> GetAllGames()
     {
-        var games = await repository.GetAllGamesAsync();
-        return Ok(new DataList<GameInfo>(games));
+        // TODO: Remove early return when database is implemented.
+        return Ok(new[] {
+            new GameInfo { Id = 1, Name = "Test Game", Description = "This is a test game." },
+            new GameInfo { Id = 2, Name = "Another Game", Description = "This is another test game." }
+            });
+
+        IEnumerable<GameInfo> games = await repository.GetAllGamesAsync();
+        return Ok(games);
     }
 
     // 2. All images based on game ID
-    [HttpGet("images")]
-    [EnableRateLimiting(Utils.LOW_COST)]
+    [HttpGet("game-images")]
+    [EnableRateLimiting("LowCost")]
     [EndpointSummary("Retrieves all images of a game.")]
     [EndpointDescription("Requires a gameId. Returns all the images for the game.")]
-    public async Task<ActionResult<DataList<ImgInfo>>> GetImages([FromQuery] ulong gameId)
+    public async Task<ActionResult<IEnumerable<ImgInfo>>> GetImages([FromQuery] ulong gameId)
     {
-        var images = await repository.GetImagesByGameIdAsync(gameId);
-        return Ok(new DataList<ImgInfo>(images));
+        IEnumerable<ImgInfo> images = await repository.GetImagesByGameIdAsync(gameId);
+        return Ok(images);
     }
 
     // 3. All versions based on game ID
-    [HttpGet("versions")]
-    [EnableRateLimiting(Utils.LOW_COST)]
+    [HttpGet("game-versions")]
+    [EnableRateLimiting("LowCost")]
     [EndpointSummary("Retrieves all versions of a game.")]
-    [EndpointDescription("Requires a gameId. Returns all the images for the game.")]
-    public async Task<ActionResult<DataList<VersionInfo>>> GetVersions([FromQuery] ulong gameId)
+    [EndpointDescription("Requires a gameId. Returns all the versions for the game.")]
+    public async Task<ActionResult<IEnumerable<VersionInfo>>> GetVersions([FromQuery] ulong gameId)
     {
-        var versions = await repository.GetVersionsByGameIdAsync(gameId);
-        return Ok(new DataList<VersionInfo>(versions));
+        IEnumerable<VersionInfo> versions = await repository.GetVersionsByGameIdAsync(gameId);
+        return Ok(versions);
     }
 
     // 4. Primary version based on game ID
-    [HttpGet("versions/primary")]
-    [EnableRateLimiting(Utils.LOW_COST)]
+    [HttpGet("game-versions/primary")]
+    [EnableRateLimiting("LowCost")]
     [EndpointSummary("Retrieves the primary version of a game.")]
     [EndpointDescription("Requires a gameId. Returns the primary version for a game.")]
     public async Task<ActionResult<VersionInfo>> GetPrimaryVersion([FromQuery] ulong gameId)
     {
-        var version = await repository.GetPrimaryVersionAsync(gameId);
+        VersionInfo? version = await repository.GetPrimaryVersionAsync(gameId);
         return version is not null ? Ok(version) : NotFound();
     }
 
     // 5. Find executables based on version ID
-    [HttpGet("execs")]
-    [EnableRateLimiting(Utils.LOW_COST)]
+    [HttpGet("version-execs")]
+    [EnableRateLimiting("LowCost")]
     [EndpointSummary("Retrieves executables for a version.")]
     [EndpointDescription("Requires a versionId. Returns the executable info for a certain version.")]
-    public async Task<ActionResult<DataList<ExecInfo>>> GetExecs([FromQuery] ulong versionId)
+    public async Task<ActionResult<IEnumerable<ExecInfo>>> GetExecs([FromQuery] ulong versionId)
     {
-        var execs = await repository.GetExecsByVersionIdAsync(versionId);
-        return Ok(new DataList<ExecInfo>(execs));
+        IEnumerable<ExecInfo> execs = await repository.GetExecsByVersionIdAsync(versionId);
+        return Ok(execs);
     }
 }
