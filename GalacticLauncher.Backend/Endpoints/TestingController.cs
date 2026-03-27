@@ -3,7 +3,7 @@ using GalacticLauncher.Core.DbRecords;
 using GalacticLauncher.Core;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace GalacticLauncher.Backend.Socket.Endpoints;
+namespace GalacticLauncher.Backend.Endpoints;
 
 [ApiController]
 [Route("testing")]
@@ -20,7 +20,7 @@ public class TestingController(ILogger<TestingController> Logger) : ControllerBa
             return NotFound();
         }
 
-        Logger.LogInformation("Testing: GameEcho called.");
+        Logger.LogInformation("GameEcho called with: {GameInfo}", gameInfo);
         return Ok(gameInfo);
     }
 

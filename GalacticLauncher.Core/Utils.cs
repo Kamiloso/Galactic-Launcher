@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Collections;
+using System.Runtime.InteropServices;
 using GalacticLauncher.Core.Enums;
 
 namespace GalacticLauncher.Core;
@@ -41,5 +42,16 @@ public static class Utils
     {
         var argList = Environment.GetCommandLineArgs();
         return argList.Any(a => a.Equals(arg, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static bool IsNullRecursive(object? obj)
+    {
+        if (obj is null) return true;
+        if (obj.GetType().IsPrimitive || obj is string || obj.GetType().IsEnum) return false;
+
+        if (obj is IEnumerable enumerable)
+            return enumerable.Cast<object>().Any(IsNullRecursive);
+
+        return obj.GetType().GetProperties().Any(prop => IsNullRecursive(prop.GetValue(obj)));
     }
 }
