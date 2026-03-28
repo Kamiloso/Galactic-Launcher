@@ -1,4 +1,6 @@
 ﻿using GalacticLauncher.Core;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace GalacticLauncher.Backend;
 
@@ -24,9 +26,14 @@ public static class AppExtensions
     public static void LogStartup<T>(this WebApplication app, AppConfig config)
     {
         var logger = app.Services.GetRequiredService<ILogger<T>>();
+        var lsConfig = config.Listener;
 
-        if (config.Listener.PrefixIPv4 % 8 != 0 ||
-            config.Listener.PrefixIPv6 % 8 != 0)
+        logger.LogInformation("""
+            ListenerConfig = {ListenerConfig}
+            """, lsConfig);
+
+        if (lsConfig.PrefixIPv4 % 8 != 0 ||
+            lsConfig.PrefixIPv6 % 8 != 0)
         {
             logger.LogWarning("Network prefixes should be divisible by 8 to work properly.");
         }
