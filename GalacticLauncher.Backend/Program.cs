@@ -15,7 +15,10 @@ services.AddEndpointsApiExplorer();
 
 if (Utils.IsDebug)
 {
-    services.AddSwaggerGen();
+    services.AddSwaggerGen(c =>
+    {
+        c.SupportNonNullableReferenceTypes();
+    });
 }
 
 services.ConfigureForwardedFor(config);
