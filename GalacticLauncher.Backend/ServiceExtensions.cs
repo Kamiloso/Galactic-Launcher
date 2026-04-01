@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.RateLimiting;
+using GalacticLauncher.Core.Interfaces;
 using static GalacticLauncher.Backend.AppConfig.RateLimitingSection;
 
 namespace GalacticLauncher.Backend;

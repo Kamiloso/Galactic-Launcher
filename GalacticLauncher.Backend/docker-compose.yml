@@ -1,0 +1,15 @@
+services:
+  mysql-dev:
+    image: mysql:8.0
+    container_name: galactic_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: HardCodedPass!123
+      MYSQL_DATABASE: Galactic
+    ports:
+      - "127.0.0.1:11201:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
