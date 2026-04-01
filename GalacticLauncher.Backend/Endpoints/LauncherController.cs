@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using GalacticLauncher.Core.DbRecords;
-using GalacticLauncher.Backend.Repositories;
+using GalacticLauncher.Core.Interfaces;
 
 namespace GalacticLauncher.Backend.Endpoints;
 
