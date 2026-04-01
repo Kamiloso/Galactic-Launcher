@@ -12,6 +12,9 @@ public record VersionInfo
     public required DateTime ReleaseDate { get; init; } // upload date
     public required VersionType VersionType { get; init; } // Alpha, Beta, Release etc.
     public required ulong IdGame { get; init; } // FK
+    public GameInfo? Game { get; init; }
+    
+    public ICollection<ExecInfo> Executables { get; init; } = [];
 
     public bool IsRelease() => 
         VersionType == VersionType.Release;

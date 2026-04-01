@@ -8,8 +8,13 @@ public class GameInfoConfiguration : IEntityTypeConfiguration<GameInfo>
 {
     public void Configure(EntityTypeBuilder<GameInfo> builder)
     {
-        builder.ToTable("Games");
+        builder.ToTable("games");
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Name).IsRequired().HasMaxLength(20);
+        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        
+        builder.Property(e => e.Name).HasMaxLength(50);
+        builder.Property(e => e.Description).HasMaxLength(2000);
+        // 1:N relationships: (game -> versions, game -> images)
+        // M:N relationship: (game <-> tags)
     }
 }

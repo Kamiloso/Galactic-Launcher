@@ -8,12 +8,16 @@ public class ImgInfoConfiguration : IEntityTypeConfiguration<ImgInfo>
 {
     public void Configure(EntityTypeBuilder<ImgInfo> builder)
     {
-        builder.ToTable("Images");
-        builder.HasKey(x => x.Id);
+        builder.ToTable("images");
+        builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+
+        builder.Property(e => e.IdGame).HasColumnName("game_id");
         
-        builder.HasOne<GameInfo>()
-            .WithMany()
-            .HasForeignKey(x => x.IdGame)
+        // 1:N relation: (game -> images)
+        builder.HasOne(e => e.Game)
+            .WithMany(g => g.Images)
+            .HasForeignKey(e => e.IdGame)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

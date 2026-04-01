@@ -8,12 +8,18 @@ public class VersionInfoConfiguration : IEntityTypeConfiguration<VersionInfo>
 {
     public void Configure(EntityTypeBuilder<VersionInfo> builder)
     {
-        builder.ToTable("Versions");
+        builder.ToTable("versions");
         builder.HasKey(e => e.Id);
-
-        builder.HasOne<GameInfo>()
-            .WithMany()
+        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        
+        builder.Property(e => e.IdGame).HasColumnName("game_id");
+        builder.Property(e => e.VersionText).HasMaxLength(50);
+        builder.Property(e => e.Description).HasMaxLength(2000);
+        
+        // 1:N relation: (game -> versions)
+        builder.HasOne(e => e.Game)
+            .WithMany(g => g.Versions)
             .HasForeignKey(e => e.IdGame)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade); // if the game is deleted all its version are deleted as well
     }
 }

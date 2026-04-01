@@ -8,17 +8,21 @@ public class LogInfoConfiguration : IEntityTypeConfiguration<LogInfo>
 {
     public void Configure(EntityTypeBuilder<LogInfo> builder)
     {
-        builder.ToTable("Actions");
+        builder.ToTable("actions");
         builder.HasKey(e => e.Id);
+        builder.Property(e => e.Id).ValueGeneratedOnAdd();
 
-        builder.HasOne<UserInfo>()
-            .WithMany()
-            .HasForeignKey(e => e.IdUser);
+        builder.Property(e => e.IdUser).HasColumnName("user_id");
+        builder.Property(e => e.IdExec).HasColumnName("exec_id");
 
-        builder.HasOne<ExecInfo>()
+        builder.HasOne(e => e.User)
+            .WithMany(u => u.Logs)
+            .HasForeignKey(e => e.IdUser)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(e => e.Exec)
             .WithMany()
             .HasForeignKey(e => e.IdExec)
-            .IsRequired(false)
-            .OnDelete(DeleteBehavior.SetNull); 
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
