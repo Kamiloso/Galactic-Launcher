@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GalacticLauncher.Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401175824_InitialSchema")]
+    [Migration("20260403061642_InitialSchema")]
     partial class InitialSchema
     {
         /// <inheritdoc />
@@ -98,6 +98,25 @@ namespace GalacticLauncher.Backend.Migrations
                         .HasName("pk_games");
 
                     b.ToTable("games", (string)null);
+                });
+
+            modelBuilder.Entity("GalacticLauncher.Core.DbRecords.GameTagInfo", b =>
+                {
+                    b.Property<ulong>("IdGame")
+                        .HasColumnType("bigint unsigned")
+                        .HasColumnName("game_id");
+
+                    b.Property<ulong>("IdTag")
+                        .HasColumnType("bigint unsigned")
+                        .HasColumnName("tag_id");
+
+                    b.HasKey("IdGame", "IdTag")
+                        .HasName("pk_games_tags");
+
+                    b.HasIndex("IdTag")
+                        .HasDatabaseName("ix_games_tags_tag_id");
+
+                    b.ToTable("games_tags", (string)null);
                 });
 
             modelBuilder.Entity("GalacticLauncher.Core.DbRecords.ImgInfo", b =>
@@ -283,113 +302,67 @@ namespace GalacticLauncher.Backend.Migrations
                     b.ToTable("versions", (string)null);
                 });
 
-            modelBuilder.Entity("GameInfoTagInfo", b =>
-                {
-                    b.Property<ulong>("GamesId")
-                        .HasColumnType("bigint unsigned")
-                        .HasColumnName("games_id");
-
-                    b.Property<ulong>("TagsId")
-                        .HasColumnType("bigint unsigned")
-                        .HasColumnName("tags_id");
-
-                    b.HasKey("GamesId", "TagsId")
-                        .HasName("pk_games_tags");
-
-                    b.HasIndex("TagsId")
-                        .HasDatabaseName("ix_games_tags_tags_id");
-
-                    b.ToTable("games_tags", (string)null);
-                });
-
             modelBuilder.Entity("GalacticLauncher.Core.DbRecords.ExecInfo", b =>
                 {
-                    b.HasOne("GalacticLauncher.Core.DbRecords.VersionInfo", "Version")
-                        .WithMany("Executables")
+                    b.HasOne("GalacticLauncher.Core.DbRecords.VersionInfo", null)
+                        .WithMany()
                         .HasForeignKey("IdVersion")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_execs_versions_version_id");
+                });
 
-                    b.Navigation("Version");
+            modelBuilder.Entity("GalacticLauncher.Core.DbRecords.GameTagInfo", b =>
+                {
+                    b.HasOne("GalacticLauncher.Core.DbRecords.GameInfo", null)
+                        .WithMany()
+                        .HasForeignKey("IdGame")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_games_tags_games_game_id");
+
+                    b.HasOne("GalacticLauncher.Core.DbRecords.TagInfo", null)
+                        .WithMany()
+                        .HasForeignKey("IdTag")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_games_tags_tags_tag_id");
                 });
 
             modelBuilder.Entity("GalacticLauncher.Core.DbRecords.ImgInfo", b =>
                 {
-                    b.HasOne("GalacticLauncher.Core.DbRecords.GameInfo", "Game")
-                        .WithMany("Images")
+                    b.HasOne("GalacticLauncher.Core.DbRecords.GameInfo", null)
+                        .WithMany()
                         .HasForeignKey("IdGame")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_images_games_game_id");
-
-                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("GalacticLauncher.Core.DbRecords.LogInfo", b =>
                 {
-                    b.HasOne("GalacticLauncher.Core.DbRecords.ExecInfo", "Exec")
+                    b.HasOne("GalacticLauncher.Core.DbRecords.ExecInfo", null)
                         .WithMany()
                         .HasForeignKey("IdExec")
                         .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("fk_actions_execs_exec_id");
 
-                    b.HasOne("GalacticLauncher.Core.DbRecords.UserInfo", "User")
-                        .WithMany("Logs")
+                    b.HasOne("GalacticLauncher.Core.DbRecords.UserInfo", null)
+                        .WithMany()
                         .HasForeignKey("IdUser")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_actions_users_user_id");
-
-                    b.Navigation("Exec");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GalacticLauncher.Core.DbRecords.VersionInfo", b =>
                 {
-                    b.HasOne("GalacticLauncher.Core.DbRecords.GameInfo", "Game")
-                        .WithMany("Versions")
+                    b.HasOne("GalacticLauncher.Core.DbRecords.GameInfo", null)
+                        .WithMany()
                         .HasForeignKey("IdGame")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_versions_games_game_id");
-
-                    b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("GameInfoTagInfo", b =>
-                {
-                    b.HasOne("GalacticLauncher.Core.DbRecords.GameInfo", null)
-                        .WithMany()
-                        .HasForeignKey("GamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_games_tags_games_games_id");
-
-                    b.HasOne("GalacticLauncher.Core.DbRecords.TagInfo", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_games_tags_tags_tags_id");
-                });
-
-            modelBuilder.Entity("GalacticLauncher.Core.DbRecords.GameInfo", b =>
-                {
-                    b.Navigation("Images");
-
-                    b.Navigation("Versions");
-                });
-
-            modelBuilder.Entity("GalacticLauncher.Core.DbRecords.UserInfo", b =>
-                {
-                    b.Navigation("Logs");
-                });
-
-            modelBuilder.Entity("GalacticLauncher.Core.DbRecords.VersionInfo", b =>
-                {
-                    b.Navigation("Executables");
                 });
 #pragma warning restore 612, 618
         }

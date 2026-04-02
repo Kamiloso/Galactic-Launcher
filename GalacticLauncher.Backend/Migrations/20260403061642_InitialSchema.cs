@@ -123,21 +123,21 @@ namespace GalacticLauncher.Backend.Migrations
                 name: "games_tags",
                 columns: table => new
                 {
-                    games_id = table.Column<ulong>(type: "bigint unsigned", nullable: false),
-                    tags_id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
+                    game_id = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    tag_id = table.Column<ulong>(type: "bigint unsigned", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_games_tags", x => new { x.games_id, x.tags_id });
+                    table.PrimaryKey("pk_games_tags", x => new { x.game_id, x.tag_id });
                     table.ForeignKey(
-                        name: "fk_games_tags_games_games_id",
-                        column: x => x.games_id,
+                        name: "fk_games_tags_games_game_id",
+                        column: x => x.game_id,
                         principalTable: "games",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_games_tags_tags_tags_id",
-                        column: x => x.tags_id,
+                        name: "fk_games_tags_tags_tag_id",
+                        column: x => x.tag_id,
                         principalTable: "tags",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -216,9 +216,9 @@ namespace GalacticLauncher.Backend.Migrations
                 column: "version_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_games_tags_tags_id",
+                name: "ix_games_tags_tag_id",
                 table: "games_tags",
-                column: "tags_id");
+                column: "tag_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_images_game_id",
