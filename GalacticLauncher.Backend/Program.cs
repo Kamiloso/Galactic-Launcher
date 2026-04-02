@@ -40,20 +40,20 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        if (Utils.IsDebug)
+        if (args.Contains("--migrate"))
         {
+            logger.LogInformation("Migrating database...");
             dbContext.Database.Migrate();
+            return;
+        }
+
+        if (dbContext.Database.CanConnect())
+        {
+            logger.LogInformation("Connection with the database established.");
         }
         else
         {
-            if (dbContext.Database.CanConnect())
-            {
-                logger.LogInformation("Connection with the database established.");
-            }
-            else
-            {
-                logger.LogWarning("Connection with the database could not be established!");
-            }
+            logger.LogWarning("Connection with the database could not be established!");
         }
     }
     catch (Exception ex)
