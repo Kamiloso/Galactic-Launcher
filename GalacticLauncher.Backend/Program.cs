@@ -1,7 +1,5 @@
 using GalacticLauncher.Backend;
-using GalacticLauncher.Backend.Database;
 using GalacticLauncher.Core;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -32,39 +30,13 @@ services.AddControllers();
 // ----- APP SECTION -----
 
 var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
-using (var scope = app.Services.CreateScope())
+if (app.ConnectToDatabase(logger))
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    app.ConfigureMiddleware(config);
+    app.MapControllers();
 
-    try
-    {
-        if (args.Contains("--migrate"))
-        {
-            logger.LogInformation("Migrating database...");
-            dbContext.Database.Migrate();
-            return;
-        }
-
-        if (dbContext.Database.CanConnect())
-        {
-            logger.LogInformation("Connection with the database established.");
-        }
-        else
-        {
-            logger.LogWarning("Connection with the database could not be established!");
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogCritical(ex, "Critical error while trying to establish a connection with the database!");
-        throw;
-    }
+    app.LogStartup<Program>(config);
+    app.Run();
 }
-
-app.ConfigureMiddleware(config);
-app.MapControllers();
-
-app.LogStartup<Program>(config);
-app.Run();
