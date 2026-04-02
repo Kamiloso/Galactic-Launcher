@@ -9,7 +9,4 @@ public record GameInfo
     public required string Name { get; init; } // name of the game
     public required string Description { get; init; } // why you should play etc.
     
-    public ICollection<VersionInfo> Versions { get; init; } = [];
-    public ICollection<ImgInfo> Images { get; init; } = [];
-    public ICollection<TagInfo> Tags { get; init; } = [];
 }

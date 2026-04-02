@@ -11,6 +11,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ExecInfo> Execs { get; set; }
     public DbSet<UserInfo> Users { get; set; }
     public DbSet<LogInfo> Actions { get; set; }
+    public DbSet<TagInfo> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

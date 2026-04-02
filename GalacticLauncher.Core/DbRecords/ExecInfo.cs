@@ -11,5 +11,4 @@ public record ExecInfo
     public required PlatformType Platform { get; init; } // Windows / Linux / macOS etc.
     public required AlertType Alert { get; init; } // how safe is it to run?
     public required ulong IdVersion { get; init; } // FK
-    public VersionInfo? Version { get; init; }
 }

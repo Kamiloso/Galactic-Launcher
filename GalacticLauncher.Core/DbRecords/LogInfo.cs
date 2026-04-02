@@ -10,6 +10,4 @@ public record LogInfo
     public DateTime Time { get; init; } = DateTime.UtcNow; // when it was made
     public required ulong IdUser { get; init; } // FK
     public ulong? IdExec { get; init; } // FK (Nullable)
-    public ExecInfo? Exec { get; init; }
-    public UserInfo? User { get; init; }
 }

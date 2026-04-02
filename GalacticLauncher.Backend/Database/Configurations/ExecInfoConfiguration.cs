@@ -16,8 +16,8 @@ public class ExecInfoConfiguration : IEntityTypeConfiguration<ExecInfo>
         builder.Property(e => e.FileHashSHA256).HasMaxLength(64).IsFixedLength().UseCollation("ascii_general_ci"); // Fixed length of 64 characters
 
         // 1:N relationships: (game -> versions, versions -> exe s)
-        builder.HasOne(e => e.Version)
-            .WithMany(v => v.Executables)
+        builder.HasOne<VersionInfo>()
+            .WithMany()
             .HasForeignKey(e => e.IdVersion)
             .OnDelete(DeleteBehavior.Cascade); // if the version is deleted its executables are removed from as well
     }

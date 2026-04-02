@@ -15,8 +15,8 @@ public class ImgInfoConfiguration : IEntityTypeConfiguration<ImgInfo>
         builder.Property(e => e.IdGame).HasColumnName("game_id");
         
         // 1:N relation: (game -> images)
-        builder.HasOne(e => e.Game)
-            .WithMany(g => g.Images)
+        builder.HasOne<GameInfo>()
+            .WithMany()
             .HasForeignKey(e => e.IdGame)
             .OnDelete(DeleteBehavior.Cascade);
     }

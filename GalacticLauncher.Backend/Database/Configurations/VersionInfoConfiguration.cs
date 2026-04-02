@@ -17,8 +17,8 @@ public class VersionInfoConfiguration : IEntityTypeConfiguration<VersionInfo>
         builder.Property(e => e.Description).HasMaxLength(2000);
         
         // 1:N relation: (game -> versions)
-        builder.HasOne(e => e.Game)
-            .WithMany(g => g.Versions)
+        builder.HasOne<GameInfo>()
+            .WithMany()
             .HasForeignKey(e => e.IdGame)
             .OnDelete(DeleteBehavior.Cascade); // if the game is deleted all its version are deleted as well
     }

@@ -7,5 +7,4 @@ public record UserInfo
     public required string Email { get; init; } // email
     public required string Name { get; init; } // full name
     public required string ProfileUrl { get; init; } // url to profile picture
-    public ICollection<LogInfo> Logs { get; init; } = [];
 }

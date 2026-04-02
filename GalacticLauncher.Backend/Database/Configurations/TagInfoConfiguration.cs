@@ -15,8 +15,5 @@ public class TagInfoConfiguration : IEntityTypeConfiguration<TagInfo>
         builder.Property(e => e.Description).HasMaxLength(200);
         
         // M:N relationship: (tags <-> games)
-        builder.HasMany(e => e.Games)
-            .WithMany(g => g.Tags)
-            .UsingEntity(j => j.ToTable("games_tags")); // join table for many to many relationship
     }
 }

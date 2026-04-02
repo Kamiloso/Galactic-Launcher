@@ -15,12 +15,12 @@ public class LogInfoConfiguration : IEntityTypeConfiguration<LogInfo>
         builder.Property(e => e.IdUser).HasColumnName("user_id");
         builder.Property(e => e.IdExec).HasColumnName("exec_id");
 
-        builder.HasOne(e => e.User)
-            .WithMany(u => u.Logs)
+        builder.HasOne<UserInfo>()
+            .WithMany()
             .HasForeignKey(e => e.IdUser)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(e => e.Exec)
+        builder.HasOne<ExecInfo>()
             .WithMany()
             .HasForeignKey(e => e.IdExec)
             .OnDelete(DeleteBehavior.SetNull);
