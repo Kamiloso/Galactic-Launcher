@@ -3,7 +3,7 @@ services:
     image: mysql:8.0
     container_name: galactic-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: HardCodedRootPass!123
+      MYSQL_ROOT_PASSWORD: HardCodedPass!123
       MYSQL_DATABASE: galactic
     ports:
       - "127.0.0.1:11201:3306"

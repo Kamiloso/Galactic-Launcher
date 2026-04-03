@@ -1,14 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using GalacticLauncher.Core.DbRecords;
-using GalacticLauncher.Core.Interfaces;
+using GalacticLauncher.Backend.Repositories;
 
 namespace GalacticLauncher.Backend.Endpoints;
 
 [ApiController]
 [Route("launcher")]
 public class LauncherController(
-    ILauncherRepository repository,
+    IGameRepository gameRepo,
+    IImageRepository imageRepo,
+    IVersionRepository versionRepo,
+    IExecRepository execRepo,
     ILogger<LauncherController> logger
     ) : ControllerBase
 {
@@ -19,16 +22,8 @@ public class LauncherController(
     [EndpointDescription("Returns a DataList of all games for easier deserialization.")]
     public async Task<ActionResult<IEnumerable<GameInfo>>> GetAllGames()
     {
-        logger.LogDebug($"Received request: {nameof(GetAllGames)}");
-
-        // TODO: Remove early return when database is implemented.
-        return Ok(new[] {
-            new GameInfo { Id = 1, Name = "Test Game", Description = "This is a test game." },
-            new GameInfo { Id = 2, Name = "Another Game", Description = "This is another test game." }
-            });
-
-        IEnumerable<GameInfo> games = await repository.GetAllGamesAsync();
-        return Ok(games);
+        IEnumerable<GameInfo> allGames = await gameRepo.GetAllGames();
+        return Ok(allGames);
     }
 
     // 2. All images based on game ID
@@ -36,10 +31,10 @@ public class LauncherController(
     [EnableRateLimiting("LowCost")]
     [EndpointSummary("Retrieves all images of a game.")]
     [EndpointDescription("Requires a gameId. Returns all the images for the game.")]
-    public async Task<ActionResult<IEnumerable<ImgInfo>>> GetImages([FromQuery] ulong gameId)
+    public async Task<ActionResult<IEnumerable<ImageInfo>>> GetImages([FromQuery] ulong gameId)
     {
         logger.LogDebug($"Received request: {nameof(GetImages)} with gameId={{gameId}}", gameId);
-        IEnumerable<ImgInfo> images = await repository.GetImagesByGameIdAsync(gameId);
+        IEnumerable<ImageInfo> images = await imageRepo.GetImagesByGameId(gameId);
         return Ok(images);
     }
 
@@ -51,7 +46,7 @@ public class LauncherController(
     public async Task<ActionResult<IEnumerable<VersionInfo>>> GetVersions([FromQuery] ulong gameId)
     {
         logger.LogDebug($"Received request: {nameof(GetVersions)} with gameId={{gameId}}", gameId);
-        IEnumerable<VersionInfo> versions = await repository.GetVersionsByGameIdAsync(gameId);
+        IEnumerable<VersionInfo> versions = await versionRepo.GetVersionsByGameId(gameId);
         return Ok(versions);
     }
 
@@ -63,7 +58,7 @@ public class LauncherController(
     public async Task<ActionResult<VersionInfo>> GetPrimaryVersion([FromQuery] ulong gameId)
     {
         logger.LogDebug($"Received request: {nameof(GetPrimaryVersion)} with gameId={{gameId}}", gameId);
-        VersionInfo? version = await repository.GetPrimaryVersionAsync(gameId);
+        VersionInfo? version = await versionRepo.GetPrimaryVersion(gameId);
         return version is not null ? Ok(version) : NotFound();
     }
 
@@ -75,7 +70,7 @@ public class LauncherController(
     public async Task<ActionResult<IEnumerable<ExecInfo>>> GetExecs([FromQuery] ulong versionId)
     {
         logger.LogDebug($"Received request: {nameof(GetExecs)} with versionId={{versionId}}", versionId);
-        IEnumerable<ExecInfo> execs = await repository.GetExecsByVersionIdAsync(versionId);
+        IEnumerable<ExecInfo> execs = await execRepo.GetExecsByVersionId(versionId);
         return Ok(execs);
     }
 }

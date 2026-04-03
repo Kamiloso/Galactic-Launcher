@@ -23,8 +23,10 @@ if (Utils.IsDevelopment)
 
 services.ConfigureForwardedFor(config);
 services.ConfigureRateLimiters(config);
-services.AddGalacticDatabase(config);
 
+services.AddDatabase(config);
+services.AddRepositories();
+// services.AddServices(); TODO: add services
 services.AddControllers();
 
 // ----- APP SECTION -----
@@ -32,11 +34,8 @@ services.AddControllers();
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
-if (app.ConnectToDatabase(logger))
-{
-    app.ConfigureMiddleware(config);
-    app.MapControllers();
+app.ConfigureMiddleware(config);
+app.MapControllers();
 
-    app.LogStartup<Program>(config);
-    app.Run();
-}
+app.LogStartup<Program>(config);
+app.Run();

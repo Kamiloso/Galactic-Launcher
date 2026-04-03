@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace GalacticLauncher.Backend;
+﻿namespace GalacticLauncher.Backend;
 
 public record AppConfig
 {
@@ -20,10 +18,8 @@ public record AppConfig
         public required string Address { get; init; }
         public required ushort Port { get; init; }
         public required string Database { get; init; }
-        public required string AdminUser { get; init; }
-        public required string AdminPassword { get; init; }
-        public required string AppUser { get; init; }
-        public required string AppPassword { get; init; }
+        public required string User { get; init; }
+        public required string Password { get; init; }
     }
 
     public record RateLimitingSection

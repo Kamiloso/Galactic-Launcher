@@ -3,7 +3,7 @@
   "profiles": {
     "GalacticLauncher": {
       "commandName": "Project",
-      "commandLineArgs": "--debug",
+      "commandLineArgs": "--development",
       "dotnetRunMessages": false,
       "launchBrowser": true,
       "launchUrl": "swagger"

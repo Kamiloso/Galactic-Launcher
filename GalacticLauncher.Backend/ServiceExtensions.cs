@@ -1,13 +1,11 @@
-﻿using GalacticLauncher.Backend.Database;
-using GalacticLauncher.Backend.Repositories;
-using GalacticLauncher.Core;
+﻿using GalacticLauncher.Core;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.RateLimiting;
-using GalacticLauncher.Core.Interfaces;
+using MySqlConnector;
+using GalacticLauncher.Backend.Repositories;
 using static GalacticLauncher.Backend.AppConfig.RateLimitingSection;
 
 namespace GalacticLauncher.Backend;
@@ -91,31 +89,27 @@ public static class ServiceExtensions
         });
     }
 
-    public static IServiceCollection AddGalacticDatabase(this IServiceCollection srv, AppConfig config)
+    public static void AddDatabase(this IServiceCollection srv, AppConfig config)
     {
-        var rawVersion = new Version(8, 0, 45);
-        var sqlVersion = new MySqlServerVersion(rawVersion);
-        
-        bool isMigrate = Utils.HasArgumentCLI("--migrate");
-
-        // TODO: ADD Valid live connection for the Database in the appsettings
-        srv.AddDbContext<AppDbContext>((provider, options) =>
+        var builder = new DbConnectionStringBuilder
         {
-            var builder = new DbConnectionStringBuilder
-            {
-                { "Server", config.Database.Address },
-                { "Port", config.Database.Port },
-                { "Database", config.Database.Database },
-                { "User ID", isMigrate ? config.Database.AdminUser : config.Database.AppUser },
-                { "Password", isMigrate ? config.Database.AdminPassword : config.Database.AppPassword }
-            };
+            { "Server", config.Database.Address },
+            { "Port", config.Database.Port },
+            { "Database", config.Database.Database },
+            { "User ID", config.Database.User },
+            { "Password", config.Database.Password }
+        };
+        
+        string connectionString = builder.ConnectionString;
 
-            options.UseMySql(builder.ConnectionString, sqlVersion)
-                .UseSnakeCaseNamingConvention(); // snake_case!
-        });
+        srv.AddScoped(_ => new MySqlConnection(connectionString));
+    }
 
-        srv.AddScoped<ILauncherRepository, LauncherRepository>(); // Instead of Singleton so that the database doesnt break
-        // srv.AddHostedService<DatabaseMigrator>();
-        return srv;
+    public static void AddRepositories(this IServiceCollection srv)
+    {
+        srv.AddScoped<IGameRepository, RepoMock>();
+        srv.AddScoped<IImageRepository, RepoMock>();
+        srv.AddScoped<IVersionRepository, RepoMock>();
+        srv.AddScoped<IExecRepository, RepoMock>();
     }
 }

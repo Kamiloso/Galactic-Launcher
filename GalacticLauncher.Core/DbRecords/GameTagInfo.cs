@@ -2,6 +2,6 @@ namespace GalacticLauncher.Core.DbRecords;
 
 public record GameTagInfo
 {
-    public required ulong IdGame { get; init; }
-    public required ulong IdTag { get; init; }
+    public required long IdGame { get; init; }
+    public required long IdTag { get; init; }
 }
