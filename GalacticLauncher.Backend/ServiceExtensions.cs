@@ -95,6 +95,8 @@ public static class ServiceExtensions
     {
         var rawVersion = new Version(8, 0, 45);
         var sqlVersion = new MySqlServerVersion(rawVersion);
+        
+        bool isMigrate = Utils.HasArgumentCLI("--migrate");
 
         // TODO: ADD Valid live connection for the Database in the appsettings
         srv.AddDbContext<AppDbContext>((provider, options) =>
@@ -104,8 +106,8 @@ public static class ServiceExtensions
                 { "Server", config.Database.Address },
                 { "Port", config.Database.Port },
                 { "Database", config.Database.Database },
-                { "User ID", config.Database.User },
-                { "Password", config.Database.Password }
+                { "User ID", isMigrate ? config.Database.AdminUser : config.Database.AppUser },
+                { "Password", isMigrate ? config.Database.AdminPassword : config.Database.AppPassword }
             };
 
             options.UseMySql(builder.ConnectionString, sqlVersion)
