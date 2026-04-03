@@ -1,7 +1,7 @@
 services:
   mysql-dev:
     image: mysql:8.0
-    container_name: galactic_mysql
+    container_name: galactic-mysql
     environment:
       MYSQL_ROOT_PASSWORD: HardCodedRootPass!123
       MYSQL_DATABASE: Galactic
