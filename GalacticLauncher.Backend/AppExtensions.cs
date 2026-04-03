@@ -39,7 +39,7 @@ public static class AppExtensions
             app.UseForwardedHeaders();
         }
 
-        if (Utils.IsDebug)
+        if (Utils.IsDevelopment)
         {
             app.UseSwagger();
             app.UseSwaggerUI();
@@ -66,7 +66,7 @@ public static class AppExtensions
 
         logger.LogInformation("Backend is running on: {Address}", Utils.Address);
 
-        if (Utils.IsDebug)
+        if (Utils.IsDevelopment)
         {
             logger.LogInformation(
                 "Swagger initialized. Open: {Address}/swagger/index.html", Utils.Address);

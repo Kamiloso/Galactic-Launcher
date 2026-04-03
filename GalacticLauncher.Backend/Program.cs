@@ -4,7 +4,7 @@ using GalacticLauncher.Core;
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args,
-    EnvironmentName = Utils.IsDebug ? "Development" : "Production"
+    EnvironmentName = Utils.IsDevelopment ? "Development" : "Production"
 });
 
 var services = builder.Services;
@@ -13,7 +13,7 @@ AppConfig config = services.ConfigureAppConfig(builder.Configuration);
 
 services.AddEndpointsApiExplorer();
 
-if (Utils.IsDebug)
+if (Utils.IsDevelopment)
 {
     services.AddSwaggerGen(c =>
     {

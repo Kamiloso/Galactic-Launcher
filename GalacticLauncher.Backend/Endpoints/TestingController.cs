@@ -15,7 +15,7 @@ public class TestingController(ILogger<TestingController> Logger) : ControllerBa
     [EndpointDescription("This is a robust description...")]
     public ActionResult<GameInfo> GameEcho([FromBody] GameInfo gameInfo)
     {
-        if (Utils.IsRelease)
+        if (Utils.IsProduction)
         {
             return NotFound();
         }
