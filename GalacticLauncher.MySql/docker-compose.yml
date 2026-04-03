@@ -4,14 +4,13 @@ services:
     container_name: galactic-mysql
     environment:
       MYSQL_ROOT_PASSWORD: HardCodedRootPass!123
-      MYSQL_DATABASE: Galactic
-      MYSQL_USER: galactic_admin
-      MYSQL_PASSWORD: HardCodedAdminPass!123
+      MYSQL_DATABASE: galactic
     ports:
       - "127.0.0.1:11201:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/etc/mysql/init.sql
+    command: --init-file /etc/mysql/init.sql
     restart: unless-stopped
 
 volumes:

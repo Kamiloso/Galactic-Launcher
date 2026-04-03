@@ -48,6 +48,15 @@ for %%n in (windows, linux, mac-intel, mac-silicon) do (
 		copy ".\GalacticLauncher.Backend\Keys\%_DEB_CERT_%" "%_DIR_%\!dirb!\Backend\Keys\" >nul 2>&1
 		if errorlevel 1 echo Cannot copy "%_DEB_CERT_%" into the !dirb! build.
 		
+		xcopy ".\GalacticLauncher.MySql" "%_DIR_%\!dirb!\Backend\MySql" /E /I /H /Y
+		if not errorlevel 1 (
+			del /q /a "%_DIR_%\!dirb!\Backend\MySql\*.bat" >nul 2>&1
+			if errorlevel 1 echo Cannot remove batch files from the MySql folder.
+			
+		) else (
+			echo Cannot copy MySql Docker container instructions.
+		)
+		
 		echo ------------------------------------------------------------
 	)
 )
