@@ -4,5 +4,5 @@ namespace GalacticLauncher.Backend.Repositories;
 
 public interface IExecRepository
 {
-    Task<IEnumerable<ExecInfo>> GetExecsByVersionId(ulong versionId);
+    Task<IEnumerable<ExecInfo>> GetExecsByVersionId(long versionId);
 }

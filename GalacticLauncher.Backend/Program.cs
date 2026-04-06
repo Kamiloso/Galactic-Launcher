@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     EnvironmentName = Utils.IsDevelopment ? "Development" : "Production"
 });
 
+Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true; // snake_case!
+
 var services = builder.Services;
 
 AppConfig config = services.ConfigureAppConfig(builder.Configuration);

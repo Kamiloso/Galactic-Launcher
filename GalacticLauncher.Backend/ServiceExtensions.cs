@@ -107,9 +107,11 @@ public static class ServiceExtensions
 
     public static void AddRepositories(this IServiceCollection srv)
     {
-        srv.AddScoped<IGameRepository, RepoMock>();
-        srv.AddScoped<IImageRepository, RepoMock>();
-        srv.AddScoped<IVersionRepository, RepoMock>();
-        srv.AddScoped<IExecRepository, RepoMock>();
+        srv.AddScoped<IGameRepository, GameRepository>();
+        srv.AddScoped<IImageRepository, ImageRepository>();
+        srv.AddScoped<IVersionRepository, VersionRepository>();
+        srv.AddScoped<IExecRepository, ExecRepository>();
+        srv.AddScoped<ITagRepository, TagRepository>();
+        srv.AddScoped<IUserRepository, UserRepository>();
     }
 }
