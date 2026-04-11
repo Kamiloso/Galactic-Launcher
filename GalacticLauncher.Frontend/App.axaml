@@ -1,10 +1,46 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.App"
+			 
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
+             xmlns:views="using:GalacticLauncher.Frontend.Views.MainPanelViews"
+			 
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
+	
+	<Application.DataTemplates>
+		
+		<DataTemplate DataType="{x:Type vm:HomeViewModel}">
+			<views:HomeView/>
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vm:LibraryViewModel}">
+			<views:LibraryView />
+		</DataTemplate>
+		
+	</Application.DataTemplates>
+	
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/Gradients.axaml"/>
+				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/fonts.axaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
+	
     <Application.Styles>
-        <FluentTheme />
-    </Application.Styles>
+		<FluentTheme/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/SideMenuStyles/sideMenufonts.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/SideMenuStyles/buttons.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/borderGalaxy.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/mainPanelFonts.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/HomeStyles/homeButtons.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/libraryButtons.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/searchBorder.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/libraryFonts.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/searchTextBox.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/ScrollBar.axaml"/>
+
+	</Application.Styles>
+	
 </Application>

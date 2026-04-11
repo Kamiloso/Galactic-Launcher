@@ -1,0 +1,9 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<FontFamily x:Key="Rationale">avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Fonts/Rationale-Regular.ttf#Rationale</FontFamily>
+	<FontFamily x:Key="Rajdhani">avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Fonts/Rajdhani-Regular.ttf#Rajdhani Regular</FontFamily>
+	<FontFamily x:Key="Poppins">avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Fonts/Poppins-Regular.ttf#Poppins</FontFamily>
+	<FontFamily x:Key="Roboto">avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Fonts/Roboto-Regular.ttf#Roboto</FontFamily>
+	
+</ResourceDictionary>

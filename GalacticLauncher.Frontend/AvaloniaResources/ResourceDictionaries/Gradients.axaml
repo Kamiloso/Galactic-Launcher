@@ -1,0 +1,58 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--Galaxy Gradient Colors-->
+	<Color x:Key="GalaxyPinkiePie">#ff42b6</Color>
+	<Color x:Key="GalaxyPurple">#a600ff</Color>
+	<Color x:Key="GalaxySkytBlue">#5f79ff</Color>
+	
+	<!--Solid Color-->
+	<Color x:Key="DarkestNight">#00032d</Color>
+	<Color x:Key="LightBlue">#eef0ff</Color>
+
+	<!--Side Menu Gradient Colors-->
+	<Color x:Key="MidnightBlue">#051249</Color>
+	<Color x:Key="Nightmare">#02092b</Color>
+
+	<!--Bakcground Gradient Colors-->
+	<Color x:Key="VibrantBlue">#34279e</Color>
+	<Color x:Key="DarkBlue">#030b32</Color>
+
+	<!--Main Panel Gradient Colors-->
+	<Color x:Key="DarkSea">#08175b</Color>
+	<Color x:Key="NightStorm">#040d39</Color>
+
+	<!--Galaxy gradient-->
+	<LinearGradientBrush x:Key="GalaxyGradient"
+						 StartPoint="0%,0%"
+						 EndPoint="100%,100%">
+		<GradientStop Color="{StaticResource GalaxyPinkiePie}" Offset="0.0"/>
+		<GradientStop Color="{StaticResource GalaxyPurple}" Offset="0.5"/>
+		<GradientStop Color="{StaticResource GalaxySkytBlue}" Offset="1.0"/>
+	</LinearGradientBrush>
+
+	<!--Options Panel Gradient-->
+	<LinearGradientBrush x:Key="SideMenuGradient"
+                         StartPoint="50%,0%"
+                         EndPoint="50%,100%">
+		<GradientStop Color="{StaticResource Nightmare}" Offset="0"/>
+		<GradientStop Color="{StaticResource MidnightBlue}" Offset="1"/>
+	</LinearGradientBrush>
+
+	<!--Background Gradient-->
+	<LinearGradientBrush x:Key="BackgroundGradient"
+                         StartPoint="50%,0%"
+                         EndPoint="50%,100%">
+		<GradientStop Color="{StaticResource DarkBlue}" Offset="0"/>
+		<GradientStop Color="{StaticResource VibrantBlue}" Offset="1"/>
+	</LinearGradientBrush>
+
+	<!--Main Panel Gradient-->
+	<LinearGradientBrush x:Key="MainPanelGradient"
+                         StartPoint="50%,0%"
+                         EndPoint="50%,100%">
+		<GradientStop Color="{StaticResource NightStorm}" Offset="0"/>
+		<GradientStop Color="{StaticResource DarkSea}" Offset="1"/>
+	</LinearGradientBrush>
+
+</ResourceDictionary>

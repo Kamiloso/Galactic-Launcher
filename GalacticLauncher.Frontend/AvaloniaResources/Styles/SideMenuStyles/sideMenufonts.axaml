@@ -1,0 +1,40 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--Logo text style1-->
+	<Style Selector="TextBlock.logoGalacticStyle1">
+		<Setter Property="FontFamily"
+                Value="{DynamicResource Rationale}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
+	
+	<!--Logo text style2-->
+	<Style Selector="TextBlock.logoGalacticStyle2">
+		<Setter Property="FontFamily"
+                Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
+
+	<!--Account name text style-->
+	<Style Selector="TextBlock.accountName">
+		<Setter Property="FontFamily"
+                Value="{DynamicResource Rationale}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="FontSize" Value="16"/>
+	</Style>
+	
+	<!--Account sign in/out text style-->
+	<Style Selector="TextBlock.sign">
+		<Setter Property="FontFamily"
+                Value="{DynamicResource Poppins}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{DynamicResource GalaxyPinkiePie}"/>
+	</Style>
+
+</Styles>

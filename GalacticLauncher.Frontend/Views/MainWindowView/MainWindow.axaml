@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModel"
+		xmlns:views="clr-namespace:GalacticLauncher.Frontend.Views.MainWindowView"
+        x:Class="GalacticLauncher.Frontend.Views.MainWindowView.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Galactic Launcher"
+        Width="1920" Height="1080"
+		MinWidth="1024"
+		MinHeight="576"
+        WindowStartupLocation="CenterScreen">
+	
+	<Grid ColumnDefinitions="Auto, *">
+		
+		<!--Side Menu-->
+		<views:SideMenu x:Name="SideBar" Grid.Column="0" />
+		
+		<!--Main panel-->
+		<Grid Grid.Column="1"
+			  Background="{DynamicResource BackgroundGradient}">
+			
+
+					<!--Sensor for Side Menu-->
+				<Rectangle Width="30"
+						   Fill="#01000000"
+						   ZIndex="500"
+						   HorizontalAlignment="Left"
+						   VerticalAlignment="Stretch"
+						   PointerEntered="Trigger_PointerEntered"/>
+			
+				<!--Main Panel content-->
+				<Border>
+					<ContentControl Content="{Binding CurrentPage}" />
+				</Border>
+		</Grid>
+	</Grid>
+</Window>

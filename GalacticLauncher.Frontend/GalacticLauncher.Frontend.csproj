@@ -6,6 +6,22 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="AvaloniaResources\Assets\LibraryAssets\search.png" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\logo.png" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\account.png" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\Fonts\Poppins-Regular.ttf" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\Fonts\Rajdhani-Regular.ttf" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\Fonts\Rationale-Regular.ttf" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\Fonts\Roboto-Regular.ttf" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\temp1.jpg" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\temp2.jpg" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\temp3.jpg" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\temp4.jpg" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\temp5.jpg" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\temp6.jpg" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\temp7.jpg" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.12" />
@@ -22,4 +38,62 @@
   <ItemGroup>
     <ProjectReference Include="..\GalacticLauncher.Core\GalacticLauncher.Core.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="AvaloniaResources\**\*.axaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\HomeStyles\homeButtons.axaml" />
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\libraryButtons.axaml" />
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\libraryFonts.axaml" />
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\searchBorder.axaml" />
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\searchTextBox.axaml" />
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\MainPanelStyles\ScrollBar.axaml" />
+	  <AvaloniaXaml Remove="Views\MainPanelViews\UserControl1.axaml" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="AvaloniaResources\Assets\LibraryAssets\search.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AvaloniaResource Update="AvaloniaResources\ResourceDictionaries\fonts.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\ResourceDictionaries\Gradients.axaml">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\HomeStyles\homeButtons.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\LibraryStyles\libraryButtons.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\LibraryStyles\libraryFonts.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\LibraryStyles\searchBorder.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\LibraryStyles\searchTextBox.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\MainPanelStyles\borderGalaxy.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\MainPanelStyles\mainPanelFonts.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\MainPanelStyles\ScrollBar.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\SideMenuStyles\sideMenufonts.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\SideMenuStyles\buttons.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Views\MainPanelViews\HomeView.axaml.cs">
+	    <DependentUpon>HomeView.axaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
 </Project>

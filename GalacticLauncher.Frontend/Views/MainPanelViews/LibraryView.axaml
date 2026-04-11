@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.LibraryView">
+	<!-- Dodanie szukania po tagach etc, ile wyswietlanych z zainstalowanych ewentualnie maks 30 na strone-->
+ <!--Library view-->
+	<Border Padding="30,30,30,30">
+		<Grid RowDefinitions="90,*"
+		  Margin="30,20,30,20"
+		  HorizontalAlignment="Stretch"
+		  MaxWidth="1100">
+
+			<!--YOUR GAMES-->
+			<TextBlock Classes="slogan"
+					   Grid.Row="0"
+					   Text="YOUR GAMES"
+					   HorizontalAlignment="Left"
+					   VerticalAlignment="Bottom"/>
+
+			<Grid Grid.Row="1"
+				  ColumnDefinitions="2*,30,1*"
+				  Margin="0,20,0,0">
+				<!--Games view-->
+				<Border Grid.Column="0" Classes="galaxyBorder">
+					<Border HorizontalAlignment="Center"
+							Margin="30,30,0,30">
+						<ScrollViewer Classes="ScrollBar"
+							  HorizontalScrollBarVisibility="Disabled"
+							  VerticalScrollBarVisibility="Auto">
+							<WrapPanel HorizontalAlignment="Left"
+									VerticalAlignment="Top"
+									ItemSpacing="15"
+									LineSpacing="15"
+									   Margin="0,0,30,0">
+								<Button Classes="libraryImage">
+									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"
+										   Stretch="UniformToFill"/>
+								</Button>
+								<Button Classes="libraryImage">
+									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"
+										   Stretch="UniformToFill"/>
+								</Button>
+								<Button Classes="libraryImage">
+									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"
+										   Stretch="UniformToFill"/>
+								</Button>
+								<Button Classes="libraryImage">
+									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"
+										   Stretch="UniformToFill"/>
+								</Button>
+								<Button Classes="libraryImage">
+									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"
+										   Stretch="UniformToFill"/>
+								</Button>
+								<Button Classes="libraryImage">
+									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"
+										   Stretch="UniformToFill"/>
+								</Button>
+							</WrapPanel>
+						</ScrollViewer>
+					</Border>
+				</Border>
+				<!--search view-->
+				<Border Grid.Column="2" Classes="librarySearch"
+						Padding="10,10,10,10">
+					<Grid RowDefinitions="*,*,8*">
+						<Grid Grid.Row="0" ColumnDefinitions="*,5*"
+							  Margin="0,0,0,10">
+
+							<Image Grid.Column="0"
+								   Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/search.png"
+								   RenderOptions.BitmapInterpolationMode="HighQuality"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Bottom"
+								   Height="20"
+								   Width="20"
+								   Stretch="Uniform"/>
+							
+							<TextBlock Grid.Column="1" 
+									   Classes="searchHeader" 
+									   Text="SEARCH LIBRARY"
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Bottom"/>
+						</Grid>
+						<Border Grid.Row="1"
+								BorderThickness="3"
+								BorderBrush="{DynamicResource GalaxyGradient}"
+								Background="{DynamicResource SideMenuGradient}"
+								CornerRadius="20">
+
+							<TextBox Classes="galaxyTextBox"></TextBox>
+						</Border>
+					</Grid>
+				</Border>
+			</Grid>
+		</Grid>
+	</Border>
+</UserControl>
