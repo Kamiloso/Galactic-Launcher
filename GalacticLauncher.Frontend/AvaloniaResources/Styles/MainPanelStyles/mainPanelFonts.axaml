@@ -1,0 +1,22 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--Slogan-->
+	<Style Selector="TextBlock.slogan">
+		<Setter Property="FontFamily" Value="{DynamicResource Poppins}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="FontSize" Value="50"/>
+	</Style>
+
+	<!--Home Header-->
+	<Style Selector="TextBlock.homeHeader">
+		<Setter Property="FontFamily" Value="{DynamicResource Roboto}"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="FontSize" Value="25"/>
+		<Setter Property="Margin" Value="30,0,0,0"/>
+		<Setter Property="Width" Value="300"/>
+	</Style>
+</Styles>

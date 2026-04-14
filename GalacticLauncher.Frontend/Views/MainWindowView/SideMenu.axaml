@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModels"
+			 x:DataType="vm:MainWindowViewModel"
+             x:Class="GalacticLauncher.Frontend.Views.MainWindowView.SideMenu"
+			 Width="0"
+			 HorizontalAlignment="Left">
+	
+	<!--Side Menu-->
+	<UserControl.Transitions>
+		<Transitions>
+			<DoubleTransition Property="Width" Duration="0:0:0.1" Easing="SineEaseIn"/>
+		</Transitions>
+	</UserControl.Transitions>
+
+	<Border Background="{DynamicResource SideMenuGradient}"
+            ClipToBounds="True"
+            Width="220">
+
+		<Grid RowDefinitions="120,0.2*,4*,100">
+
+			<!--lOGO-->
+			<Border Grid.Row="0"
+					Background="{DynamicResource GalaxyGradient}">
+
+				<Grid ColumnDefinitions="*,8,*"
+					  HorizontalAlignment="Center">
+					<Image Grid.Column="0"
+						   Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/SideMenuAssets/logo.png"
+						   RenderOptions.BitmapInterpolationMode="HighQuality"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"
+						   Height="110"
+						   Width="110"
+						   Stretch="Uniform"/>
+
+					<StackPanel Grid.Column="2"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Center">
+
+						<TextBlock Classes="logoGalacticStyle1" Text="GALACTIC"
+								 FontSize="22"/>
+						<TextBlock Classes="logoGalacticStyle2" Text="LAUNCHER"
+								 FontSize="22"/>
+
+					</StackPanel>
+				</Grid>
+			</Border>
+
+			<!--Options-->
+			<StackPanel Grid.Row="2" VerticalAlignment="Top">
+				<Button Classes="menuItem" Content="HOME"
+						Command="{Binding ShowHome}"/>
+
+				<Button Classes="menuItem" Content="LIBRARY"
+						Command="{Binding ShowLibrary}"/>
+
+				<Button Classes="menuItem" Content="SEARCH GAMES"/>
+			</StackPanel>
+
+			<!--Account-->
+			<Grid Grid.Row="3"
+				  RowDefinitions="1*"
+				  ColumnDefinitions="*,2*"
+				  Background="{StaticResource DarkestNight}">
+
+				<Image Grid.Row="0" Grid.Column="0"
+					   Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/SideMenuAssets/account.png"
+					   RenderOptions.BitmapInterpolationMode="HighQuality"
+					   Width="40"
+					   Height="40"
+					   Stretch="Uniform"
+					   VerticalAlignment="Center"/>
+
+				<StackPanel Grid.Row="0" Grid.Column="1"
+							Orientation="Vertical"
+							VerticalAlignment="Center"
+							HorizontalAlignment="Left">
+
+					<TextBlock Classes="accountName" Text="UNKNOWN"/>
+
+					<TextBlock Classes="sign" Text="Sign in"
+							   FontSize="13"
+							   HorizontalAlignment="Left"/>
+				</StackPanel>
+			</Grid>
+		</Grid>
+		
+	</Border>
+	
+</UserControl>

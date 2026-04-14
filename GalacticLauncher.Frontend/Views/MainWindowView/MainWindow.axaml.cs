@@ -1,7 +1,9 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using GalacticLauncher.Frontend.Network;
+using GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
 
-namespace GalacticLauncher.Frontend;
+namespace GalacticLauncher.Frontend.Views.MainWindowView;
 
 public partial class MainWindow : Window
 {
@@ -15,5 +17,10 @@ public partial class MainWindow : Window
                 HttpClientProvider.HttpClient
                 )
         };
+    }
+
+    private void Trigger_PointerEntered(object? sender, PointerEventArgs e)
+    {
+        SideBar.ForceOpen();
     }
 }

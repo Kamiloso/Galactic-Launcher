@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.GameView"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
+			 x:DataType="vm:GameViewModel">
+
+	
+		<!--Game view-->
+	<Grid>
+		<!--only the galaxy border for looks-->
+		<Border Classes="galaxyBorder"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Margin="60,60,60,60">
+		</Border>
+		
+		<ScrollViewer Classes="ScrollBar"
+					  HorizontalScrollBarVisibility="Disabled"
+					  VerticalScrollBarVisibility="Auto">
+			
+			<!--Game content-->
+			<Border Margin="80,80,80,80"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch">
+				<Grid>
+					<Grid RowDefinitions="Auto,Auto">
+						<!--Banner + icon + title-->
+						<Grid Grid.Row="0">
+							<Viewbox Stretch="Uniform"
+									 Margin="10,10,10,10">
+
+								<Grid Width="1024"
+									  Height="475">
+
+									<!--Banner-->
+									<Viewbox Stretch="Uniform"
+											 HorizontalAlignment="Stretch"
+											 VerticalAlignment="Top">
+										
+										<Border Width="1024"
+												Height="347"
+												CornerRadius="20"
+												ClipToBounds="True">
+
+											<!--Banner image-->
+											<Image Source="/AvaloniaResources/Assets/GameAssets/banner.png"
+												   Stretch="UniformToFill"></Image>
+										</Border>
+									</Viewbox>
+
+									<!--Icon -->
+									<Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*">
+										<Viewbox Grid.Row="1" Grid.Column="0"
+												 Stretch="Uniform"
+												 HorizontalAlignment="Left"
+												 Margin="60,0,0,0">
+
+											<Border Height="256"
+													Width="256"
+													CornerRadius="20"
+													ClipToBounds="True">
+
+												<!--Icon Image-->
+												<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"
+													   Stretch="UniformToFill"></Image>
+											</Border>
+										</Viewbox>
+
+										<!--title-->
+										<Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*,*"
+											  HorizontalAlignment="Left">
+											<TextBlock Grid.Row="1"
+													   Classes="slogan"
+													   VerticalAlignment="Center"
+													   HorizontalAlignment="Center"
+													   Margin="20,0,0,0"
+													   TextWrapping="Wrap"
+													   FontSize="30"
+													   Text="GAME TITLE LOOOOOOOOOOOOOOOOOOOONG LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG
+													   LOOOOOOOOOOOOOOOOOOOOOOOOOOONG">
+											</TextBlock>
+										</Grid>
+									</Grid>
+								</Grid>
+							</Viewbox>
+						</Grid>
+					</Grid>
+				</Grid>
+			</Border>
+
+		</ScrollViewer>
+	</Grid>
+</UserControl>
