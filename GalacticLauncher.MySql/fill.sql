@@ -6,7 +6,7 @@ SET NAMES 'utf8mb4';
 -- ==========================================
 -- 1. GAMES (GRY)
 -- ==========================================
-INSERT INTO games (id, name, description) VALUES
+INSERT INTO games (Id, Name, Description) VALUES
 (1, 'Stellar Vanguard', 'Epicka symulacja kosmiczna z otwartym światem. Eksploruj tysiące układów słonecznych, handluj zasobami, walcz z piratami i buduj własną flotę statków w nieskończonym wszechświecie.'),
 (2, 'Neon Cyber Ninja', 'Dynamiczna platformówka 2D w klimacie cyberpunk. Używaj cyber-katany, modyfikacji ciała i zwinności, aby pokonać megakorporację rządzącą dystopijnym miastem Neo-Tokyo.'),
 (3, 'Aether Tactics', 'Turowa gra RPG osadzona w świecie dark fantasy. Zbierz drużynę najemników, rozwijaj ich umiejętności i walcz w wymagających potyczkach, gdzie każda decyzja ma znaczenie.');
@@ -15,7 +15,7 @@ INSERT INTO games (id, name, description) VALUES
 -- 2. VERSIONS (WERSJE)
 -- Zakładamy mapowanie VersionType: 1 = Alpha, 2 = Beta, 3 = Stable/Release
 -- ==========================================
-INSERT INTO versions (id, version_text, description, is_primary, release_date, version_type, id_game) VALUES
+INSERT INTO versions (Id, VersionText, Description, IsPrimary, ReleaseDate, VersionType, IdGame) VALUES
 -- Stellar Vanguard (Game ID: 1)
 (1, 'v1.0.0', 'Oficjalna premiera gry! Dodano tryb fabularny i nowe modele statków.', TRUE, '2025-10-15 14:00:00', 3, 1),
 (2, 'v0.9.5-beta', 'Ostatnia faza beta. Poprawiono stabilność silnika fizycznego i dodano nowy sektor do eksploracji.', FALSE, '2025-08-01 10:30:00', 2, 1),
@@ -30,7 +30,7 @@ INSERT INTO versions (id, version_text, description, is_primary, release_date, v
 -- ==========================================
 -- 3. IMAGES (ZDJĘCIA / ZASOBY LAUNCHERA)
 -- ==========================================
-INSERT INTO images (id, url, id_game) VALUES
+INSERT INTO images (Id, Url, IdGame) VALUES
 -- Stellar Vanguard (Game ID: 1)
 (1, 'https://cdn.galacticlauncher.com/assets/stellar_vanguard/banner.jpg', 1),
 (2, 'https://cdn.galacticlauncher.com/assets/stellar_vanguard/logo_transparent.png', 1),
@@ -51,7 +51,7 @@ INSERT INTO images (id, url, id_game) VALUES
 -- Zakładamy mapowanie Platform: 1 = Windows, 2 = macOS, 3 = Linux
 -- Zakładamy mapowanie Alert: 0 = Brak (OK), 1 = Ostrzeżenie (np. wirusowy false-positive), 2 = Wycofana/Zablokowana
 -- ==========================================
-INSERT INTO execs (id, download_url, exec_location, file_hash_sha256, platform, alert, id_version) VALUES
+INSERT INTO execs (Id, DownloadUrl, ExecLocation, FileHashSHA256, Platform, Alert, IdVersion) VALUES
 -- Stellar Vanguard v1.0.0 (Version ID: 1)
 (1, 'https://dl.galacticlauncher.com/games/stellar_v1.0.0_win.zip', 'StellarVanguard\\StellarVanguard.exe', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 1, 0, 1),
 (2, 'https://dl.galacticlauncher.com/games/stellar_v1.0.0_mac.dmg', 'Stellar Vanguard.app/Contents/MacOS/StellarVanguard', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 0, 1),
