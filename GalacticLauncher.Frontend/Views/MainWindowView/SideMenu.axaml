@@ -3,15 +3,9 @@
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModels"
 			 x:DataType="vm:MainWindowViewModel"
              x:Class="GalacticLauncher.Frontend.Views.MainWindowView.SideMenu"
-			 Width="0"
 			 HorizontalAlignment="Left">
 	
 	<!--Side Menu-->
-	<UserControl.Transitions>
-		<Transitions>
-			<DoubleTransition Property="Width" Duration="0:0:0.1" Easing="SineEaseIn"/>
-		</Transitions>
-	</UserControl.Transitions>
 
 	<Border Background="{DynamicResource SideMenuGradient}"
             ClipToBounds="True"

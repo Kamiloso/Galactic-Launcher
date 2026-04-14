@@ -9,169 +9,173 @@
 	<ScrollViewer Classes="ScrollBar"
 						  HorizontalScrollBarVisibility="Disabled"
 						  VerticalScrollBarVisibility="Auto">
+		
 		<!--Home view-->
-		<Border Padding="30,30,30,30">
-			<Grid RowDefinitions="90,*"
-		  Margin="30,20,30,20"
-		  HorizontalAlignment="Stretch"
-		  MaxWidth="1100">
+		<Border Padding="60,30,60,30">
+			<Grid RowDefinitions="Auto,Auto,Auto"
+				  HorizontalAlignment="Stretch"
+				  VerticalAlignment="Center">
 
 				<!--Welcome back!-->
 				<TextBlock Classes="slogan"
 						   Grid.Row="0"
 						   Text="WELCOME BACK!"
-						   HorizontalAlignment="Left"
-						   VerticalAlignment="Bottom"/>
+						   HorizontalAlignment="Left"/>
 
+				<!--Recommendations-->
+				<Viewbox Grid.Row="1"
+						 Stretch="Uniform"
+						 HorizontalAlignment="Stretch"
+						 VerticalAlignment="Top"
+						 Margin="0,20,0,0">
 
+					<Grid RowDefinitions="Auto,Auto,Auto"
+						  Width="852"
+						  Height="260">
 
-				<Grid RowDefinitions="50,*,50,*,50,*"
-					  Grid.Row="1">
-
-					<!--Recommendations-->
-					<Grid Grid.Row="1" RowDefinitions="0.2*,2*"
-						  VerticalAlignment="Stretch">
-						<Border Grid.Row="0" Classes="galaxyHeader"
-								HorizontalAlignment="Left">
+						<!--Recommendation header-->
+						<Border Grid.Row="0"
+								Classes="galaxyHeader"
+								HorizontalAlignment="Left"
+								Height="36">
 							<TextBlock Classes="homeHeader"
 									   Text="RECOMMENDATIONS"
-									   HorizontalAlignment="Left"/>
-						</Border>
-						<Border Grid.Row="1" Classes="galaxyBorder">
-
-							<Grid ColumnDefinitions="*,15,*,15,*,15,*,15,*"
-										HorizontalAlignment="Left"
-										Margin="30,30,30,30">
-
-								<Button Classes="imageClickable"
-										Grid.Column="0"
-										Command="{Binding ShowGame}">
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="2"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="4"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="6">
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp4.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="8"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp5.jpg"/>
-								</Button>
-							</Grid>
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Center"/>
+									   
 						</Border>
 
+						<!--Recommendations-->
+						<Border Grid.Row="2"
+								Classes="galaxyBorder"
+								Height="220">
+
+							<UniformGrid Columns="5"
+										 ColumnSpacing="7"
+										 HorizontalAlignment="Center">
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp4.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp5.jpg"/>
+								</Button>
+
+							</UniformGrid>
+						</Border>
 					</Grid>
+				</Viewbox>
 
-					<!--Quick start -->
-					<Grid Grid.Row="3" RowDefinitions="0.2*,2*">
+				<!--Quick start-->
+				<Viewbox Grid.Row="2"
+						 Stretch="Uniform"
+						 HorizontalAlignment="Stretch"
+						 VerticalAlignment="Top"
+						 Margin="0,20,0,0">
 
-						<Border Grid.Row="0" Classes="galaxyHeader"
-								HorizontalAlignment="Left">
+					<Grid RowDefinitions="Auto,Auto,Auto"
+						  ColumnDefinitions="2*,30,*"
+						  Width="852"
+						  Height="267">
+
+						<!--quick start header-->
+						<Border Grid.Row="0"
+								Grid.Column="0"
+								Classes="galaxyHeader"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Height="36">
 							<TextBlock Classes="homeHeader"
-									   Text="QUICK START"
-									   HorizontalAlignment="Left"/>
+									   Text="DIVE RIGHT IN"
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Center"/>
+									   
+						</Border>
+						<!--quick start-->
+						<Border Grid.Row="2"
+								Grid.Column="0"
+								Classes="galaxyBorder"
+								VerticalAlignment="Top"
+								Height="220">
+
+							<UniformGrid Columns="3"
+										 ColumnSpacing="7"
+										 HorizontalAlignment="Center">
+
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
+								</Button>
+							</UniformGrid>
 						</Border>
 
-						<Border Grid.Row="1" Classes="galaxyBorder">
-							<Grid ColumnDefinitions="*,15,*,15,*,15,*,15,*"
-										HorizontalAlignment="Left"
-										Margin="30,30,30,30">
-
-								<Button Classes="imageClickable"
-										Grid.Column="0"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="2"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="4"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="6"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp4.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="8"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp5.jpg"/>
-								</Button>
-							</Grid>
-						</Border>
-					</Grid>
-
-					<Grid Grid.Row="5" RowDefinitions="0.2*,*">
-						<!--Last played -->
-						<Border Grid.Row="0" Classes="galaxyHeader"
-							HorizontalAlignment="Left">
+						<!--last played header-->
+						<Border Grid.Row="0"
+								Grid.Column="2"
+								Classes="galaxyHeader"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Height="36">
+							
 							<TextBlock Classes="homeHeader"
-									   Text="LAST PLAYED"
-									   HorizontalAlignment="Left"/>
+									   Text="CONTINUE"
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Center"/>
 						</Border>
+						<!--last play-->
+						<Border Grid.Row="2"
+								Grid.Column="2"
+								Classes="galaxyBorder"
+								VerticalAlignment="Top"
+								Height="220">
 
-						<Border Grid.Row="1" Classes="galaxyBorder">
-							<Grid ColumnDefinitions="*,15,*,15,*,15,*,15,*"
-										HorizontalAlignment="Left"
-										Margin="30,30,30,30">
-
+							<UniformGrid Columns="1"
+										 ColumnSpacing="7"
+										 HorizontalAlignment="Center">
 								<Button Classes="imageClickable"
-										Grid.Column="0"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
 								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="2"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="4"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="6"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp4.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Grid.Column="8"
-										Command="{Binding ShowGame}">
-
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp5.jpg"/>
-								</Button>
-							</Grid>
+							</UniformGrid>
 						</Border>
+						
 					</Grid>
-				</Grid>
+				</Viewbox>
 			</Grid>
 		</Border>
 	</ScrollViewer>
