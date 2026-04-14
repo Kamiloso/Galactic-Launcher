@@ -41,7 +41,7 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
 
         public void ShowLibrary()
         {
-            _libraryPage ??= new LibraryViewModel();
+            _libraryPage ??= new LibraryViewModel(this);
             SetCurrentPage(_libraryPage);
         }
 

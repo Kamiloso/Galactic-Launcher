@@ -11,7 +11,7 @@
 						  VerticalScrollBarVisibility="Auto">
 		
 		<!--Home view-->
-		<Border Padding="60,60,60,60">
+		<Border Padding="60,30,60,30">
 			<Grid RowDefinitions="Auto,Auto,Auto"
 				  HorizontalAlignment="Stretch"
 				  VerticalAlignment="Center">
@@ -20,19 +20,18 @@
 				<TextBlock Classes="slogan"
 						   Grid.Row="0"
 						   Text="WELCOME BACK!"
-						   HorizontalAlignment="Left"
-						   VerticalAlignment="Bottom"/>
+						   HorizontalAlignment="Left"/>
 
 				<!--Recommendations-->
 				<Viewbox Grid.Row="1"
 						 Stretch="Uniform"
 						 HorizontalAlignment="Stretch"
 						 VerticalAlignment="Top"
-						 Margin="0,30,0,0">
+						 Margin="0,20,0,0">
 
-					<Grid RowDefinitions="Auto,10,Auto"
+					<Grid RowDefinitions="Auto,Auto,Auto"
 						  Width="852"
-						  Height="272">
+						  Height="260">
 
 						<!--Recommendation header-->
 						<Border Grid.Row="0"
@@ -41,7 +40,9 @@
 								Height="36">
 							<TextBlock Classes="homeHeader"
 									   Text="RECOMMENDATIONS"
-									   HorizontalAlignment="Left"/>
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Center"/>
+									   
 						</Border>
 
 						<!--Recommendations-->
@@ -49,46 +50,132 @@
 								Classes="galaxyBorder"
 								Height="220">
 
-						</Border>
-					</Grid>
-				</Viewbox>
+							<UniformGrid Columns="5"
+										 ColumnSpacing="7"
+										 HorizontalAlignment="Center">
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
 
-				<!--Recommendations-->
-				<Viewbox Grid.Row="2"
-						 Stretch="Uniform"
-						 HorizontalAlignment="Stretch"
-						 VerticalAlignment="Top"
-						 Margin="0,30,0,0">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
 
-					<Grid RowDefinitions="Auto,10,Auto"
-						  Width="852"
-						  Height="272">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
 
-						<!--Recommendation header-->
-						<Border Grid.Row="0"
-								Classes="galaxyHeader"
-								HorizontalAlignment="Left"
-								Height="36">
-							<TextBlock Classes="homeHeader"
-									   Text="RECOMMENDATIONS"
-									   HorizontalAlignment="Left"/>
-						</Border>
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
 
-						<!--Recommendations-->
-						<Border Grid.Row="2"
-								Classes="galaxyBorder"
-								Height="220">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp4.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
 
-							<UniformGrid Columns="5" Spacing="10">
-								<Border Background="{DynamicResource MainPanelGradient}">
-									<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/search.png"/>
-								</Border>
-								
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp5.jpg"/>
+								</Button>
+
 							</UniformGrid>
 						</Border>
 					</Grid>
 				</Viewbox>
 
+				<!--Quick start-->
+				<Viewbox Grid.Row="2"
+						 Stretch="Uniform"
+						 HorizontalAlignment="Stretch"
+						 VerticalAlignment="Top"
+						 Margin="0,20,0,0">
+
+					<Grid RowDefinitions="Auto,Auto,Auto"
+						  ColumnDefinitions="2*,30,*"
+						  Width="852"
+						  Height="267">
+
+						<!--quick start header-->
+						<Border Grid.Row="0"
+								Grid.Column="0"
+								Classes="galaxyHeader"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Height="36">
+							<TextBlock Classes="homeHeader"
+									   Text="DIVE RIGHT IN"
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Center"/>
+									   
+						</Border>
+						<!--quick start-->
+						<Border Grid.Row="2"
+								Grid.Column="0"
+								Classes="galaxyBorder"
+								VerticalAlignment="Top"
+								Height="220">
+
+							<UniformGrid Columns="3"
+										 ColumnSpacing="7"
+										 HorizontalAlignment="Center">
+
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
+								</Button>
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
+								</Button>
+							</UniformGrid>
+						</Border>
+
+						<!--last played header-->
+						<Border Grid.Row="0"
+								Grid.Column="2"
+								Classes="galaxyHeader"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
+								Height="36">
+							
+							<TextBlock Classes="homeHeader"
+									   Text="CONTINUE"
+									   HorizontalAlignment="Left"
+									   VerticalAlignment="Center"/>
+						</Border>
+						<!--last play-->
+						<Border Grid.Row="2"
+								Grid.Column="2"
+								Classes="galaxyBorder"
+								VerticalAlignment="Top"
+								Height="220">
+
+							<UniformGrid Columns="1"
+										 ColumnSpacing="7"
+										 HorizontalAlignment="Center">
+								<Button Classes="imageClickable"
+										Command="{Binding ShowGame}"
+										Background="{DynamicResource MainPanelGradient}">
+									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
+								</Button>
+							</UniformGrid>
+						</Border>
+						
+					</Grid>
+				</Viewbox>
 			</Grid>
 		</Border>
 	</ScrollViewer>

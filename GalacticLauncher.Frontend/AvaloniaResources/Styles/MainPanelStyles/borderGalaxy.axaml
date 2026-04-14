@@ -3,7 +3,7 @@
 
 	<!--Panel Galaxy-->
 	<Style Selector="Border.galaxyBorder">
-		<Setter Property="BorderThickness" Value="3"/>
+		<Setter Property="BorderThickness" Value="2"/>
 		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
 		<Setter Property="Background" Value="{DynamicResource MainPanelGradient}"/>
 		<Setter Property="CornerRadius" Value="20"/>
@@ -11,7 +11,7 @@
 
 	<!--Header Galaxy-->
 	<Style Selector="Border.galaxyHeader">
-		<Setter Property="BorderThickness" Value="3"/>
+		<Setter Property="BorderThickness" Value="2"/>
 		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
 		<Setter Property="Background" Value="{DynamicResource MainPanelGradient}"/>
 		<Setter Property="CornerRadius" Value="20"/>
