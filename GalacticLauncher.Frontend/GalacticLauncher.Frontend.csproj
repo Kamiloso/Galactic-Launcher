@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <AvaloniaResource Include="AvaloniaResources\Assets\GameAssets\banner.png" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\no_recommendation.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\LibraryAssets\search.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\logo.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\account.png" />
@@ -53,6 +54,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="AvaloniaResources\Assets\GameAssets\banner.png" />
+	  <None Remove="AvaloniaResources\Assets\HomeViewAssets\no_recommendation.png" />
 	  <None Remove="AvaloniaResources\Assets\LibraryAssets\search.png" />
 	</ItemGroup>
 	<ItemGroup>

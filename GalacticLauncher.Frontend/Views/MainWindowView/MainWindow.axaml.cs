@@ -18,9 +18,4 @@ public partial class MainWindow : Window
                 )
         };
     }
-
-    private void Trigger_PointerEntered(object? sender, PointerEventArgs e)
-    {
-        SideBar.ForceOpen();
-    }
 }
