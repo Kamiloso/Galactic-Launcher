@@ -4,6 +4,12 @@ using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
 
+public interface IUserRepository
+{
+    Task<UserInfo?> GetUserByEmail(string email);
+    Task<UserInfo?> GetUserByGoogleKey(string googleKey);
+}
+
 public class UserRepository(MySqlConnection db) : IUserRepository
 {
     public async Task<UserInfo?> GetUserByEmail(string email)

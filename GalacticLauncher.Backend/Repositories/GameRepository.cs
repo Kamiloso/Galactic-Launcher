@@ -4,6 +4,12 @@ using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
 
+public interface IGameRepository
+{
+    Task<IEnumerable<GameInfo>> GetAllGames();
+    Task<IEnumerable<GameInfo>> GetGamesByTagId(long tagId);
+}
+
 public class GameRepository(MySqlConnection db) : IGameRepository
 {
     public async Task<IEnumerable<GameInfo>> GetAllGames()

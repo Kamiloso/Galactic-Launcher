@@ -4,6 +4,11 @@ using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
 
+public interface IExecRepository
+{
+    Task<IEnumerable<ExecInfo>> GetExecsByVersionId(long versionId);
+}
+
 public class ExecRepository(MySqlConnection db) : IExecRepository
 {
     public async Task<IEnumerable<ExecInfo>> GetExecsByVersionId(long versionId)

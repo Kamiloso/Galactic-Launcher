@@ -3,6 +3,12 @@ using GalacticLauncher.Core.DbRecords;
 using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
+
+public interface IImageRepository
+{
+    Task<IEnumerable<ImageInfo>> GetImagesByGameId(long gameId);
+}
+
 public class ImageRepository(MySqlConnection db) : IImageRepository
 {
     public async Task<IEnumerable<ImageInfo>> GetImagesByGameId(long gameId)

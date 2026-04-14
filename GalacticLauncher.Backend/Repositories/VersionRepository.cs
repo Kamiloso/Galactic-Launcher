@@ -4,6 +4,12 @@ using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
 
+public interface IVersionRepository
+{
+    Task<IEnumerable<VersionInfo>> GetVersionsByGameId(long gameId);
+    Task<VersionInfo?> GetPrimaryVersion(long gameId);
+}
+
 public class VersionRepository(MySqlConnection db) : IVersionRepository
 {
     public async Task<IEnumerable<VersionInfo>> GetVersionsByGameId(long gameId)
