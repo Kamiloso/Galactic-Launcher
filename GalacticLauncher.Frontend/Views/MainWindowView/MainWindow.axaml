@@ -1,11 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModel"
+        xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModels"
 		xmlns:views="clr-namespace:GalacticLauncher.Frontend.Views.MainWindowView"
         x:Class="GalacticLauncher.Frontend.Views.MainWindowView.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="Galactic Launcher"
-        Width="1920" Height="1080"
+        Width="2048" Height="1152"
 		MinWidth="1024"
 		MinHeight="576"
         WindowStartupLocation="CenterScreen">

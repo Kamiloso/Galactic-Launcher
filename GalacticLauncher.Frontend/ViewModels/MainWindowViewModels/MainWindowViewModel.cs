@@ -8,12 +8,13 @@ using GalacticLauncher.Frontend.Network;
 using GalacticLauncher.Frontend.ViewModels.Interfaces;
 using GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
 
-namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModel
+namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
         private HomeViewModel? _homePage;
         private LibraryViewModel? _libraryPage;
+        private GameViewModel? _gamePage;
 
         private object? _currentPage;
         public object? CurrentPage
@@ -28,14 +29,13 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModel
 
         public MainWindowViewModel()
         {
-            // Default Home Page
-            CurrentPage = new HomeViewModel();
+            CurrentPage = new HomeViewModel(this);
         }
 
         #region View navigation
         public void ShowHome()
         {
-            _homePage ??= new HomeViewModel();
+            _homePage ??= new HomeViewModel(this);
             SetCurrentPage(_homePage);
         }
 
@@ -43,6 +43,12 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModel
         {
             _libraryPage ??= new LibraryViewModel();
             SetCurrentPage(_libraryPage);
+        }
+
+        public void ShowGame()
+        {
+            _gamePage ??= new GameViewModel();
+            SetCurrentPage(_gamePage);
         }
 
         private void SetCurrentPage(object page)

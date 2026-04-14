@@ -7,6 +7,7 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <ItemGroup>
+    <AvaloniaResource Include="AvaloniaResources\Assets\GameAssets\banner.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\LibraryAssets\search.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\logo.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\account.png" />
@@ -51,6 +52,7 @@
 	  <AvaloniaXaml Remove="Views\MainPanelViews\UserControl1.axaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="AvaloniaResources\Assets\GameAssets\banner.png" />
 	  <None Remove="AvaloniaResources\Assets\LibraryAssets\search.png" />
 	</ItemGroup>
 	<ItemGroup>
@@ -95,5 +97,8 @@
 	  <Compile Update="Views\MainPanelViews\HomeView.axaml.cs">
 	    <DependentUpon>HomeView.axaml</DependentUpon>
 	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="AvaloniaResources\Styles\GameStyles\" />
 	</ItemGroup>
 </Project>

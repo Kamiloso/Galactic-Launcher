@@ -8,7 +8,7 @@ using GalacticLauncher.Frontend.ViewModels.Interfaces;
 
 namespace GalacticLauncher.Frontend.ViewModels.MainPanelViewModels
 {
-    internal class LibraryViewModel: INotifyPropertyChanged, INavigationAware
+    public class GameViewModel : INotifyPropertyChanged, INavigationAware
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using GalacticLauncher.Frontend.Network;
-using GalacticLauncher.Frontend.ViewModels.MainWindowViewModel;
+using GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
 
 namespace GalacticLauncher.Frontend.Views.MainWindowView;
 
