@@ -21,8 +21,11 @@ public class GameRepository(MySqlConnection db) : IGameRepository
     
     public async Task<IEnumerable<GameInfo>> GetGamesByTagId(long tagId)
     {
-        return await db.QueryAsync<GameInfo>(
-            @"SELECT g.* FROM games g INNER JOIN games_tags gt ON g.id = gt.id_game WHERE gt.id_tag = @p1",
+        return await db.QueryAsync<GameInfo>("""
+            SELECT * FROM games
+                INNER JOIN games_tags ON games.id = games_tags.id_game
+                WHERE games_tags.id_tag = @p1
+            """,
             new { p1 = tagId }
         );
     }
