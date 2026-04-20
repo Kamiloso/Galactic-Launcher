@@ -9,6 +9,7 @@
 	<!--Solid Color-->
 	<Color x:Key="DarkestNight">#00032d</Color>
 	<Color x:Key="LightBlue">#eef0ff</Color>
+	<Color x:Key="TagBlue">#2a37b1</Color>
 
 	<!--Side Menu Gradient Colors-->
 	<Color x:Key="MidnightBlue">#051249</Color>

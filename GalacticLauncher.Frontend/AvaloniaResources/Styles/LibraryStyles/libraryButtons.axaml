@@ -29,7 +29,6 @@
 
 	<Style Selector="Button.imageClickable:pointerover">
 		<Setter Property="RenderTransform" Value="scale(1.02)"/>
-		<Setter Property="Cursor" Value="Hand"/>
 	</Style>
 
 	<Style Selector="Button.imageClickable:pointerover /template/ ContentPresenter">

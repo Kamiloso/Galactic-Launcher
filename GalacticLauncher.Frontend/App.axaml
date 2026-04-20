@@ -6,10 +6,10 @@
              xmlns:views="using:GalacticLauncher.Frontend.Views.MainPanelViews"
 			 
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-	
+	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
 	<Application.DataTemplates>
-		
+
 		<DataTemplate DataType="{x:Type vm:HomeViewModel}">
 			<views:HomeView/>
 		</DataTemplate>
@@ -19,18 +19,23 @@
 		<DataTemplate DataType="{x:Type vm:GameViewModel}">
 			<views:GameView />
 		</DataTemplate>
+		<DataTemplate DataType="{x:Type vm:AdminViewModel}">
+			<views:ManageView />
+		</DataTemplate>
 	</Application.DataTemplates>
+
 	
 	<Application.Resources>
 		<ResourceDictionary>
+			<WindowIcon x:Key="AppIcon">avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/ikonka.png</WindowIcon>
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/Gradients.axaml"/>
 				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/fonts.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>
-	
-    <Application.Styles>
+
+	<Application.Styles>
 		<FluentTheme/>
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/SideMenuStyles/sideMenufonts.axaml"/>
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/SideMenuStyles/buttons.axaml"/>
@@ -44,5 +49,6 @@
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/ScrollBar.axaml"/>
 
 	</Application.Styles>
-	
+
+
 </Application>

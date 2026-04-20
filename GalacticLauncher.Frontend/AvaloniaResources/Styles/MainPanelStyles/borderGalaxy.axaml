@@ -13,7 +13,7 @@
 	<Style Selector="Border.galaxyHeader">
 		<Setter Property="BorderThickness" Value="2"/>
 		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
-		<Setter Property="Background" Value="{DynamicResource MainPanelGradient}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 		<Setter Property="CornerRadius" Value="20"/>
 		<Setter Property="HorizontalAlignment" Value="Left"/>
 		<Setter Property="VerticalAlignment" Value="Bottom"/>
