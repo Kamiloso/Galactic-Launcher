@@ -3,6 +3,7 @@
              x:Class="GalacticLauncher.Frontend.App"
 			 
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
+			 xmlns:vma="using:GalacticLauncher.Frontend.ViewModels.AdminViewModels"
              xmlns:views="using:GalacticLauncher.Frontend.Views.MainPanelViews"
 			 
              RequestedThemeVariant="Default">
@@ -21,6 +22,15 @@
 		</DataTemplate>
 		<DataTemplate DataType="{x:Type vm:AdminViewModel}">
 			<views:ManageView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vma:TagsViewModel}">
+			<views:TagsView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vma:AllGamesViewModel}">
+			<views:AllGamesView />
+		</DataTemplate>
+		<DataTemplate DataType="{x:Type vma:UsersViewModel}">
+			<views:UsersView />
 		</DataTemplate>
 	</Application.DataTemplates>
 
@@ -47,6 +57,7 @@
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/libraryFonts.axaml"/>
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/searchTextBox.axaml"/>
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/ScrollBar.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/AdminStyles/AddTagStyles.axaml"/>
 
 	</Application.Styles>
 

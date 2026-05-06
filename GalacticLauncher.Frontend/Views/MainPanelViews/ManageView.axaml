@@ -3,87 +3,65 @@
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.ManageView"
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
 			 x:DataType="vm:AdminViewModel"
+			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 x:CompileBindings="True">
 
 
-	<!--Admin manager view-->
-	<Grid>
-		<Grid RowDefinitions="Auto,Auto"
-			  Margin="60,30,60,60">
+	<UserControl.Resources>
+		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+	</UserControl.Resources>
 
-			<!--Admin manager-->
-			<TextBlock Classes="slogan"
-					   Grid.Row="0"
-					   Text="LIBRARY"
-					   HorizontalAlignment="Left"
-					   VerticalAlignment="Top"/>
+	<!--Admin view-->
+	<Border Margin="30,20,30,20">
+		<Grid RowDefinitions="Auto,*">
+			<Grid RowDefinitions="Auto,Auto"
+				  Margin="0,0,0,20"
+				  Grid.Row="0">
 
-			<Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*"
-				  HorizontalAlignment="Left"
-				  VerticalAlignment="Bottom">
+				<!--Laucnher manager-->
+				<TextBlock Classes="slogan"
+						   Grid.Row="0"
+						   Text="ADMIN MANAGER"
+						   HorizontalAlignment="Left"
+						   VerticalAlignment="Top"
+						   FontSize="35"/>
 
-				<!--buttons-->
-				<Button Classes="favouriteAll"
-						Content="YOUR GAMES"
-						Grid.Column="0">
-				</Button>
-				<Button Classes="favouriteAll"
-						Content="FAVOURITES"
-						Grid.Column="1">
-				</Button>
-			</Grid>
-		</Grid>
+				<Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto"
+					  HorizontalAlignment="Left"
+					  VerticalAlignment="Stretch">
 
-		<!--search view-->
-		<Border Classes="librarySearch"
-				Padding="10,10,10,10"
-				HorizontalAlignment="Right"
-				Width="220"
-				Margin="60,150,60,60">
-			<Grid RowDefinitions="*,*,8*">
-				<Grid Grid.Row="0" ColumnDefinitions="*,5*"
-					  Margin="0,0,0,10">
-
-					<Image Grid.Column="0"
-						   Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/search.png"
-						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Bottom"
-						   Height="20"
-						   Width="20"
-						   Stretch="Uniform"/>
-
-					<TextBlock Grid.Column="1"
-							   Classes="searchHeader"
-							   Text="SEARCH LIBRARY"
-							   HorizontalAlignment="Left"
-							   VerticalAlignment="Bottom"/>
+					<!--buttons-->
+					<Button Classes="favouriteAll"
+							Content="TAGS"
+							Grid.Column="0"
+							Command="{Binding ShowTags}"
+							Classes.active="{Binding CurrentPage, 
+							Converter={StaticResource PageTypeToBoolConverter}, 
+							ConverterParameter=TagsViewModel}">
+					</Button>
+					
+					<Button Classes="favouriteAll"
+							Content="USERS"
+							Grid.Column="1"
+							Command="{Binding ShowUsers}"
+							Classes.active="{Binding CurrentPage, 
+							Converter={StaticResource PageTypeToBoolConverter}, 
+							ConverterParameter=UsersViewModel}">
+					</Button>
+					<Button Classes="favouriteAll"
+							Content="GAMES"
+							Grid.Column="2"
+							Command="{Binding ShowAllGames}"
+							Classes.active="{Binding CurrentPage, 
+							Converter={StaticResource PageTypeToBoolConverter}, 
+							ConverterParameter=AllGamesViewModel}">
+					</Button>
 				</Grid>
-				<Border Grid.Row="1"
-						BorderThickness="3"
-						BorderBrush="{DynamicResource GalaxyGradient}"
-						Background="{DynamicResource SideMenuGradient}"
-						CornerRadius="20">
-
-					<TextBox Classes="galaxyTextBox"></TextBox>
-				</Border>
 			</Grid>
-		</Border>
-
-		<Border Classes="galaxyBorder"
-				HorizontalAlignment="Stretch"
-				VerticalAlignment="Stretch"
-				Margin="60,150,300,60"
-				Padding="20,20,20,20">
-
-			<!--Games view-->
-			<ScrollViewer Classes="ScrollBar"
-						  HorizontalScrollBarVisibility="Disabled"
-						  VerticalScrollBarVisibility="Auto"
-						  Margin="0,0,10,0">
-
-				
-			</ScrollViewer>
-		</Border>
-	</Grid>
+			<Border Grid.Row="1">
+				<ContentControl Content="{Binding CurrentPage}"/>
+			</Border>
+			
+		</Grid>
+	</Border>
 </UserControl>

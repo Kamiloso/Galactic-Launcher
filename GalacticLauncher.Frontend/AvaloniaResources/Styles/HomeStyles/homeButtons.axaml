@@ -15,21 +15,31 @@
 
 					<Border BorderThickness="6"
 							BorderBrush="{DynamicResource GalaxyGradient}"
-							Background="{StaticResource DarkestNight}"
+							Background="Transparent"
 							CornerRadius="0"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch">
-
-						<TextBlock FontFamily="{DynamicResource Roboto}"
+						
+						<StackPanel Orientation="Vertical"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center">
+							
+							<TextBlock FontFamily="{DynamicResource Rajdhani}"
 								   FontStyle="Normal"
-								   Foreground="{StaticResource LightBlue}"
+								   Foreground="{StaticResource GreyBlue}"
 								   FontSize="16"
 								   Text="{TemplateBinding Tag}"
 								   TextAlignment="Center"
 								   TextWrapping="WrapWithOverflow"
 								   VerticalAlignment="Center"
 								   HorizontalAlignment="Center"
-								   Margin="15,0,15,0"/>
+								   Margin="15,0,15,10"/>
+
+							<Image Source="/AvaloniaResources/Assets/HomeViewAssets/no_recommendation.png"
+								   HorizontalAlignment="Center"
+								   Width="30"
+								   Height="30"/>
+						</StackPanel>
 					</Border>
 
 					<ContentPresenter Name="PART_ContentPresenter"

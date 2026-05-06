@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.AllGamesView"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminViewModels"
+			 x:DataType="vm:AllGamesViewModel">
+	<Grid ColumnDefinitions="2.5*,20,*">
+
+		<!--ADD GAME-->
+		<Border Classes="librarySearch"
+				Padding="20,20,20,30"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Grid.Column="2">
+
+			<Grid RowDefinitions="40,*,40,2*">
+				<!--GAME NAME-->
+				<Grid Grid.Row="0">
+					<StackPanel Grid.Row="2" Orientation="Horizontal"
+							Spacing="10"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center">
+
+						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/AdminAssets/game-controller.png"
+							   RenderOptions.BitmapInterpolationMode="HighQuality"
+							   Height="15"
+							   Width="15"
+							   Stretch="Uniform"/>
+						<TextBlock Grid.Column="1"
+								   Classes="searchHeader"
+								   Text="GAME NAME"/>
+					</StackPanel>
+				</Grid>
+
+				<Border Classes="GameAddBorder"
+						MinHeight="30"
+						VerticalAlignment="Stretch"
+						Margin="0,0,0,20"
+						Grid.Row="1">
+
+					<TextBox Classes="TagAddTextBox"
+							 MaxLength="100"
+							 Watermark="Add game name"/>
+				</Border>
+				<!--GAME DESCRIPTION-->
+				<Grid Grid.Row="2">
+					<StackPanel Grid.Row="2" Orientation="Horizontal"
+							Spacing="10"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							Margin="0,10,0,0">
+
+						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/AdminAssets/game-controller.png"
+							   RenderOptions.BitmapInterpolationMode="HighQuality"
+							   Height="15"
+							   Width="15"
+							   Stretch="Uniform"/>
+						<TextBlock Grid.Column="1"
+								   Classes="searchHeader"
+								   Text="GAME DESCRIPTION"/>
+					</StackPanel>
+				</Grid>
+
+				<Border Grid.Row="3"
+						Classes="GameAddBorder"
+						MinHeight="30"
+						VerticalAlignment="Stretch">
+
+					<TextBox Classes="TagAddTextBox"
+							 MaxLength="300"
+							 Watermark="Add game description"/>
+				</Border>
+			</Grid>
+		</Border>
+
+		<!--GAMES HERE-->
+		<Border Classes="librarySearch"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Padding="20,20,20,20"
+				Grid.Column="0">
+
+			<!--The games found-->
+			<Grid RowDefinitions="30,35,Auto,*">
+
+				<StackPanel Grid.Row="0" Orientation="Horizontal"
+							Spacing="10"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center">
+
+					<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/search.png"
+						   RenderOptions.BitmapInterpolationMode="HighQuality"
+						   Height="15"
+						   Width="15"
+						   Stretch="Uniform"/>
+
+					<TextBlock Grid.Column="1"
+							   Classes="searchHeader"
+							   Text="SEARCH GAMES"/>
+				</StackPanel>
+				<Border Grid.Row="1"
+						Classes="GameAddBorder"
+						Height="30"
+						Margin="0,0,0,20"
+						VerticalAlignment="Center">
+
+					<TextBox Classes="galaxyTextBox"
+							 Watermark="Search games..."/>
+				</Border>
+
+				<Border Grid.Row="3"
+						Classes="GameSearchBorder"
+						VerticalAlignment="Stretch">
+					<ContentControl Classes="noFound"
+									Tag="NO GAMES FOUND"/>
+				</Border>
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

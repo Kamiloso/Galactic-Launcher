@@ -7,10 +7,14 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <ItemGroup>
+    <AvaloniaResource Include="AvaloniaResources\Assets\AdminAssets\game-controller.png" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\AdminAssets\user.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\GameAssets\banner.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\ikonka.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\HomeViewAssets\no_recommendation.png" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\LibraryAssets\checkmark.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\LibraryAssets\search.png" />
+    <AvaloniaResource Include="AvaloniaResources\Assets\LibraryAssets\tag.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\logo.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\SideMenuAssets\account.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\Fonts\Poppins-Regular.ttf" />
@@ -45,20 +49,26 @@
 		<AvaloniaResource Include="AvaloniaResources\**\*.axaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\AdminStyles\AddTagStyles.axaml" />
 	  <AvaloniaXaml Remove="AvaloniaResources\Styles\HomeStyles\homeButtons.axaml" />
 	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\libraryButtons.axaml" />
 	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\libraryFonts.axaml" />
+	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\libraryTags.axaml" />
 	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\searchBorder.axaml" />
 	  <AvaloniaXaml Remove="AvaloniaResources\Styles\LibraryStyles\searchTextBox.axaml" />
 	  <AvaloniaXaml Remove="AvaloniaResources\Styles\MainPanelStyles\ScrollBar.axaml" />
 	  <AvaloniaXaml Remove="Views\MainPanelViews\UserControl1.axaml" />
 	</ItemGroup>
 	<ItemGroup>
+	  <None Remove="AvaloniaResources\Assets\AdminAssets\game-controller.png" />
+	  <None Remove="AvaloniaResources\Assets\AdminAssets\user.png" />
 	  <None Remove="AvaloniaResources\Assets\GameAssets\banner.png" />
 	  <None Remove="AvaloniaResources\Assets\HomeViewAssets\icon.png" />
 	  <None Remove="AvaloniaResources\Assets\HomeViewAssets\ikonka.png" />
 	  <None Remove="AvaloniaResources\Assets\HomeViewAssets\no_recommendation.png" />
+	  <None Remove="AvaloniaResources\Assets\LibraryAssets\checkmark.png" />
 	  <None Remove="AvaloniaResources\Assets\LibraryAssets\search.png" />
+	  <None Remove="AvaloniaResources\Assets\LibraryAssets\tag.png" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ApplicationDefinition Include="AvaloniaResources\Assets\HomeViewAssets\icon.png" />
@@ -73,6 +83,9 @@
 	  <AvaloniaResource Update="AvaloniaResources\ResourceDictionaries\Gradients.axaml">
 	    <CopyToOutputDirectory></CopyToOutputDirectory>
 	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\AdminStyles\AddTagStyles.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
 	  <AvaloniaResource Update="AvaloniaResources\Styles\HomeStyles\homeButtons.axaml">
 	    <SubType>Designer</SubType>
 	  </AvaloniaResource>
@@ -80,6 +93,9 @@
 	    <SubType>Designer</SubType>
 	  </AvaloniaResource>
 	  <AvaloniaResource Update="AvaloniaResources\Styles\LibraryStyles\libraryFonts.axaml">
+	    <SubType>Designer</SubType>
+	  </AvaloniaResource>
+	  <AvaloniaResource Update="AvaloniaResources\Styles\LibraryStyles\libraryTags.axaml">
 	    <SubType>Designer</SubType>
 	  </AvaloniaResource>
 	  <AvaloniaResource Update="AvaloniaResources\Styles\LibraryStyles\searchBorder.axaml">
