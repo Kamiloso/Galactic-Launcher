@@ -5,30 +5,56 @@
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="BorderThickness" Value="0"/>
-		<Setter Property="Height" Value="160"/>
-		<Setter Property="Width" Value="160"/>
-		
+		<Setter Property="Height" Value="170"/>
+		<Setter Property="Width" Value="170"/>
+		<Setter Property="CornerRadius" Value="0"/>
+
 		<Setter Property="Template">
 			<ControlTemplate>
-				<Border Background="{TemplateBinding Background}"
-						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}"
-						CornerRadius="{TemplateBinding CornerRadius}"
-						ClipToBounds="True">
+				<Panel Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+
+					<Border BorderThickness="6"
+							BorderBrush="{DynamicResource GalaxyGradient}"
+							Background="Transparent"
+							CornerRadius="0"
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch">
+						
+						<StackPanel Orientation="Vertical"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center">
+							
+							<TextBlock FontFamily="{DynamicResource Rajdhani}"
+								   FontStyle="Normal"
+								   Foreground="{StaticResource GreyBlue}"
+								   FontSize="16"
+								   Text="{TemplateBinding Tag}"
+								   TextAlignment="Center"
+								   TextWrapping="WrapWithOverflow"
+								   VerticalAlignment="Center"
+								   HorizontalAlignment="Center"
+								   Margin="15,0,15,10"/>
+
+							<Image Source="/AvaloniaResources/Assets/HomeViewAssets/no_recommendation.png"
+								   HorizontalAlignment="Center"
+								   Width="30"
+								   Height="30"/>
+						</StackPanel>
+					</Border>
+
 					<ContentPresenter Name="PART_ContentPresenter"
 									  Content="{TemplateBinding Content}"
-									  ContentTemplate="{TemplateBinding ContentTemplate}"
-									  Padding="{TemplateBinding Padding}"
-									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-				</Border>
+									  Margin="0"
+									  HorizontalContentAlignment="Stretch"
+									  VerticalContentAlignment="Stretch"/>
+				</Panel>
 			</ControlTemplate>
 		</Setter>
+
 	</Style>
 
 	<Style Selector="Button.imageClickable:pointerover">
-		<Setter Property="RenderTransform" Value="scale(1.02)"/>
-		<Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="RenderTransform" Value="scale(1.05)"/>
 	</Style>
 
 	<Style Selector="Button.imageClickable:pointerover /template/ ContentPresenter">
@@ -36,7 +62,7 @@
 	</Style>
 
 	<Style Selector="Button.imageClickable:pressed">
-		<Setter Property="RenderTransform" Value="scale(0.98)"/>
+		<Setter Property="RenderTransform" Value="scale(0.95)"/>
 	</Style>
 
 	<Style Selector="Button.imageClickable > Image">

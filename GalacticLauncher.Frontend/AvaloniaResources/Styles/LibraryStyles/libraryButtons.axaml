@@ -6,30 +6,12 @@
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="BorderThickness" Value="0"/>
-		<Setter Property="Height" Value="150"/>
-		<Setter Property="Width" Value="150"/>
-
-		<Setter Property="Template">
-			<ControlTemplate>
-				<Border Background="{TemplateBinding Background}"
-						BorderBrush="{TemplateBinding BorderBrush}"
-						BorderThickness="{TemplateBinding BorderThickness}"
-						CornerRadius="{TemplateBinding CornerRadius}"
-						ClipToBounds="True">
-					<ContentPresenter Name="PART_ContentPresenter"
-									  Content="{TemplateBinding Content}"
-									  ContentTemplate="{TemplateBinding ContentTemplate}"
-									  Padding="{TemplateBinding Padding}"
-									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
-				</Border>
-			</ControlTemplate>
-		</Setter>
+		<Setter Property="Height" Value="110"/>
+		<Setter Property="Width" Value="110"/>
 	</Style>
 
 	<Style Selector="Button.imageClickable:pointerover">
 		<Setter Property="RenderTransform" Value="scale(1.02)"/>
-		<Setter Property="Cursor" Value="Hand"/>
 	</Style>
 
 	<Style Selector="Button.imageClickable:pointerover /template/ ContentPresenter">
@@ -46,19 +28,31 @@
 
 	<!--Button favourites/all games-->
 	<Style Selector="Button.favouriteAll">
-		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 		<Setter Property="Padding" Value="0"/>
 		<Setter Property="CornerRadius" Value="0"/>
-		<Setter Property="BorderThickness" Value="0"/>
-		<Setter Property="Height" Value="30"/>
+		<Setter Property="BorderThickness" Value="2"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Height" Value="25"/>
 		<Setter Property="Width" Value="150"/>
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
 		<Setter Property="HorizontalContentAlignment" Value="Center"/>
-		
 		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
 		<Setter Property="FontStyle" Value="Normal"/>
-		<Setter Property="Foreground" Value="White"/>
-		<Setter Property="FontSize" Value="20"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="FontSize" Value="18"/>
+	</Style>
+
+	<Style Selector="Button.favouriteAll.active /template/ ContentPresenter">
+		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+	</Style>
+
+	<Style Selector="Button.favouriteAll:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource TagBlue}"/>
+	</Style>
+
+	<Style Selector="Button.favouriteAll:pressed /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 	</Style>
 	
 </Styles>

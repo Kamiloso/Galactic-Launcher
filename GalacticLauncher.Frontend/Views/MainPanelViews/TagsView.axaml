@@ -1,0 +1,117 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.TagsView"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminViewModels"
+			 x:DataType="vm:TagsViewModel">
+	
+	<Grid ColumnDefinitions="2.5*,20,*">
+
+		<!--ADD TAG-->
+		<Border Classes="librarySearch"
+				Padding="20,20,20,30"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Grid.Column="2">
+
+			<Grid RowDefinitions="40,*,40,2*">
+				<!--TAG NAME-->
+				<Grid Grid.Row="0">
+					<StackPanel Grid.Row="2" Orientation="Horizontal"
+							Spacing="10"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center">
+
+						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
+							   RenderOptions.BitmapInterpolationMode="HighQuality"
+							   Height="15"
+							   Width="15"
+							   Stretch="Uniform"/>
+						<TextBlock Grid.Column="1"
+								   Classes="searchHeader"
+								   Text="TAG NAME"/>
+					</StackPanel>
+				</Grid>
+
+				<Border Classes="TagAddBorder"
+						MinHeight="30"
+						VerticalAlignment="Stretch"
+						Margin="0,0,0,20"
+						Grid.Row="1">
+
+					<TextBox Classes="TagAddTextBox"
+							 MaxLength="100"/>
+				</Border>
+				<!--TAG DESCRIPTION-->
+				<Grid Grid.Row="2">
+					<StackPanel Grid.Row="2" Orientation="Horizontal"
+							Spacing="10"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							Margin="0,10,0,0">
+
+						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
+							   RenderOptions.BitmapInterpolationMode="HighQuality"
+							   Height="15"
+							   Width="15"
+							   Stretch="Uniform"/>
+						<TextBlock Grid.Column="1"
+								   Classes="searchHeader"
+								   Text="TAG DESCRIPTION"/>
+					</StackPanel>
+				</Grid>
+
+				<Border Grid.Row="3"
+						Classes="TagAddBorder"
+						MinHeight="30"
+						VerticalAlignment="Stretch">
+
+					<TextBox Classes="TagAddTextBox"
+							 MaxLength="300"/>
+				</Border>
+			</Grid>
+		</Border>
+
+		<!--TAGS HERE-->
+		<Border Classes="librarySearch"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Padding="20,20,20,20"
+				Grid.Column="0">
+
+			<!--The tags found-->
+			<Grid RowDefinitions="30,35,Auto,*">
+
+				<StackPanel Grid.Row="0" Orientation="Horizontal"
+							Spacing="10"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center">
+
+					<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
+						   RenderOptions.BitmapInterpolationMode="HighQuality"
+						   Height="15"
+						   Width="15"
+						   Stretch="Uniform"/>
+
+					<TextBlock Grid.Column="1"
+							   Classes="searchHeader"
+							   Text="SEARCH TAGS"/>
+				</StackPanel>
+				<Border Grid.Row="1"
+						Classes="TagSearchBorder"
+						Height="30"
+						Margin="0,0,0,20"
+						VerticalAlignment="Center">
+
+					<TextBox Classes="galaxyTextBox"/>
+				</Border>
+
+				<Border Grid.Row="3"
+						Classes="TagsBorder"
+						VerticalAlignment="Stretch">
+					<ContentControl Classes="noFound"
+									Tag="NO TAGS FOUND"/>
+				</Border>
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

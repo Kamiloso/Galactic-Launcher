@@ -3,68 +3,123 @@
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.LibraryView"
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
 			 x:DataType="vm:LibraryViewModel"
+			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 x:CompileBindings="True">
 
+	<UserControl.Resources>
+		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+	</UserControl.Resources>
+	
 	<!--Library view-->
 	<Grid>
 		<Grid RowDefinitions="Auto,Auto"
-			  Margin="60,30,60,60">
+			  Margin="30,20,30,50">
 			
 			<!--Welcome back!-->
 			<TextBlock Classes="slogan"
 					   Grid.Row="0"
 					   Text="LIBRARY"
 					   HorizontalAlignment="Left"
-					   VerticalAlignment="Top"/>
+					   VerticalAlignment="Top"
+					   FontSize="35"/>
 			
-			<Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,*"
+			<Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto"
 				  HorizontalAlignment="Left"
-				  VerticalAlignment="Bottom">
+				  VerticalAlignment="Stretch">
 
 				<!--buttons-->
 				<Button Classes="favouriteAll"
 						Content="YOUR GAMES"
+						Classes.active="{Binding ShowAllGames}, 
+						Converter={StaticResource PageTypeToBoolConverter}, 
+						ConverterParameter=int}"
 						Grid.Column="0">
 				</Button>
 				<Button Classes="favouriteAll"
 						Content="FAVOURITES"
+						Classes.active="{Binding ShowFavourites}, 
+						Converter={StaticResource PageTypeToBoolConverter}, 
+						ConverterParameter=string}"
 						Grid.Column="1">
 				</Button>
+				<Button Classes="favouriteAll"
+						Content="FIND NEW GAMES"
+						Classes.active="{Binding ShowFavourites}, 
+						Converter={StaticResource PageTypeToBoolConverter}, 
+						ConverterParameter=string}"
+						Grid.Column="2">
+				</Button>
+						
 			</Grid>
 		</Grid>
 
 		<!--search view-->
 		<Border Classes="librarySearch"
-				Padding="10,10,10,10"
+				Padding="20,20,20,30"
 				HorizontalAlignment="Right"
-				Width="220"
-				Margin="60,150,60,60">
-			<Grid RowDefinitions="*,*,8*">
-				<Grid Grid.Row="0" ColumnDefinitions="*,5*"
-					  Margin="0,0,0,10">
+				Width="230"
+				Margin="30,120,30,30">
+			<Grid RowDefinitions="40,35,40,35,Auto,*">
+				<Grid Grid.Row="0">
 
-					<Image Grid.Column="0"
-						   Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/search.png"
+					<StackPanel Orientation="Horizontal"
+								Spacing="10"
+								HorizontalAlignment="Left"
+								VerticalAlignment="Center">
+						
+						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/search.png"
+							   RenderOptions.BitmapInterpolationMode="HighQuality"
+							   Height="15"
+							   Width="15"
+							   Stretch="Uniform"/>
+
+						<TextBlock Grid.Column="1"
+								   Classes="searchHeader"
+								   Text="SEARCH LIBRARY"/>
+					</StackPanel>
+					
+				</Grid>
+				<Border Grid.Row="1"
+						Classes="GameSearchBorder"
+						Height="30"
+						VerticalAlignment="Center">
+
+					<TextBox Classes="galaxyTextBox"/>
+				</Border>
+
+				<StackPanel Grid.Row="2" Orientation="Horizontal"
+							Spacing="10"
+							HorizontalAlignment="Left"
+							VerticalAlignment="Center"
+							Margin="0,10,0,0">
+
+					<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
 						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Bottom"
-						   Height="20"
-						   Width="20"
+						   Height="15"
+						   Width="15"
 						   Stretch="Uniform"/>
 
 					<TextBlock Grid.Column="1"
 							   Classes="searchHeader"
-							   Text="SEARCH LIBRARY"
-							   HorizontalAlignment="Left"
-							   VerticalAlignment="Bottom"/>
-				</Grid>
-				<Border Grid.Row="1"
-						BorderThickness="3"
-						BorderBrush="{DynamicResource GalaxyGradient}"
-						Background="{DynamicResource SideMenuGradient}"
-						CornerRadius="20">
+							   Text="SEARCH TAGS"/>
+				</StackPanel>
+				<Border Grid.Row="3"
+						Classes="TagSearchBorder"
+						Height="30"
+						Margin="0,0,0,20"
+						VerticalAlignment="Center">
 
-					<TextBox Classes="galaxyTextBox"></TextBox>
+					<TextBox Classes="galaxyTextBox"/>
+				</Border>
+
+				<!--TAGS HERE-->
+				
+				<Border Grid.Row="5"
+						Classes="TagsBorder"
+						VerticalAlignment="Stretch">
+					<ContentControl Classes="noFound"
+									Tag="NO TAGS FOUND"/>
+
 				</Border>
 			</Grid>
 		</Border>
@@ -72,7 +127,7 @@
 		<Border Classes="galaxyBorder"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Margin="60,150,300,60"
+				Margin="30,120,270,30"
 				Padding="20,20,20,20">
 			
 			<!--Games view-->
@@ -85,36 +140,10 @@
 						   VerticalAlignment="Top"
 						   ItemSpacing="15"
 						   LineSpacing="15">
-					<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
-										Background="{DynamicResource MainPanelGradient}">
 
-						<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
-					</Button>
-					<Button Classes="imageClickable"
-							Command="{Binding ShowGame}"
-							Background="{DynamicResource MainPanelGradient}">
-
-						<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
-					</Button>
-					<Button Classes="imageClickable"
-							Command="{Binding ShowGame}"
-							Background="{DynamicResource MainPanelGradient}">
-
-						<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
-					</Button>
-					<Button Classes="imageClickable"
-							Command="{Binding ShowGame}"
-							Background="{DynamicResource MainPanelGradient}">
-
-						<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp4.jpg"/>
-					</Button>
-					<Button Classes="imageClickable"
-							Command="{Binding ShowGame}"
-							Background="{DynamicResource MainPanelGradient}">
-
-						<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp5.jpg"/>
-					</Button>
+					<!--Wont show up if any game is found-->
+					<ContentControl Classes="noFound"
+									Tag="GAMES NOT FOUND"/>
 				</WrapPanel>
 			</ScrollViewer>
 		</Border>

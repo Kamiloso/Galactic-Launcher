@@ -3,15 +3,20 @@
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModels"
 			 x:DataType="vm:MainWindowViewModel"
              x:Class="GalacticLauncher.Frontend.Views.MainWindowView.SideMenu"
+			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 HorizontalAlignment="Left">
+
+	<UserControl.Resources>
+		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+	</UserControl.Resources>
 	
 	<!--Side Menu-->
 
 	<Border Background="{DynamicResource SideMenuGradient}"
             ClipToBounds="True"
-            Width="220">
+            Width="200">
 
-		<Grid RowDefinitions="120,0.2*,4*,100">
+		<Grid RowDefinitions="100,30,4*,100">
 
 			<!--lOGO-->
 			<Border Grid.Row="0"
@@ -24,8 +29,8 @@
 						   RenderOptions.BitmapInterpolationMode="HighQuality"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"
-						   Height="110"
-						   Width="110"
+						   Height="80"
+						   Width="80"
 						   Stretch="Uniform"/>
 
 					<StackPanel Grid.Column="2"
@@ -33,9 +38,9 @@
 								VerticalAlignment="Center">
 
 						<TextBlock Classes="logoGalacticStyle1" Text="GALACTIC"
-								 FontSize="22"/>
+								 FontSize="21"/>
 						<TextBlock Classes="logoGalacticStyle2" Text="LAUNCHER"
-								 FontSize="22"/>
+								 FontSize="21"/>
 
 					</StackPanel>
 				</Grid>
@@ -44,12 +49,22 @@
 			<!--Options-->
 			<StackPanel Grid.Row="2" VerticalAlignment="Top">
 				<Button Classes="menuItem" Content="HOME"
-						Command="{Binding ShowHome}"/>
+						Command="{Binding ShowHome}"
+						Classes.active="{Binding CurrentPage, 
+						Converter={StaticResource PageTypeToBoolConverter}, 
+						ConverterParameter=HomeViewModel}"/>
 
 				<Button Classes="menuItem" Content="LIBRARY"
-						Command="{Binding ShowLibrary}"/>
+						Command="{Binding ShowLibrary}"
+						Classes.active="{Binding CurrentPage, 
+						Converter={StaticResource PageTypeToBoolConverter}, 
+						ConverterParameter=LibraryViewModel}"/>
 
-				<Button Classes="menuItem" Content="SEARCH GAMES"/>
+				<Button Classes="menuItem" Content="ADMIN"
+						Command="{Binding ShowAdmin}"
+						Classes.active="{Binding CurrentPage, 
+						Converter={StaticResource PageTypeToBoolConverter}, 
+						ConverterParameter=AdminViewModel}"/>
 			</StackPanel>
 
 			<!--Account-->

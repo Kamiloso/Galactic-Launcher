@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.ManageView"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
+			 x:DataType="vm:AdminViewModel"
+			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
+			 x:CompileBindings="True">
+
+
+	<UserControl.Resources>
+		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
+	</UserControl.Resources>
+
+	<!--Admin view-->
+	<Border Margin="30,20,30,20">
+		<Grid RowDefinitions="Auto,*">
+			<Grid RowDefinitions="Auto,Auto"
+				  Margin="0,0,0,20"
+				  Grid.Row="0">
+
+				<!--Laucnher manager-->
+				<TextBlock Classes="slogan"
+						   Grid.Row="0"
+						   Text="ADMIN MANAGER"
+						   HorizontalAlignment="Left"
+						   VerticalAlignment="Top"
+						   FontSize="35"/>
+
+				<Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto"
+					  HorizontalAlignment="Left"
+					  VerticalAlignment="Stretch">
+
+					<!--buttons-->
+					<Button Classes="favouriteAll"
+							Content="TAGS"
+							Grid.Column="0"
+							Command="{Binding ShowTags}"
+							Classes.active="{Binding CurrentPage, 
+							Converter={StaticResource PageTypeToBoolConverter}, 
+							ConverterParameter=TagsViewModel}">
+					</Button>
+					
+					<Button Classes="favouriteAll"
+							Content="USERS"
+							Grid.Column="1"
+							Command="{Binding ShowUsers}"
+							Classes.active="{Binding CurrentPage, 
+							Converter={StaticResource PageTypeToBoolConverter}, 
+							ConverterParameter=UsersViewModel}">
+					</Button>
+					<Button Classes="favouriteAll"
+							Content="GAMES"
+							Grid.Column="2"
+							Command="{Binding ShowAllGames}"
+							Classes.active="{Binding CurrentPage, 
+							Converter={StaticResource PageTypeToBoolConverter}, 
+							ConverterParameter=AllGamesViewModel}">
+					</Button>
+				</Grid>
+			</Grid>
+			<Border Grid.Row="1">
+				<ContentControl Content="{Binding CurrentPage}"/>
+			</Border>
+			
+		</Grid>
+	</Border>
+</UserControl>

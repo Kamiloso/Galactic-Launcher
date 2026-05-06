@@ -11,7 +11,7 @@
 						  VerticalScrollBarVisibility="Auto">
 		
 		<!--Home view-->
-		<Border Padding="60,30,60,30">
+		<Border Padding="50,20,50,20">
 			<Grid RowDefinitions="Auto,Auto,Auto"
 				  HorizontalAlignment="Stretch"
 				  VerticalAlignment="Center">
@@ -20,7 +20,8 @@
 				<TextBlock Classes="slogan"
 						   Grid.Row="0"
 						   Text="WELCOME BACK!"
-						   HorizontalAlignment="Left"/>
+						   HorizontalAlignment="Left"
+						   VerticalAlignment="Bottom"/>
 
 				<!--Recommendations-->
 				<Viewbox Grid.Row="1"
@@ -31,12 +32,13 @@
 
 					<Grid RowDefinitions="Auto,Auto,Auto"
 						  Width="852"
-						  Height="260">
+						  Height="267">
 
 						<!--Recommendation header-->
 						<Border Grid.Row="0"
 								Classes="galaxyHeader"
 								HorizontalAlignment="Left"
+								VerticalAlignment="Top"
 								Height="36">
 							<TextBlock Classes="homeHeader"
 									   Text="RECOMMENDATIONS"
@@ -50,38 +52,32 @@
 								Classes="galaxyBorder"
 								Height="220">
 
-							<UniformGrid Columns="5"
-										 ColumnSpacing="7"
+							<UniformGrid Columns="4"
+										 ColumnSpacing="20"
 										 HorizontalAlignment="Center">
 								<Button Classes="imageClickable"
 										Command="{Binding ShowGame}"
+										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
 								</Button>
 								<Button Classes="imageClickable"
 										Command="{Binding ShowGame}"
+										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
 								</Button>
 								<Button Classes="imageClickable"
 										Command="{Binding ShowGame}"
+										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
 								</Button>
 								<Button Classes="imageClickable"
 										Command="{Binding ShowGame}"
+										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp4.jpg"/>
-								</Button>
-								<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
-										Background="{DynamicResource MainPanelGradient}">
-
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp5.jpg"/>
 								</Button>
 
 							</UniformGrid>
@@ -97,7 +93,7 @@
 						 Margin="0,20,0,0">
 
 					<Grid RowDefinitions="Auto,Auto,Auto"
-						  ColumnDefinitions="2*,30,*"
+						  ColumnDefinitions="2*,30,0.8*"
 						  Width="852"
 						  Height="267">
 
@@ -122,23 +118,23 @@
 								Height="220">
 
 							<UniformGrid Columns="3"
-										 ColumnSpacing="7"
+										 ColumnSpacing="12"
 										 HorizontalAlignment="Center">
 
 								<Button Classes="imageClickable"
 										Command="{Binding ShowGame}"
+										Tag="NO GAME ADDED"
 										Background="{DynamicResource MainPanelGradient}">
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
 								</Button>
 								<Button Classes="imageClickable"
 										Command="{Binding ShowGame}"
+										Tag="NO GAME ADDED"
 										Background="{DynamicResource MainPanelGradient}">
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp2.jpg"/>
 								</Button>
 								<Button Classes="imageClickable"
+										Tag="NO GAME ADDED"
 										Command="{Binding ShowGame}"
 										Background="{DynamicResource MainPanelGradient}">
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"/>
 								</Button>
 							</UniformGrid>
 						</Border>
@@ -164,12 +160,12 @@
 								Height="220">
 
 							<UniformGrid Columns="1"
-										 ColumnSpacing="7"
+										 ColumnSpacing="12"
 										 HorizontalAlignment="Center">
 								<Button Classes="imageClickable"
+										Tag="NO GAME PLAYED YET"
 										Command="{Binding ShowGame}"
 										Background="{DynamicResource MainPanelGradient}">
-									<Image Source="/AvaloniaResources/Assets/HomeViewAssets/temp1.jpg"/>
 								</Button>
 							</UniformGrid>
 						</Border>

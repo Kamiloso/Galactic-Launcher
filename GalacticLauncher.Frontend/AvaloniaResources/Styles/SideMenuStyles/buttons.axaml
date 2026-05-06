@@ -4,12 +4,10 @@
 	<!--Menu button Appearance-->
 	<Style Selector="Button.menuItem">
 		
-		<Setter Property="FontFamily"
-                Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
 		<Setter Property="FontStyle" Value="Normal"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
 		<Setter Property="FontSize" Value="20"/>
-		
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -18,8 +16,18 @@
 	</Style>
 
 	<!--Menu button Hover-->
-	<Style Selector="Button.menuItem:pointerover">
-		<Setter Property="Background" Value="#2d3dcf"/>
+	<Style Selector="Button.menuItem:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource TagBlue}"/>
 	</Style>
+
+	<Style Selector="Button.menuItem:pressed /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+	</Style>
+
+	<!--Acive-->
+	<Style Selector="Button.menuItem.active /template/ ContentPresenter">
+		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+	</Style>
+	
 
 </Styles>

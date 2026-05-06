@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using GalacticLauncher.Core.DbRecords;
 using GalacticLauncher.Frontend.Network;
 using GalacticLauncher.Frontend.ViewModels.Interfaces;
@@ -15,18 +16,21 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
         private HomeViewModel? _homePage;
         private LibraryViewModel? _libraryPage;
         private GameViewModel? _gamePage;
+        private AdminViewModel? _adminPage;
 
         private object? _currentPage;
         public object? CurrentPage
         {
             get => _currentPage;
             set
-            {
-                _currentPage = value;
-                OnPropertyChanged();
+            { _currentPage = value; 
+              OnPropertyChanged(); 
+              OnPropertyChanged(nameof(CurrentActivePage)); 
             }
         }
+        public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
 
+        private Button _currentButton;
         public MainWindowViewModel()
         {
             CurrentPage = new HomeViewModel(this);
@@ -49,6 +53,12 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
         {
             _gamePage ??= new GameViewModel();
             SetCurrentPage(_gamePage);
+        }
+
+        public void ShowAdmin()
+        {
+            _adminPage ??= new AdminViewModel(this);
+            SetCurrentPage(_adminPage);
         }
 
         private void SetCurrentPage(object page)

@@ -1,10 +1,19 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+	<!--Search text-->
 	<Style Selector="TextBlock.searchHeader">
 		<Setter Property="FontFamily" Value="{DynamicResource Roboto}"/>
 		<Setter Property="FontStyle" Value="Normal"/>
-		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="FontSize" Value="14"/>
+	</Style>
+
+	<!--Nothing found text-->
+	<Style Selector="TextBlock.nothingFound">
+		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
 		<Setter Property="FontSize" Value="20"/>
 	</Style>
 </Styles>

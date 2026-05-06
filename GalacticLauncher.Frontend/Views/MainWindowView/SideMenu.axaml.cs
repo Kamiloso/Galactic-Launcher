@@ -8,9 +8,6 @@ namespace GalacticLauncher.Frontend.Views.MainWindowView;
 
 public partial class SideMenu : UserControl
 {
-    private readonly int sideBarWidth = 220;
-    private readonly DispatcherTimer _closeTimer;
-
     public SideMenu()
     {
         InitializeComponent();
