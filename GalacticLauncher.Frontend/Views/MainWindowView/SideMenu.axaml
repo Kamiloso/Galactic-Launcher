@@ -14,18 +14,21 @@
 
 	<Border Background="{DynamicResource SideMenuGradient}"
             ClipToBounds="True"
-            Width="200">
+            Width="200"
+			CornerRadius="0"
+			BorderThickness="0">
 
-		<Grid RowDefinitions="100,30,4*,100">
+		<Grid RowDefinitions="100,30,4*,50,100">
 
 			<!--lOGO-->
 			<Border Grid.Row="0"
-					Background="{DynamicResource GalaxyGradient}">
+					Background="{DynamicResource GalaxyGradient}"
+					CornerRadius="0">
 
 				<Grid ColumnDefinitions="*,8,*"
 					  HorizontalAlignment="Center">
 					<Image Grid.Column="0"
-						   Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/SideMenuAssets/logo.png"
+						   Source="/AvaloniaResources/Assets/Logo/logo.png"
 						   RenderOptions.BitmapInterpolationMode="HighQuality"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"
@@ -67,14 +70,34 @@
 						ConverterParameter=AdminViewModel}"/>
 			</StackPanel>
 
+			<!--Color theme -->
+
+			<Button Classes="menuItem"
+					Click="OnSwitchThemeClick"
+					Grid.Row="3"
+					Background="{DynamicResource GalaxyGradient}">
+				
+				<StackPanel Orientation="Horizontal">
+
+					<Image Source="/AvaloniaResources/Assets/Icons/palette.png"
+						   Width="20"
+						   Height="20"
+						   Margin="0,0,10,0"/>
+
+					<TextBlock Text="SWITCH COLOR THEME"
+							   VerticalAlignment="Center"
+							   FontSize="12"/>
+				</StackPanel>
+			</Button>
+
 			<!--Account-->
-			<Grid Grid.Row="3"
+			<Grid Grid.Row="4"
 				  RowDefinitions="1*"
 				  ColumnDefinitions="*,2*"
 				  Background="{StaticResource DarkestNight}">
 
 				<Image Grid.Row="0" Grid.Column="0"
-					   Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/SideMenuAssets/account.png"
+					   Source="/AvaloniaResources/Assets/Icons/account.png"
 					   RenderOptions.BitmapInterpolationMode="HighQuality"
 					   Width="40"
 					   Height="40"

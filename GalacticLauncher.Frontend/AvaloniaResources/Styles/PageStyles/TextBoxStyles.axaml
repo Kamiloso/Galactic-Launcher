@@ -1,0 +1,39 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--
+	========= TEXT BOX SECTION ==================================
+	-->
+
+	<!--TextBox Galaxy Style-->
+	<Style Selector="TextBox.galaxyTextBox">
+		<Setter Property="Height" Value="22"/>
+	</Style>
+
+
+	<!--
+	========= TEXT BLOX SECTION ==================================
+	-->
+
+	<!--TextBox Galaxy Style-->
+	<Style Selector="TextBox.TagAddTextBox">
+		<Setter Property="MinHeight" Value="30"/>
+		<Setter Property="TextWrapping" Value="Wrap"/>
+		<Setter Property="AcceptsReturn" Value="True"/>
+		<Setter Property="Padding" Value="10,5"/>
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+	</Style>
+
+	<!--TextBox Add Game Style-->
+	<Style Selector="TextBox.GameAddTextBox">
+		<Setter Property="MinHeight" Value="30"/>
+		<Setter Property="TextWrapping" Value="Wrap"/>
+		<Setter Property="AcceptsReturn" Value="True"/>
+		<Setter Property="Padding" Value="10,5"/>
+		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+		<Setter Property="ScrollViewer.AllowAutoHide" Value="False"/>
+	</Style>
+	
+</Styles>

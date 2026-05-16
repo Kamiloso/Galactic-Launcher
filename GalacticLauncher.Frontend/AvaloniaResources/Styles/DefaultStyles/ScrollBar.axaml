@@ -1,0 +1,81 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--Scroll bar-->
+	<Style Selector="ScrollBar">
+
+		<!--Clear default settings-->
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="MinWidth" Value="10"/>
+		
+		<Style.Resources>
+			<SolidColorBrush x:Key="ScrollBarTrackFill">Transparent</SolidColorBrush>
+			<SolidColorBrush x:Key="ScrollBarTrackFillPointerOver">Transparent</SolidColorBrush>
+			<x:Double x:Key="ScrollBarThickness">10</x:Double>
+			<x:Double x:Key="ScrollBarExpandThickness">10</x:Double>
+			<Thickness x:Key="ScrollBarThumbVerticalMargin">0</Thickness>
+		</Style.Resources>
+
+		<!--Thumb-->
+		<Style Selector="^ /template/ Thumb">
+			<Setter Property="Background" Value="Transparent"/>
+
+			<!--default visual-->
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Border Name="ThumbVisual"
+							Background="{DynamicResource GalaxyGradient}"
+							CornerRadius="6"
+							Margin="2"/>
+				</ControlTemplate>
+			</Setter>
+
+			<!--Hover thumb-->
+			<Style Selector="^:pointerover /template/ Border#ThumbVisual">
+				<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+			</Style>
+
+			<!--Pressed thumb-->
+			<Style Selector="^:pressed /template/ Border#ThumbVisual">
+				<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+				<Setter Property="Opacity" Value="0.8"/>
+			</Style>
+		</Style>
+
+		<!--Track-->
+		<Style Selector="^ /template/ Track">
+			<Setter Property="Opacity" Value="1" />
+			<Setter Property="IsVisible" Value="True" />
+
+			<Style Selector="^ /template/ Rectangle#TrackRect">
+				<Setter Property="Fill" Value="{DynamicResource SideMenuGradient}"/>
+				<Setter Property="Opacity" Value="1" />
+				<Setter Property="Transitions" Value="{x:Null}" />
+			</Style>
+
+			<Style Selector="^ /template/ Track:pointerover /template/ Rectangle#TrackRect">
+				<Setter Property="Fill" Value="{DynamicResource SideMenuGradient}" />
+			</Style>
+			
+		</Style>
+		<Style Selector="^:not(:pointerover) /template/ Rectangle#TrackRect">
+			<Setter Property="Fill" Value="{DynamicResource SideMenuGradient}"/>
+		</Style>
+		<Style Selector="^:pointerover /template/ Rectangle#TrackRect">
+			<Setter Property="Fill" Value="{DynamicResource SideMenuGradient}" />
+		</Style>
+
+		
+		<!--deleting the 'arrows'-->
+		<Style Selector="^ /template/ RepeatButton">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+
+		<!--Bakcgound-->
+		<Style Selector="^ /template/ Border#Root">
+			<Setter Property="Background" Value="{DynamicResource SideMenuGradient}" />
+			<Setter Property="BorderBrush" Value="Transparent" />
+		</Style>
+	</Style>
+	
+</Styles>
