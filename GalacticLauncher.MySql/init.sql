@@ -1,83 +1,64 @@
--- SQL script to initialize the database for the Galactic Launcher backend.
--- Everything should be idempotent here, so it can be run multiple times without causing errors.
+-- sql script to initialize the database for the galactic launcher backend.
+-- everything should be idempotent here, so it can be run multiple times without causing errors.
 
-CREATE USER IF NOT EXISTS 'galactic_app'@'%' IDENTIFIED BY 'HardCodedPass!123';
-REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'galactic_app'@'%';
-GRANT SELECT, INSERT, UPDATE, DELETE ON galactic.* TO 'galactic_app'@'%';
+-- database & user setup
 
 CREATE DATABASE IF NOT EXISTS galactic;
 USE galactic;
 
--- table for initialization logs (for debugging purposes)
+CREATE USER IF NOT EXISTS 'galactic_app'@'%' IDENTIFIED BY 'HardCodedPass!123';
+GRANT SELECT, INSERT, UPDATE, DELETE ON galactic.* TO 'galactic_app'@'%';
 
-CREATE TABLE IF NOT EXISTS init_logs (
-    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    init_time DATETIME NOT NULL);
-
-INSERT INTO init_logs (init_time) VALUES (CURRENT_TIMESTAMP);
-
--- database schema for all tables
-
-CREATE TABLE IF NOT EXISTS users (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    google_key VARCHAR(200) NOT NULL,
-    email VARCHAR(200) NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    profile_url VARCHAR(2048) NOT NULL,
-    UNIQUE (email),
-    UNIQUE (google_key));
+-- schema for all tables
 
 CREATE TABLE IF NOT EXISTS games (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    description VARCHAR(1000) NOT NULL);
+    id bigint primary key auto_increment not null,
+    name VARCHAR(255) not null,
+    description text not null
+    );
 
 CREATE TABLE IF NOT EXISTS versions (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    version_text VARCHAR(50) NOT NULL,
-    description VARCHAR(200) NOT NULL,
-    is_primary BOOLEAN NOT NULL,
-    release_date DATETIME NOT NULL,
-    version_type INT NOT NULL,
-    id_game BIGINT NOT NULL,
-    FOREIGN KEY(id_game) REFERENCES games(id) ON DELETE CASCADE);
+    id bigint primary key auto_increment not null,
+    caption VARCHAR(255) not null,
+    type enum('alpha', 'beta', 'release', 'snapshot') not null,
+    description text not null,
+    is_primary boolean not null,
+    release_date date not null default (current_date), 
+    platform enum('windows', 'linux', 'macsilicon', 'macintel') not null,
+    download_url text not null,
+    exec_location text not null,
+    alert enum('stable', 'alert', 'danger') not null,
+    id_game bigint not null,
+    foreign key(id_game) references games(id) on delete cascade
+    );
 
 CREATE TABLE IF NOT EXISTS images (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    url VARCHAR(2048) NOT NULL,
-    id_game BIGINT NOT NULL,
-    FOREIGN KEY(id_game) REFERENCES games(id) ON DELETE CASCADE);
+    id bigint primary key auto_increment not null,
+    download_url text not null,
+    type enum('icon', 'screenshot', 'banner') not null,
+    sort_index int not null default 0,
+    id_game bigint not null,
+    foreign key(id_game) references games(id) on delete cascade
+    );
 
 CREATE TABLE IF NOT EXISTS tags (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    description VARCHAR(200) NOT NULL);
+    id bigint primary key auto_increment not null,
+    name VARCHAR(255) not null unique,
+    description text not null
+    );
 
 CREATE TABLE IF NOT EXISTS games_tags (
-    id_game BIGINT NOT NULL,
-    id_tag BIGINT NOT NULL,
-    PRIMARY KEY(id_game, id_tag),
-    FOREIGN KEY(id_game) REFERENCES games(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_tag) REFERENCES tags(id) ON DELETE CASCADE);
+    id_game bigint not null,
+    id_tag bigint not null,
+    primary key(id_game, id_tag),
+    foreign key(id_game) references games(id) on delete cascade,
+    foreign key(id_tag) references tags(id) on delete cascade
+    );
 
-CREATE TABLE IF NOT EXISTS execs (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    download_url VARCHAR(2048) NOT NULL,
-    exec_location VARCHAR(2048) NOT NULL,
-    file_hash_sha256 CHAR(64) NOT NULL,
-    platform INT NOT NULL,
-    alert INT NOT NULL,
-    id_version BIGINT NOT NULL,
-    FOREIGN KEY(id_version) REFERENCES versions(id) ON DELETE CASCADE);
-
-CREATE TABLE IF NOT EXISTS actions (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    type INT NOT NULL,
-    time DATETIME(6) NOT NULL,
-    id_user BIGINT NOT NULL,
-    id_exec BIGINT NULL,
-    FOREIGN KEY(id_user) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY(id_exec) REFERENCES execs(id) ON DELETE SET NULL);
-
--- Add migrations here:
--- ALTER TABLE example_table ADD COLUMN new_column VARCHAR(255);
+CREATE TABLE IF NOT EXISTS history (
+    id bigint primary key auto_increment not null,
+    info text not null,
+    timestamp datetime not null default current_timestamp,
+    id_game bigint default null,
+    foreign key(id_game) references games(id) on delete cascade
+    );

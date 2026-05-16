@@ -5,10 +5,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.RateLimiting;
 using MySqlConnector;
-using GalacticLauncher.Backend.Repositories;
-using static GalacticLauncher.Backend.AppConfig.RateLimitingSection;
 
-namespace GalacticLauncher.Backend;
+namespace GalacticLauncher.Backend.Startup;
 
 public static class ServiceExtensions
 {
@@ -43,8 +41,9 @@ public static class ServiceExtensions
 
     public static void ConfigureRateLimiters(this IServiceCollection services, AppConfig config)
     {
-        static RateLimitPartition<string> RateLimitPartition(
-            HttpContext context, AppConfig config, RateLimitRule policy)
+        static RateLimitPartition<string> GetRateLimitPartition(
+            HttpContext context, AppConfig config,
+            AppConfig.RateLimitingSection.RateLimitRule policy)
         {
             IPAddress? ip = context.Connection.RemoteIpAddress;
 
@@ -66,10 +65,10 @@ public static class ServiceExtensions
                 AddressFamily.InterNetworkV6 when ip is not null =>
                     Convert.ToHexString(ip.GetAddressBytes().AsSpan(0, lenV6)),
 
-                _ => "???"
+                _ => "Unknown"
             };
 
-            return System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+            return RateLimitPartition.GetFixedWindowLimiter(
                 partitionKey: uniqueNetworkString,
                 factory: _ => new FixedWindowRateLimiterOptions
                 {
@@ -83,9 +82,10 @@ public static class ServiceExtensions
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-            options.AddPolicy("LowCost", context => RateLimitPartition(context, config, config.Limiter.LowCost));
-            options.AddPolicy("MediumCost", context => RateLimitPartition(context, config, config.Limiter.MediumCost));
-            options.AddPolicy("HighCost", context => RateLimitPartition(context, config, config.Limiter.HighCost));
+            options.AddPolicy("LowCost", context => GetRateLimitPartition(context, config, config.Limiter.LowCost));
+            options.AddPolicy("MediumCost", context => GetRateLimitPartition(context, config, config.Limiter.MediumCost));
+            options.AddPolicy("HighCost", context => GetRateLimitPartition(context, config, config.Limiter.HighCost));
+            options.AddPolicy("ReqCost", context => GetRateLimitPartition(context, config, config.Limiter.ReqCost));
         });
     }
 
@@ -99,19 +99,9 @@ public static class ServiceExtensions
             { "User ID", config.Database.User },
             { "Password", config.Database.Password }
         };
-        
+
         string connectionString = builder.ConnectionString;
 
         srv.AddScoped(_ => new MySqlConnection(connectionString));
-    }
-
-    public static void AddRepositories(this IServiceCollection srv)
-    {
-        srv.AddScoped<IGameRepository, GameRepository>();
-        srv.AddScoped<IImageRepository, ImageRepository>();
-        srv.AddScoped<IVersionRepository, VersionRepository>();
-        srv.AddScoped<IExecRepository, ExecRepository>();
-        srv.AddScoped<ITagRepository, TagRepository>();
-        srv.AddScoped<IUserRepository, UserRepository>();
     }
 }

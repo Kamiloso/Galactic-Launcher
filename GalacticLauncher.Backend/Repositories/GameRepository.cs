@@ -1,32 +1,31 @@
 using Dapper;
-using GalacticLauncher.Core.DbRecords;
+using GalacticLauncher.Core.DbModels;
 using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
 
 public interface IGameRepository
 {
-    Task<IEnumerable<GameInfo>> GetAllGames();
-    Task<IEnumerable<GameInfo>> GetGamesByTagId(long tagId);
+    Task<IEnumerable<long>> GetAllGameIds();
+    Task<Game> GetGameById(long id);
 }
 
 public class GameRepository(MySqlConnection db) : IGameRepository
 {
-    public async Task<IEnumerable<GameInfo>> GetAllGames()
+    public async Task<IEnumerable<long>> GetAllGameIds()
     {
-        return await db.QueryAsync<GameInfo>(
-            "SELECT * FROM games"
+        return await db.QueryAsync<long>(
+            "SELECT id FROM games"
             );
     }
-    
-    public async Task<IEnumerable<GameInfo>> GetGamesByTagId(long tagId)
+
+    public async Task<Game> GetGameById(long id)
     {
-        return await db.QueryAsync<GameInfo>("""
+        return await db.QuerySingleAsync<Game>("""
             SELECT * FROM games
-                INNER JOIN games_tags ON games.id = games_tags.id_game
-                WHERE games_tags.id_tag = @p1
+                WHERE id = @id
             """,
-            new { p1 = tagId }
-        );
+            new { id }
+            );
     }
 }

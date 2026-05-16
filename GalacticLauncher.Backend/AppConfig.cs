@@ -2,9 +2,15 @@
 
 public record AppConfig
 {
+    public required AppSection App { get; init; }
     public required ListenerSection Listener { get; init; }
     public required DatabaseSection Database { get; init; }
     public required RateLimitingSection Limiter { get; init; }
+
+    public record AppSection
+    {
+        public required string AdminPhrase { get; init; }
+    }
 
     public record ListenerSection
     {
@@ -27,6 +33,7 @@ public record AppConfig
         public required RateLimitRule LowCost { get; init; }
         public required RateLimitRule MediumCost { get; init; }
         public required RateLimitRule HighCost { get; init; }
+        public required RateLimitRule ReqCost { get; init; }
 
         public record RateLimitRule
         {

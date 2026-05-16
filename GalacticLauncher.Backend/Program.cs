@@ -1,4 +1,8 @@
+using Dapper;
 using GalacticLauncher.Backend;
+using GalacticLauncher.Backend.Startup;
+using GalacticLauncher.Backend.Patches;
+using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Core;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -7,28 +11,36 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     EnvironmentName = Utils.IsDevelopment ? "Development" : "Production"
 });
 
-Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true; // snake_case!
+DefaultTypeMap.MatchNamesWithUnderscores = true; // snake_case!
+
+SqlMapper.AddTypeHandler(new EnumAsStringHandler<VersionType>());
+SqlMapper.AddTypeHandler(new EnumAsStringHandler<Platform>());
+SqlMapper.AddTypeHandler(new EnumAsStringHandler<AlertLevel>());
+SqlMapper.AddTypeHandler(new EnumAsStringHandler<ImageType>());
 
 var services = builder.Services;
 
 AppConfig config = services.ConfigureAppConfig(builder.Configuration);
 
-services.AddEndpointsApiExplorer();
-
 if (Utils.IsDevelopment)
 {
-    services.AddSwaggerGen(c =>
-    {
-        c.SupportNonNullableReferenceTypes();
-    });
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen(c => c.SupportNonNullableReferenceTypes());
 }
 
+// Startup
 services.ConfigureForwardedFor(config);
 services.ConfigureRateLimiters(config);
-
 services.AddDatabase(config);
-services.AddRepositories();
-// services.AddServices(); TODO: add services
+
+// Repositories
+services.AddScoped<IGameRepository, GameRepository>();
+services.AddScoped<IImageRepository, ImageRepository>();
+services.AddScoped<IVersionRepository, VersionRepository>();
+services.AddScoped<ITagRepository, TagRepository>();
+
+// Services
+
 services.AddControllers();
 
 // ----- APP SECTION -----

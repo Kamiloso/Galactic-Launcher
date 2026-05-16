@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Runtime.InteropServices;
-using GalacticLauncher.Core.Enums;
 
 namespace GalacticLauncher.Core;
 
 public static class Utils
 {
-    public static bool IsDevelopment => HasArgumentCLI("--debug") || HasArgumentCLI("--development");
     public static bool IsProduction => !IsDevelopment;
+    public static bool IsDevelopment =>
+        HasArgumentCLI("--debug") ||
+        HasArgumentCLI("--development") ||
+        HasArgumentCLI("--dev");
 
     public static string Address => IsProduction
         ? "https://api-galactic.se3.page:27687"
@@ -17,24 +19,24 @@ public static class Utils
         ? "990a6a6647d286c7f22badf4a1bcf534b64eb372f8daee4802fccc023cb04467"
         : "8d2df4330cc5662ea74196ab3c1958c51f0ce45ce9143f2bb8e77fc4d6126005";
 
-    public static PlatformType CurrentPlatform
+    public static Platform CurrentPlatform
     {
         get
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return PlatformType.Windows;
+                return Platform.Windows;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                return PlatformType.Linux;
+                return Platform.Linux;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 return RuntimeInformation.ProcessArchitecture == Architecture.Arm64
-                    ? PlatformType.MacSilicon
-                    : PlatformType.MacIntel;
+                    ? Platform.MacSilicon
+                    : Platform.MacIntel;
             }
 
-            return PlatformType.Unknown;
+            throw new PlatformNotSupportedException("Couldn't identify current platform.");
         }
     }
 
@@ -47,11 +49,17 @@ public static class Utils
     public static bool IsNullRecursive(object? obj)
     {
         if (obj is null) return true;
-        if (obj.GetType().IsPrimitive || obj is string || obj.GetType().IsEnum) return false;
+
+        if (obj.GetType().IsPrimitive ||
+            obj is string ||
+            obj.GetType().IsEnum) return false;
 
         if (obj is IEnumerable enumerable)
             return enumerable.Cast<object>().Any(IsNullRecursive);
 
-        return obj.GetType().GetProperties().Any(prop => IsNullRecursive(prop.GetValue(obj)));
+        return obj
+            .GetType()
+            .GetProperties()
+            .Any(prop => IsNullRecursive(prop.GetValue(obj)));
     }
 }

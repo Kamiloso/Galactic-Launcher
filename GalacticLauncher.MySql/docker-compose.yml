@@ -9,8 +9,7 @@ services:
       - "127.0.0.1:11201:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/etc/mysql/init.sql
-    command: --init-file /etc/mysql/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
 
 volumes:
