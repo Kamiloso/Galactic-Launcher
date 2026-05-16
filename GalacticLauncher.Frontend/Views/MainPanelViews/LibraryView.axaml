@@ -54,7 +54,7 @@
 		</Grid>
 
 		<!--search view-->
-		<Border Classes="librarySearch"
+		<Border Classes="SearchBorder"
 				Padding="20,20,20,30"
 				HorizontalAlignment="Right"
 				Width="230"
@@ -67,7 +67,7 @@
 								HorizontalAlignment="Left"
 								VerticalAlignment="Center">
 						
-						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/search.png"
+						<Image Source="/AvaloniaResources/Assets/Icons/search.png"
 							   RenderOptions.BitmapInterpolationMode="HighQuality"
 							   Height="15"
 							   Width="15"
@@ -93,7 +93,7 @@
 							VerticalAlignment="Center"
 							Margin="0,10,0,0">
 
-					<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
+					<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
 						   RenderOptions.BitmapInterpolationMode="HighQuality"
 						   Height="15"
 						   Width="15"

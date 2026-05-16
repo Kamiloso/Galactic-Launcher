@@ -1,13 +1,11 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-	<!--TextBox Galaxy Style-->
-	<Style Selector="TextBox.TagAddTextBox">
+	
+	
+	<!--TextBox-->
+	<Style Selector="TextBox">
 		<Setter Property="Background" Value="Transparent"/>
-		<Setter Property="MinHeight" Value="30"/>
-		<Setter Property="TextWrapping" Value="Wrap"/>
-		<Setter Property="AcceptsReturn" Value="True"/>
-
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="VerticalAlignment" Value="Stretch"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -16,12 +14,7 @@
 		<Setter Property="Foreground" Value="White"/>
 		<Setter Property="FontFamily" Value="{DynamicResource Roboto}"/>
 		<Setter Property="FontSize" Value="12"/>
-		<Setter Property="Padding" Value="10,5"/>
-		
-		<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled"/>
-		<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-
-
+		<Setter Property="Margin" Value="0,0,0,0"/>
 		<Style.Resources>
 			<SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent" />
 			<SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
@@ -31,27 +24,42 @@
 			<SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="Transparent" />
 		</Style.Resources>
 	</Style>
+	
+	
 
-	<!--Tag border-->
-	<Style Selector="Border.TagAddBorder">
+	<!--Border-->
+	<Style Selector="Border">
 		<Setter Property="BorderThickness" Value="2"/>
-		<Setter Property="BorderBrush" Value="{StaticResource TagBlue}"/>
-		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 		<Setter Property="CornerRadius" Value="20"/>
-
-		<Setter Property="MinHeight" Value="34"/>
-		<Setter Property="Padding" Value="5"/>
-
 	</Style>
-	<!--Game search border-->
-	<Style Selector="Border.GameAddBorder">
-		<Setter Property="BorderThickness" Value="2"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
+
+
+	<!--Button-->
+	<!--Menu button Appearance-->
+	<Style Selector="Button.menuItem">
+
+		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="FontSize" Value="20"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="Padding" Value="30,10,0,10"/>
+	</Style>
+
+	<!--Menu button Hover-->
+	<Style Selector="Button.menuItem:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource TagBlue}"/>
+	</Style>
+
+	<Style Selector="Button.menuItem:pressed /template/ ContentPresenter">
 		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
-		<Setter Property="CornerRadius" Value="20"/>
+	</Style>
 
-		<Setter Property="MinHeight" Value="34"/>
-		<Setter Property="Padding" Value="5"/>
-
+	<!--Acive-->
+	<Style Selector="Button.menuItem.active /template/ ContentPresenter">
+		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
 	</Style>
 </Styles>

@@ -7,7 +7,7 @@
 	<Grid ColumnDefinitions="2.5*,20,*">
 
 		<!--ADD TAG-->
-		<Border Classes="librarySearch"
+		<Border Classes="SearchBorder"
 				Padding="20,20,20,30"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
@@ -21,7 +21,7 @@
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center">
 
-						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
+						<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
 							   RenderOptions.BitmapInterpolationMode="HighQuality"
 							   Height="15"
 							   Width="15"
@@ -49,7 +49,7 @@
 							VerticalAlignment="Center"
 							Margin="0,10,0,0">
 
-						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
+						<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
 							   RenderOptions.BitmapInterpolationMode="HighQuality"
 							   Height="15"
 							   Width="15"
@@ -72,7 +72,7 @@
 		</Border>
 
 		<!--TAGS HERE-->
-		<Border Classes="librarySearch"
+		<Border Classes="SearchBorder"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
 				Padding="20,20,20,20"
@@ -86,7 +86,7 @@
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center">
 
-					<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/LibraryAssets/tag.png"
+					<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
 						   RenderOptions.BitmapInterpolationMode="HighQuality"
 						   Height="15"
 						   Width="15"

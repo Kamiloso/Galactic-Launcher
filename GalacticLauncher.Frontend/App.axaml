@@ -37,27 +37,31 @@
 	
 	<Application.Resources>
 		<ResourceDictionary>
-			<WindowIcon x:Key="AppIcon">avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/ikonka.png</WindowIcon>
+
+			<!--App icon load-->
+			<WindowIcon x:Key="AppIcon">avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Logo/ikonka.png</WindowIcon>
+
+			<!--Resource dictionaries load-->
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/Gradients.axaml"/>
 				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/fonts.axaml"/>
+				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/PinkThemeGradient.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>
 
 	<Application.Styles>
 		<FluentTheme/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/SideMenuStyles/sideMenufonts.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/SideMenuStyles/buttons.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/borderGalaxy.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/mainPanelFonts.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/HomeStyles/homeButtons.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/libraryButtons.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/searchBorder.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/libraryFonts.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/LibraryStyles/searchTextBox.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/MainPanelStyles/ScrollBar.axaml"/>
-		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/AdminStyles/AddTagStyles.axaml"/>
+
+		<!--Page styles include-->
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/ButtonStyles.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/TextBoxStyles.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/TextBlockStyles.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/BorderStyles.axaml"/>
+
+		<!--Default styles include-->
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/DefaultStyles/ScrollBar.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/DefaultStyles/BasicElements.axaml"/>
 
 	</Application.Styles>
 
