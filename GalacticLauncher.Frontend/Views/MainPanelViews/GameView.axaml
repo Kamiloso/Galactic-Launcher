@@ -43,7 +43,7 @@
 												ClipToBounds="True">
 
 											<!--Banner image-->
-											<Image Source="/AvaloniaResources/Assets/GameAssets/banner.png"
+											<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png"
 												   Stretch="UniformToFill"></Image>
 										</Border>
 									</Viewbox>
@@ -61,7 +61,7 @@
 													ClipToBounds="True">
 
 												<!--Icon Image-->
-												<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/HomeViewAssets/temp3.jpg"
+												<Image Source="/AvaloniaResources/Assets/Placeholders/temp3.jpg"
 													   Stretch="UniformToFill"></Image>
 											</Border>
 										</Viewbox>

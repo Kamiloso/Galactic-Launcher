@@ -1,0 +1,94 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	
+	
+	<!--========= TAGS BORDERS ==================================-->
+	
+	
+	<!--Tag search border-->
+	<Style Selector="Border.TagSearchBorder">
+		<Setter Property="BorderBrush" Value="{StaticResource TagBlue}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+	</Style>
+
+	<!--View tags border-->
+	<Style Selector="Border.TagsBorder">
+		<Setter Property="BorderBrush" Value="{StaticResource TagBlue}"/>
+		<Setter Property="Background" Value="{DynamicResource BackgroundGradient}"/>
+	</Style>
+
+	
+	
+	<!--========= GAMES BORDERS ==================================-->
+	
+	<!--Game search border-->
+	<Style Selector="Border.GameAddBorder">
+		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+		<Setter Property="MinHeight" Value="34"/>
+		<Setter Property="Padding" Value="5"/>
+	</Style>
+
+	<!--View games border-->
+	<Style Selector="Border.GameSearchBorder">
+		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+	</Style>
+
+	
+
+	<!--========= GENERAL VIEW BORDER ==================================-->
+	
+	<!--Panel Galaxy-->
+	<Style Selector="Border.galaxyBorder">
+		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Background" Value="{DynamicResource MainPanelGradient}"/>
+	</Style>
+
+	<!--Header Galaxy-->
+	<Style Selector="Border.galaxyHeader">
+		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+		<Setter Property="HorizontalAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Bottom"/>
+		<Setter Property="Margin" Value="0,0,0,5"/>
+	</Style>
+
+
+	<!--========= GENERAL BORDER FOR SEARCH SECTION ==================================-->
+
+	<!--Search border-->
+	<Style Selector="Border.SearchBorder">
+		<Setter Property="Background" Value="{DynamicResource SideMenuGradient}"/>
+	</Style>
+	
+	
+
+	<!--stack panel no games found-->
+	<Style Selector="ContentControl.noFound">
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<StackPanel Orientation="Vertical">
+					<TextBlock Classes="nothingFound"
+							   Text="{TemplateBinding Tag}"
+							   HorizontalAlignment="Center"
+							   Margin="0,20,0,10"/>
+
+					<Image Source="/AvaloniaResources/Assets/Icons/no_recommendation.png"
+						   HorizontalAlignment="Center"
+						   Width="40"
+						   Height="40"/>
+
+					<ContentPresenter Name="PART_ContentPresenter"
+									  Content="{TemplateBinding Content}"/>
+				</StackPanel>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+
+
+</Styles>

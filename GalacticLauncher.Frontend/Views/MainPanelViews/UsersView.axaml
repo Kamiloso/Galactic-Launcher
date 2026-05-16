@@ -5,7 +5,7 @@
 			 x:DataType="vm:UsersViewModel">
 	
 		<!--users view-->
-		<Border Classes="librarySearch"
+		<Border Classes="SearchBorder"
 				Padding="20,20,20,30"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
@@ -18,7 +18,7 @@
 								HorizontalAlignment="Left"
 								VerticalAlignment="Center">
 
-						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/AdminAssets/user.png"
+						<Image Source="/AvaloniaResources/Assets/Icons/user.png"
 							   RenderOptions.BitmapInterpolationMode="HighQuality"
 							   Height="15"
 							   Width="15"

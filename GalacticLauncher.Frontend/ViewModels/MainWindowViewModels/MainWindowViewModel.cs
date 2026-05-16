@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml.Styling;
 using GalacticLauncher.Core.DbRecords;
 using GalacticLauncher.Frontend.Network;
 using GalacticLauncher.Frontend.ViewModels.Interfaces;
@@ -70,6 +71,7 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
                 nav.OnActivated();
             }
         }
+
         #endregion
 
         // TODO: Rozdzielić rzeczy związane z Api do osobnego modelu

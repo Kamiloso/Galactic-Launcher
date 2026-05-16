@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!--Galaxy Gradient Colors-->
+	<Color x:Key="GalaxyPinkiePie">#ff42b6</Color>
+	<Color x:Key="GalaxyPurple">#a600ff</Color>
+	<Color x:Key="GalaxySkytBlue">#5f79ff</Color>
+	
+	<!--Galaxy gradient-->
+	<LinearGradientBrush x:Key="GalaxyGradient"
+						 StartPoint="0%,0%"
+						 EndPoint="100%,100%">
+		<GradientStop Color="{StaticResource GalaxyPinkiePie}" Offset="0.0"/>
+		<GradientStop Color="{StaticResource GalaxyPurple}" Offset="0.5"/>
+		<GradientStop Color="{StaticResource GalaxySkytBlue}" Offset="1.0"/>
+	</LinearGradientBrush>
+	
+	
+</ResourceDictionary>
