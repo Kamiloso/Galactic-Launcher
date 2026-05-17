@@ -1,7 +1,7 @@
-namespace GalacticLauncher.Core.DbModels;
+namespace GalacticLauncher.Backend.Models;
 
 // Represents the 'games' table
-public record Game
+public record GameEntity
 {
     public long Id { get; init; } = 0; // auto_increment
     public required string Name { get; init; }

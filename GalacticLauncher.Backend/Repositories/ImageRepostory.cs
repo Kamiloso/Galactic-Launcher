@@ -1,23 +1,35 @@
 using Dapper;
-using GalacticLauncher.Core.DbModels;
+using GalacticLauncher.Backend.Infrastructure;
+using GalacticLauncher.Backend.Models;
 using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
 
 public interface IImageRepository
 {
-    Task<IEnumerable<Image>> GetImagesByGameId(long gameId);
+    Task<ImageEntity> GetImageById(long id);
+    Task<IEnumerable<ImageEntity>> GetImagesByGameId(long idGame);
 }
 
-public class ImageRepository(MySqlConnection db) : IImageRepository
+internal class ImageRepository(DbSession session) : IImageRepository
 {
-    public async Task<IEnumerable<Image>> GetImagesByGameId(long gameId)
+    private readonly MySqlConnection _db = session.Connection;
+
+    public async Task<ImageEntity> GetImageById(long id)
     {
-        return await db.QueryAsync<Image>("""
-            SELECT * FROM images
-                WHERE id_game = @p1
-            """,
-            new { p1 = gameId }
+        return await _db.QuerySingleAsync<ImageEntity>(
+            "SELECT * FROM images WHERE id = @p1",
+            new { p1 = id },
+            transaction: session.Transaction
+        );
+    }
+
+    public async Task<IEnumerable<ImageEntity>> GetImagesByGameId(long idGame)
+    {
+        return await _db.QueryAsync<ImageEntity>(
+            "SELECT * FROM images WHERE id_game = @p1",
+            new { p1 = idGame },
+            transaction: session.Transaction
         );
     }
 }

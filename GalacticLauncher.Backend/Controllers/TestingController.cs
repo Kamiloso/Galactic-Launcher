@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using GalacticLauncher.Core;
 using Microsoft.AspNetCore.RateLimiting;
-using GalacticLauncher.Core.DbModels;
-using GalacticLauncher.Backend.Patches;
+using GalacticLauncher.Backend.Infrastructure;
+using GalacticLauncher.Core.Models;
 
-namespace GalacticLauncher.Backend.Endpoints;
+namespace GalacticLauncher.Backend.Controllers;
 
 [ApiController]
 [Route("testing")]
@@ -14,17 +13,14 @@ public class TestingController(
 {
     [HttpPost("game-echo")] // may be GET as well (prefer GET), but POST gives more possibilities
     [EnableRateLimiting("LowCost")]
-    [EndpointSummary("It's like echo. Send it a game and it will return it to you.")]
+    [EndpointSummary("I think it's self-explanatory.")]
     [EndpointDescription("This is a robust description...")]
     public async Task<ActionResult<Game>> GameEcho(
-        [FromBody] Game gameInfo)
+        [FromBody] Game game)
     {
-        if (Utils.IsProduction)
-            return NotFound(); // ignore in production
-
         LogCallToConsole();
 
-        return Ok(gameInfo);
+        return Ok(game);
     }
 
     // ---------------------------------------------------

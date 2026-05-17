@@ -5,8 +5,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.RateLimiting;
 using MySqlConnector;
+using GalacticLauncher.Backend.Infrastructure;
 
-namespace GalacticLauncher.Backend.Startup;
+namespace GalacticLauncher.Backend;
 
 public static class ServiceExtensions
 {
@@ -102,6 +103,6 @@ public static class ServiceExtensions
 
         string connectionString = builder.ConnectionString;
 
-        srv.AddScoped(_ => new MySqlConnection(connectionString));
+        srv.AddScoped(_ => new DbSession(connectionString));
     }
 }

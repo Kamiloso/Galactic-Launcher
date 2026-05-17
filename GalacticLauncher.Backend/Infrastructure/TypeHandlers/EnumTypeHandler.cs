@@ -1,14 +1,14 @@
 ﻿using Dapper;
 using System.Data;
 
-namespace GalacticLauncher.Backend.Patches;
+namespace GalacticLauncher.Backend.Infrastructure.TypeHandlers;
 
-public class EnumAsStringHandler<T> : SqlMapper.TypeHandler<T> where T : struct, Enum
+internal class EnumTypeHandler<T> : SqlMapper.TypeHandler<T> where T : struct, Enum
 {
     public override void SetValue(IDbDataParameter parameter, T value)
     {
-        parameter.Value = value.ToString().ToLowerInvariant();
         parameter.DbType = DbType.String;
+        parameter.Value = value.ToString().ToLowerInvariant();
     }
 
     public override T Parse(object value)

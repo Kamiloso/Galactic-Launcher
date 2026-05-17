@@ -1,7 +1,7 @@
-namespace GalacticLauncher.Core.DbModels;
+namespace GalacticLauncher.Backend.Models;
 
 // Represents the 'history' table
-public record History
+public record HistoryEntity
 {
     public long Id { get; init; } = 0; // auto_increment
     public required string Info { get; init; }

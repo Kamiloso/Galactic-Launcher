@@ -1,9 +1,11 @@
+global using Version = GalacticLauncher.Core.Models.Version;
 using Dapper;
-using GalacticLauncher.Backend;
-using GalacticLauncher.Backend.Startup;
-using GalacticLauncher.Backend.Patches;
 using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Core;
+using GalacticLauncher.Backend.Services;
+using GalacticLauncher.Backend;
+using GalacticLauncher.Backend.Infrastructure.DbScopes;
+using GalacticLauncher.Backend.Infrastructure.TypeHandlers;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -13,10 +15,12 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 
 DefaultTypeMap.MatchNamesWithUnderscores = true; // snake_case!
 
-SqlMapper.AddTypeHandler(new EnumAsStringHandler<VersionType>());
-SqlMapper.AddTypeHandler(new EnumAsStringHandler<Platform>());
-SqlMapper.AddTypeHandler(new EnumAsStringHandler<AlertLevel>());
-SqlMapper.AddTypeHandler(new EnumAsStringHandler<ImageType>());
+SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+
+SqlMapper.AddTypeHandler(new EnumTypeHandler<VersionType>());
+SqlMapper.AddTypeHandler(new EnumTypeHandler<Platform>());
+SqlMapper.AddTypeHandler(new EnumTypeHandler<AlertLevel>());
+SqlMapper.AddTypeHandler(new EnumTypeHandler<ImageType>());
 
 var services = builder.Services;
 
@@ -40,7 +44,10 @@ services.AddScoped<IVersionRepository, VersionRepository>();
 services.AddScoped<ITagRepository, TagRepository>();
 
 // Services
+services.AddSingleton<IAppScopeFactory, AppScopeFactory>();
+services.AddSingleton<IDataAccessService, DataAccessService>();
 
+// Controllers
 services.AddControllers();
 
 // ----- APP SECTION -----

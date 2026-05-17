@@ -1,7 +1,9 @@
-namespace GalacticLauncher.Core.DbModels;
+using GalacticLauncher.Core;
+
+namespace GalacticLauncher.Backend.Models;
 
 // Represents the 'images' table
-public record Image
+public record ImageEntity
 {
     public long Id { get; init; } = 0; // auto_increment
     public required string DownloadUrl { get; init; }

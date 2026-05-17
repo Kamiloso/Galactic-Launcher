@@ -1,23 +1,24 @@
--- sql script to initialize the database for the galactic launcher backend.
--- everything should be idempotent here, so it can be run multiple times without causing errors.
+-- ------------------------------------------------------------------------ --
+-- sql script to initialize the database for the galactic launcher backend. --
+-- ------------------------------------------------------------------------ --
 
--- database & user setup
-
-CREATE DATABASE IF NOT EXISTS galactic;
 USE galactic;
 
-CREATE USER IF NOT EXISTS 'galactic_app'@'%' IDENTIFIED BY 'HardCodedPass!123';
+-- user setup
+
+DROP USER IF EXISTS 'galactic_app'@'%';
+CREATE USER 'galactic_app'@'%' IDENTIFIED BY 'HardCodedPass!123';
 GRANT SELECT, INSERT, UPDATE, DELETE ON galactic.* TO 'galactic_app'@'%';
 
 -- schema for all tables
 
-CREATE TABLE IF NOT EXISTS games (
+CREATE TABLE games (
     id bigint primary key auto_increment not null,
     name VARCHAR(255) not null,
     description text not null
     );
 
-CREATE TABLE IF NOT EXISTS versions (
+CREATE TABLE versions (
     id bigint primary key auto_increment not null,
     caption VARCHAR(255) not null,
     type enum('alpha', 'beta', 'release', 'snapshot') not null,
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS versions (
     foreign key(id_game) references games(id) on delete cascade
     );
 
-CREATE TABLE IF NOT EXISTS images (
+CREATE TABLE images (
     id bigint primary key auto_increment not null,
     download_url text not null,
     type enum('icon', 'screenshot', 'banner') not null,
@@ -41,13 +42,13 @@ CREATE TABLE IF NOT EXISTS images (
     foreign key(id_game) references games(id) on delete cascade
     );
 
-CREATE TABLE IF NOT EXISTS tags (
+CREATE TABLE tags (
     id bigint primary key auto_increment not null,
     name VARCHAR(255) not null unique,
     description text not null
     );
 
-CREATE TABLE IF NOT EXISTS games_tags (
+CREATE TABLE games_tags (
     id_game bigint not null,
     id_tag bigint not null,
     primary key(id_game, id_tag),
@@ -55,7 +56,7 @@ CREATE TABLE IF NOT EXISTS games_tags (
     foreign key(id_tag) references tags(id) on delete cascade
     );
 
-CREATE TABLE IF NOT EXISTS history (
+CREATE TABLE history (
     id bigint primary key auto_increment not null,
     info text not null,
     timestamp datetime not null default current_timestamp,

@@ -1,7 +1,7 @@
-namespace GalacticLauncher.Core.DbModels;
+namespace GalacticLauncher.Backend.Models;
 
 // Represents the 'tags' table
-public record Tag
+public record TagEntity
 {
     public long Id { get; init; } = 0; // auto_increment
     public required string Name { get; init; }

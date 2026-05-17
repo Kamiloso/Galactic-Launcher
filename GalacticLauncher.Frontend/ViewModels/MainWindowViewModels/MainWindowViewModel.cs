@@ -4,8 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml.Styling;
-using GalacticLauncher.Core.DbRecords;
+using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Network;
 using GalacticLauncher.Frontend.ViewModels.Interfaces;
 using GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
@@ -24,9 +23,10 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
         {
             get => _currentPage;
             set
-            { _currentPage = value; 
-              OnPropertyChanged(); 
-              OnPropertyChanged(nameof(CurrentActivePage)); 
+            {
+                _currentPage = value; 
+                OnPropertyChanged(); 
+                OnPropertyChanged(nameof(CurrentActivePage)); 
             }
         }
         public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
@@ -96,9 +96,9 @@ namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
             ResponseJson = "Pobieranie danych z serwera...";
             try
             {
-                GameInfo gameInfo = await Api.PostJsonAsync<GameInfo, GameInfo>(
+                Game gameInfo = await Api.PostJsonAsync<Game, Game>(
                     "testing/game-echo",
-                    new GameInfo{ Id = 123, Name = "Space Eternity 3", Description = "Some Description..." }
+                    new Game{ Id = 123, Name = "Space Eternity 3", Description = "Some Description...", IconUrl = null }
                     );
 
                 ResponseJson = JsonSerializer.Serialize(gameInfo);

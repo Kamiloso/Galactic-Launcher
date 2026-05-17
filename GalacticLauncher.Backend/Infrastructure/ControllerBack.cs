@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
 
-namespace GalacticLauncher.Backend.Patches;
+namespace GalacticLauncher.Backend.Infrastructure;
 
 public class ControllerBack(
     ILogger logger
@@ -11,9 +11,10 @@ public class ControllerBack(
         HttpContext.Connection.RemoteIpAddress?.ToString()
         ?? "Unknown";
 
-    protected void LogCallToConsole(string? moreInfo = null, [CallerMemberName] string caller = "")
+    protected void LogCallToConsole(object? moreInfo = null,
+        [CallerMemberName] string caller = "")
     {
-        if (moreInfo == null)
+        if (moreInfo is null)
         {
             logger.LogInformation("Address '{IP}' called {Method}(...)",
                 IP, caller);
