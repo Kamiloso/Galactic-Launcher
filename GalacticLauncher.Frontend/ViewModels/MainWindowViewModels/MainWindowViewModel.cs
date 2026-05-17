@@ -1,122 +1,116 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Avalonia.Controls;
 using GalacticLauncher.Core.Models;
-using GalacticLauncher.Frontend.Network;
+using GalacticLauncher.Frontend.Networking;
 using GalacticLauncher.Frontend.ViewModels.Interfaces;
 using GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
 
-namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels
+namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
+
+internal class MainWindowViewModel : INotifyPropertyChanged
 {
-    internal class MainWindowViewModel : INotifyPropertyChanged
+    private HomeViewModel? _homePage;
+    private LibraryViewModel? _libraryPage;
+    private GameViewModel? _gamePage;
+    private AdminViewModel? _adminPage;
+
+    private object? _currentPage;
+    public object? CurrentPage
     {
-        private HomeViewModel? _homePage;
-        private LibraryViewModel? _libraryPage;
-        private GameViewModel? _gamePage;
-        private AdminViewModel? _adminPage;
-
-        private object? _currentPage;
-        public object? CurrentPage
+        get => _currentPage;
+        set
         {
-            get => _currentPage;
-            set
-            {
-                _currentPage = value; 
-                OnPropertyChanged(); 
-                OnPropertyChanged(nameof(CurrentActivePage)); 
-            }
+            _currentPage = value; 
+            OnPropertyChanged(); 
+            OnPropertyChanged(nameof(CurrentActivePage)); 
         }
-        public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
-
-        private Button _currentButton;
-        public MainWindowViewModel()
-        {
-            CurrentPage = new HomeViewModel(this);
-        }
-
-        #region View navigation
-        public void ShowHome()
-        {
-            _homePage ??= new HomeViewModel(this);
-            SetCurrentPage(_homePage);
-        }
-
-        public void ShowLibrary()
-        {
-            _libraryPage ??= new LibraryViewModel(this);
-            SetCurrentPage(_libraryPage);
-        }
-
-        public void ShowGame()
-        {
-            _gamePage ??= new GameViewModel();
-            SetCurrentPage(_gamePage);
-        }
-
-        public void ShowAdmin()
-        {
-            _adminPage ??= new AdminViewModel(this);
-            SetCurrentPage(_adminPage);
-        }
-
-        private void SetCurrentPage(object page)
-        {
-            CurrentPage = page;
-
-            if (page is INavigationAware nav)
-            {
-                nav.OnActivated();
-            }
-        }
-
-        #endregion
-
-        // TODO: Rozdzielić rzeczy związane z Api do osobnego modelu
-
-
-        // THIS IS A SECURITY CONCERN
-        // ------------------------------
-        // TODO: Use "#define DEBUG" to display a LARGE warning
-        // indicating that the debug build is currently active!!!
-
-        public required IApiService Api { get; init; }
-
-        private string _responseJson = "";
-        public string ResponseJson
-        {
-            get => _responseJson;
-            set { _responseJson = value; OnPropertyChanged(); }
-        }
-
-        public async Task SendRequestAsync()
-        {
-            ResponseJson = "Pobieranie danych z serwera...";
-            try
-            {
-                Game gameInfo = await Api.PostJsonAsync<Game, Game>(
-                    "testing/game-echo",
-                    new Game{ Id = 123, Name = "Space Eternity 3", Description = "Some Description...", IconUrl = null }
-                    );
-
-                ResponseJson = JsonSerializer.Serialize(gameInfo);
-            }
-            catch (Exception ex)
-            {
-                ResponseJson = $"Wystąpił błąd:\n{ex.Message}";
-            }
-        }
-
-        #region View Notifier
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
+    public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
+
+    public MainWindowViewModel()
+    {
+        CurrentPage = new HomeViewModel(this);
+    }
+
+    #region View navigation
+    public void ShowHome()
+    {
+        _homePage ??= new HomeViewModel(this);
+        SetCurrentPage(_homePage);
+    }
+
+    public void ShowLibrary()
+    {
+        _libraryPage ??= new LibraryViewModel(this);
+        SetCurrentPage(_libraryPage);
+    }
+
+    public void ShowGame()
+    {
+        _gamePage ??= new GameViewModel();
+        SetCurrentPage(_gamePage);
+    }
+
+    public void ShowAdmin()
+    {
+        _adminPage ??= new AdminViewModel(this);
+        SetCurrentPage(_adminPage);
+    }
+
+    private void SetCurrentPage(object page)
+    {
+        CurrentPage = page;
+
+        if (page is INavigationAware nav)
+        {
+            nav.OnActivated();
+        }
+    }
+
+    #endregion
+
+    // TODO: Rozdzielić rzeczy związane z Api do osobnego modelu
+
+    public required IHttpService Api { get; init; }
+
+    private string _responseJson = "";
+    public string ResponseJson
+    {
+        get => _responseJson;
+        set { _responseJson = value; OnPropertyChanged(); }
+    }
+
+    public async Task SendRequestAsync()
+    {
+        ResponseJson = "Pobieranie danych z serwera...";
+        try
+        {
+            Game gameInfo = await Api.PostAsync<Game, Game>(
+                "testing/game-echo",
+                new Game{
+                    Id = 123,
+                    Name = "Space Eternity 3",
+                    Description = "Some Description...",
+                    IconUrl = null
+                });
+
+            ResponseJson = JsonSerializer.Serialize(gameInfo);
+        }
+        catch (ApiException ex)
+        {
+            ResponseJson = $"Wystąpił błąd:\n{ex.Message}";
+        }
+    }
+
+    #region View Notifier
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
 }

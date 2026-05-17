@@ -4,14 +4,14 @@ namespace GalacticLauncher.Backend.Models.Conversions;
 
 internal static class ToDomainExtensions
 {
-    public static Game ToDomain(this GameEntity game)
+    public static Game ToDomain(this GameEntity game, ImageEntity? image)
     {
         return new Game
         {
             Id = game.Id,
             Name = game.Name,
             Description = game.Description,
-            IconUrl = null, // no icon for this conversion
+            IconUrl = image?.DownloadUrl,
         };
     }
 

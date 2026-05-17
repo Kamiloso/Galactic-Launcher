@@ -7,63 +7,66 @@ namespace GalacticLauncher.Backend.Repositories;
 
 public interface IGameRepository
 {
-    Task<GameEntity> GetGameById(long id);
-    Task<IEnumerable<GameEntity>> GetAllGames();
-    Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithIcons();
-    Task<IEnumerable<GameEntity>> GetGamesByTagIds(IEnumerable<long> tagIds);
+    Task<GameWithIconEntity?> GetGameById(long id);
+    Task<IEnumerable<GameWithIconEntity>> GetAllGames();
+    Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithTagContraints(IEnumerable<long> tagIds);
 }
 
 internal class GameRepository(DbSession session) : IGameRepository
 {
     private readonly MySqlConnection _db = session.Connection;
 
-    public async Task<GameEntity> GetGameById(long id)
+    public async Task<GameWithIconEntity?> GetGameById(long id)
     {
-        return await _db.QuerySingleAsync<GameEntity>(
-            "SELECT * FROM games WHERE id = @p1",
+        return await _db.QuerySingleOrDefaultAsync<GameWithIconEntity>($"""
+            WITH temp AS (
+                SELECT * FROM games
+                    WHERE id = @p1
+            )
+            {ICON_SEARCH("temp")}
+            """,
             new { p1 = id },
-            transaction: session.Transaction
-            );
+            transaction: session.Transaction);
     }
 
-    public async Task<IEnumerable<GameEntity>> GetAllGames()
+    public async Task<IEnumerable<GameWithIconEntity>> GetAllGames()
     {
-        return await _db.QueryAsync<GameEntity>(
-            "SELECT * FROM games",
-            transaction: session.Transaction
-            );
+        return await _db.QueryAsync<GameWithIconEntity>(
+            $"{ICON_SEARCH("games")}",
+            transaction: session.Transaction);
     }
 
-    public async Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithIcons()
+    public async Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithTagContraints(IEnumerable<long> tagIds)
     {
-        return await _db.QueryAsync<GameWithIconEntity>("""
-            SELECT games.*, images.download_url AS icon_url
-                FROM games
-                LEFT JOIN images ON
-                    games.id = images.id_game AND
-                    images.type = 'icon' AND
-                    images.id = (
-                        SELECT MAX(id)
-                        FROM images i2
-                        WHERE
-                            i2.id_game = games.id AND
-                            i2.type = 'icon'
-                    )
+        if (!tagIds.Any())
+            return await GetAllGames();
+
+        return await _db.QueryAsync<GameWithIconEntity>($"""
+            WITH temp AS (
+                SELECT games.* FROM games
+                    JOIN games_tags ON games.id = games_tags.id_game
+                    WHERE games_tags.id_tag IN @p1
+                    GROUP BY games.id
+                    HAVING COUNT(*) = @p2
+            )
+            {ICON_SEARCH("temp")}
             """,
-            transaction: session.Transaction
-            );
+            new { p1 = tagIds, p2 = tagIds.Count() },
+            transaction: session.Transaction);
     }
 
-    public async Task<IEnumerable<GameEntity>> GetGamesByTagIds(IEnumerable<long> tagIds)
-    {
-        return await _db.QueryAsync<GameEntity>(
-            """
-            SELECT * FROM games
-                JOIN games_tags ON games.id = games_tags.id_game
-                WHERE games_tags.id_tag IN @p1
-            """,
-            new { p1 = tagIds.ToArray() },
-            transaction: session.Transaction
-            );
-    }
+    private static string ICON_SEARCH(string table) => $"""
+        SELECT {table}.*, images.download_url AS icon_url
+            FROM {table}
+            LEFT JOIN images ON
+                {table}.id = images.id_game AND
+                images.type = 'icon' AND
+                images.id = (
+                    SELECT MAX(id)
+                    FROM images i2
+                    WHERE
+                        i2.id_game = {table}.id AND
+                        i2.type = 'icon'
+                )
+        """;
 }

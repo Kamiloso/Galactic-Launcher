@@ -3,9 +3,10 @@ using Dapper;
 using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Core;
 using GalacticLauncher.Backend.Services;
-using GalacticLauncher.Backend;
 using GalacticLauncher.Backend.Infrastructure.DbScopes;
 using GalacticLauncher.Backend.Infrastructure.TypeHandlers;
+using GalacticLauncher.Backend.Infrastructure.Startup;
+using GalacticLauncher.Backend;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -26,13 +27,8 @@ var services = builder.Services;
 
 AppConfig config = services.ConfigureAppConfig(builder.Configuration);
 
-if (Utils.IsDevelopment)
-{
-    services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen(c => c.SupportNonNullableReferenceTypes());
-}
-
 // Startup
+services.ConfigureSwagger();
 services.ConfigureForwardedFor(config);
 services.ConfigureRateLimiters(config);
 services.AddDatabase(config);
@@ -46,6 +42,7 @@ services.AddScoped<ITagRepository, TagRepository>();
 // Services
 services.AddSingleton<IAppScopeFactory, AppScopeFactory>();
 services.AddSingleton<IDataAccessService, DataAccessService>();
+services.AddSingleton<IAdminService, AdminService>();
 
 // Controllers
 services.AddControllers();

@@ -3,11 +3,11 @@ using System;
 using System.Net.Http;
 using System.Security.Cryptography;
 
-namespace GalacticLauncher.Frontend.Network;
+namespace GalacticLauncher.Frontend.Networking;
 
-internal static class HttpClientProvider
+internal static class GalacticClientProvider
 {
-    public static double HttpTimeout => 10.0;
+    private const double HTTP_TIMEOUT = 10.0;
     public static HttpClient HttpClient { get; } = CreateHttpClient();
 
     private static HttpClient CreateHttpClient()
@@ -26,7 +26,7 @@ internal static class HttpClientProvider
 
         HttpClient client = new(handler)
         {
-            Timeout = TimeSpan.FromSeconds(HttpTimeout)
+            Timeout = TimeSpan.FromSeconds(HTTP_TIMEOUT)
         };
 
         return client;

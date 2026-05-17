@@ -4,31 +4,47 @@ namespace GalacticLauncher.Backend.Infrastructure.DbScopes;
 
 public interface IAppScopeFactory
 {
-    Task<IAppScope> CreateScopeAsync(IsolationLevel? isolationLevel);
+    Task<IAppScope> CreateScopeNoDbAsync();
+    Task<IAppScope> CreateScopeAsync(IsolationLevel? isolation);
 }
 
 internal class AppScopeFactory(IServiceScopeFactory scopeFactory) : IAppScopeFactory
 {
-    public async Task<IAppScope> CreateScopeAsync(IsolationLevel? isolationLevel)
+    public async Task<IAppScope> CreateScopeNoDbAsync()
     {
-        var scope = scopeFactory.CreateScope();
-        var session = scope.ServiceProvider.GetRequiredService<DbSession>();
+        IServiceScope scope = scopeFactory.CreateScope();
 
         try
         {
-            await session.Connection.OpenAsync();
-
-            if (isolationLevel.HasValue)
-            {
-                session.Transaction =
-                    await session.Connection.BeginTransactionAsync(isolationLevel.Value);
-            }
+            DbSession session =
+                scope.ServiceProvider.GetRequiredService<DbSession>();
 
             return new AppScope(scope, session);
         }
         catch
         {
-            await scope.DisposeSuitable();
+            if (scope is IAsyncDisposable asyncDisposable)
+                await asyncDisposable.DisposeAsync();
+            else
+                scope.Dispose();
+
+            throw;
+        }
+    }
+
+    public async Task<IAppScope> CreateScopeAsync(IsolationLevel? isolation)
+    {
+        IAppScope appScope = await CreateScopeNoDbAsync();
+
+        try
+        {
+            await appScope.ConnectAsync(isolation);
+
+            return appScope;
+        }
+        catch
+        {
+            await appScope.DisposeAsync();
 
             throw;
         }

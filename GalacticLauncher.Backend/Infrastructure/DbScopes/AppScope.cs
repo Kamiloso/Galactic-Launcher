@@ -1,36 +1,82 @@
-﻿namespace GalacticLauncher.Backend.Infrastructure.DbScopes;
+﻿using MySqlConnector;
+using System.Data;
+
+namespace GalacticLauncher.Backend.Infrastructure.DbScopes;
 
 public interface IAppScope : IAsyncDisposable
 {
-    T Resolve<T>() where T : notnull;
-    Task CompleteAsync();
+    T GetService<T>() where T : notnull;
+    Task ConnectAsync(IsolationLevel? isolation);
+    Task CommitAsync();
 }
 
 internal class AppScope(IServiceScope scope, DbSession session) : IAppScope
 {
-    private bool _isCompleted = false;
+    private MySqlConnection Connection => session.Connection;
+    private MySqlTransaction? Transaction
+    {
+        get => session.Transaction;
+        set => session.Transaction = value;
+    }
 
-    public T Resolve<T>() where T : notnull =>
+    private bool _started = false;
+    private bool _disposed = false;
+
+    public T GetService<T>() where T : notnull =>
         scope.ServiceProvider.GetRequiredService<T>();
 
-    public async Task CompleteAsync()
+    public async Task ConnectAsync(IsolationLevel? isolation)
     {
-        if (session.Transaction is not null && !_isCompleted)
+        if (_started || Transaction is not null)
+            throw new InvalidOperationException("Transaction already started.");
+
+        await Connection.OpenAsync();
+
+        if (isolation.HasValue)
         {
-            await session.Transaction.CommitAsync();
-            _isCompleted = true;
+            Transaction = await Connection.BeginTransactionAsync(isolation.Value);
         }
+
+        _started = true;
+    }
+
+    public async Task CommitAsync()
+    {
+        if (Transaction is null)
+            throw new InvalidOperationException("No transaction to commit.");
+
+        await Transaction.CommitAsync();
+        await Transaction.DisposeAsync();
+
+        Transaction = null;
     }
 
     public async ValueTask DisposeAsync()
     {
-        if (!_isCompleted && session.Transaction is not null)
+        if (_disposed) return;
+        _disposed = true;
+
+        if (Transaction is not null)
         {
-            try { await session.Transaction.RollbackAsync(); }
+            try
+            {
+                await Transaction.RollbackAsync();
+            }
             catch { /* ignore rollback errors */ }
+            finally
+            {
+                await Transaction.DisposeAsync();
+
+                Transaction = null;
+            }
         }
 
-        await session.DisposeAsync();
-        await scope.DisposeSuitable();
+        // Will also dispose the session,
+        // which will dispose the connection
+
+        if (scope is IAsyncDisposable asyncScope)
+            await asyncScope.DisposeAsync();
+        else
+            scope.Dispose();
     }
 }

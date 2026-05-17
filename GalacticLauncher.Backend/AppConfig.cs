@@ -2,14 +2,21 @@
 
 public record AppConfig
 {
-    public required AppSection App { get; init; }
+    public required AdminSection Admin { get; init; }
     public required ListenerSection Listener { get; init; }
     public required DatabaseSection Database { get; init; }
     public required RateLimitingSection Limiter { get; init; }
 
-    public record AppSection
+    public record AdminSection
     {
-        public required string AdminPhrase { get; init; }
+        public required int AdminSessionSeconds { get; init; }
+        public required IEnumerable<LoginData> Logins { get; init; }
+
+        public record LoginData
+        {
+            public required string Username { get; init; }
+            public required string Password { get; init; }
+        }
     }
 
     public record ListenerSection

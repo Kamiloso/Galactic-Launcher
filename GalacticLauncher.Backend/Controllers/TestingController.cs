@@ -11,23 +11,15 @@ public class TestingController(
     ILogger<TestingController> logger
     ) : ControllerBack(logger)
 {
-    [HttpPost("game-echo")] // may be GET as well (prefer GET), but POST gives more possibilities
+    [HttpPost("game-echo")]
     [EnableRateLimiting("LowCost")]
-    [EndpointSummary("I think it's self-explanatory.")]
-    [EndpointDescription("This is a robust description...")]
-    public async Task<ActionResult<Game>> GameEcho(
+    [EndpointDescription("It returns provided game to you.")]
+    public ActionResult<Game> GameEcho(
         [FromBody] Game game)
     {
         LogCallToConsole();
 
-        return Ok(game);
+        return HandleEndpoint(
+            () => game);
     }
-
-    // ---------------------------------------------------
-    // may copy-paste more endpoints but may also copy the whole class
-    // do as you wish, it should be practical and clean
-    // ---------------------------------------------------
-    // also do not put any advanced computations here
-    // only endpoint handling, SRP
-    // ---------------------------------------------------
 }

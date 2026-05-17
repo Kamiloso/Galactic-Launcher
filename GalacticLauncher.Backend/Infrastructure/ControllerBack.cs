@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace GalacticLauncher.Backend.Infrastructure;
 
-public class ControllerBack(
+public abstract class ControllerBack(
     ILogger logger
     ) : ControllerBase
 {
@@ -11,18 +11,45 @@ public class ControllerBack(
         HttpContext.Connection.RemoteIpAddress?.ToString()
         ?? "Unknown";
 
-    protected void LogCallToConsole(object? moreInfo = null,
-        [CallerMemberName] string caller = "")
+    protected void LogCallToConsole(object? info = null, bool important = false,
+        [CallerMemberName] string method = "")
     {
-        if (moreInfo is null)
+        Action<string?, object?[]> log = important
+            ? logger.LogInformation
+            : logger.LogDebug;
+
+        Action logAction = info is null
+            ? () => log("Address '{IP}' called {Method}()", [IP, method])
+            : () => log("Address '{IP}' called {Method}(): {@Info}", [IP, method, info]);
+
+        logAction();
+    }
+
+    protected async Task<ActionResult<T>> HandleEndpointAsync<T>(Func<Task<T>> execute,
+        [CallerMemberName] string method = "")
+    {
+        try
         {
-            logger.LogInformation("Address '{IP}' called {Method}(...)",
-                IP, caller);
+            T result = await execute.Invoke();
+            return Ok(result);
         }
-        else
+        catch (ClientFaultException ex)
         {
-            logger.LogInformation("Address '{IP}' called {Method}(...): {MoreInfo}",
-                IP, caller, moreInfo);
+            logger.LogWarning(
+                "Address '{IP}' called {Method}() inproperly: {FaultInfo}",
+                IP, method, ex.FaultInfo);
+
+            return Problem(
+                detail: ex.Message,
+                statusCode: ex.StatusCode
+                );
         }
+    }
+
+    protected ActionResult<T> HandleEndpoint<T>(Func<T> execute,
+        [CallerMemberName] string method = "")
+    {
+        return HandleEndpointAsync(
+            () => Task.FromResult(execute()), method).Result;
     }
 }

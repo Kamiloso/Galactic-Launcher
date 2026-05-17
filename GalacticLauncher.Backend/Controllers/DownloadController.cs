@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
-using GalacticLauncher.Backend.Infrastructure;
-using GalacticLauncher.Core.Models;
+﻿using GalacticLauncher.Backend.Infrastructure;
 using GalacticLauncher.Backend.Services;
+using GalacticLauncher.Core.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace GalacticLauncher.Backend.Controllers;
 
@@ -13,60 +13,54 @@ public class DownloadController(
     IDataAccessService dataAccessService
     ) : ControllerBack(logger)
 {
-    [HttpGet("game-info")]
-    [EnableRateLimiting("MediumCost")]
-    [EndpointSummary("Returns detailed information about a game by its id.")]
-    public async Task<ActionResult<GameData>> GameInfo(
-        [FromQuery] long id)
-    {
-        LogCallToConsole(new { id });
-
-        GameData result =
-            await dataAccessService.GetGameDataById(id);
-
-        return Ok(result);
-    }
-
     [HttpGet("all-games")]
     [EnableRateLimiting("MediumCost")]
-    [EndpointSummary("Returns a list of all games basic information.")]
+    [EndpointDescription("Returns a list of all games.")]
     public async Task<ActionResult<IEnumerable<Game>>> AllGames()
     {
         LogCallToConsole();
 
-        IEnumerable<Game> result =
-            await dataAccessService.GetAllGames();
+        return await HandleEndpointAsync(
+            () => dataAccessService.GetAllGames());
+    }
 
-        return Ok(result);
+    [HttpGet("game-data")]
+    [EnableRateLimiting("MediumCost")]
+    [EndpointDescription("Returns detailed information about a specific game.")]
+    public async Task<ActionResult<GameData>> GameData(
+        [FromQuery] long id)
+    {
+        LogCallToConsole(new { id });
+
+        return await HandleEndpointAsync(
+            () => dataAccessService.GetGameDataById(id));
     }
 
     [HttpGet("all-tags")]
     [EnableRateLimiting("MediumCost")]
-    [EndpointSummary("Returns a list of all existing tags.")]
+    [EndpointDescription("Returns a list of all currently existing tags.")]
     public async Task<ActionResult<IEnumerable<Tag>>> AllTags()
     {
         LogCallToConsole();
 
-        IEnumerable<Tag> result =
-            await dataAccessService.GetAllTags();
-
-        return Ok(result);
+        return await HandleEndpointAsync(
+            () => dataAccessService.GetAllTags());
     }
 
     [HttpPost("games-by-tags")]
-    [EnableRateLimiting("HighCost")]
-    [EndpointSummary("Returns a list of games basic information with all of the given tags.")]
-    public async Task<ActionResult<Game>> GameInfo(
+    [EnableRateLimiting("MediumCost")]
+    [EndpointDescription("Returns a list of all games that contain all of the provided tags.")]
+    public async Task<ActionResult<IEnumerable<Game>>> GamesByTags(
         [FromBody] IEnumerable<long> tagIds)
     {
         LogCallToConsole(new { tagIds });
 
-        if (tagIds.Count() > 10)
-            return BadRequest("Too many tags. Maximum allowed is 10.");
+        return await HandleEndpointAsync(() =>
+        {
+            if (tagIds.Count() > 16)
+                throw ClientFaultException.BadRequest400("Too many tags provided. Max 16 allowed.");
 
-        IEnumerable<Game> result =
-            await dataAccessService.GetGamesByTagIds(tagIds);
-
-        return Ok(result);
+            return dataAccessService.GetGamesByTagIds(tagIds);
+        });
     }
 }

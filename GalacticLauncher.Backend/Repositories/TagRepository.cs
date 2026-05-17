@@ -7,7 +7,7 @@ namespace GalacticLauncher.Backend.Repositories;
 
 public interface ITagRepository
 {
-    Task<TagEntity> GetById(int id);
+    Task<TagEntity?> GetTagById(int id);
     Task<IEnumerable<TagEntity>> GetAllTags();
     Task<IEnumerable<TagEntity>> GetTagsByGameId(long idGame);
 }
@@ -16,21 +16,19 @@ internal class TagRepository(DbSession session) : ITagRepository
 {
     private readonly MySqlConnection _db = session.Connection;
 
-    public async Task<TagEntity> GetById(int id)
+    public async Task<TagEntity?> GetTagById(int id)
     {
-        return await _db.QuerySingleAsync<TagEntity>(
+        return await _db.QuerySingleOrDefaultAsync<TagEntity>(
             "SELECT * FROM tags WHERE id = @p1",
             new { p1 = id },
-            transaction: session.Transaction
-        );
+            transaction: session.Transaction);
     }
 
     public async Task<IEnumerable<TagEntity>> GetAllTags()
     {
         return await _db.QueryAsync<TagEntity>(
             "SELECT * FROM tags",
-            transaction: session.Transaction
-        );
+            transaction: session.Transaction);
     }
 
     public async Task<IEnumerable<TagEntity>> GetTagsByGameId(long idGame)
@@ -41,7 +39,6 @@ internal class TagRepository(DbSession session) : ITagRepository
                 WHERE games_tags.id_game = @p1
             """,
             new { p1 = idGame },
-            transaction: session.Transaction
-        );
+            transaction: session.Transaction);
     }
 }

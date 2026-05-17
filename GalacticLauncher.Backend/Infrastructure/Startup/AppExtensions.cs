@@ -1,6 +1,6 @@
 ﻿using GalacticLauncher.Core;
 
-namespace GalacticLauncher.Backend;
+namespace GalacticLauncher.Backend.Infrastructure.Startup;
 
 public static class AppExtensions
 {

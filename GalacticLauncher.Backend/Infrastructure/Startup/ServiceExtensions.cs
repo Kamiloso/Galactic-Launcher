@@ -7,7 +7,7 @@ using System.Threading.RateLimiting;
 using MySqlConnector;
 using GalacticLauncher.Backend.Infrastructure;
 
-namespace GalacticLauncher.Backend;
+namespace GalacticLauncher.Backend.Infrastructure.Startup;
 
 public static class ServiceExtensions
 {
@@ -23,6 +23,19 @@ public static class ServiceExtensions
 
         services.AddSingleton(config!);
         return config!;
+    }
+
+    public static void ConfigureSwagger(this IServiceCollection services)
+    {
+        if (Utils.IsDevelopment)
+        {
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
+            {
+                c.SupportNonNullableReferenceTypes();
+                c.EnableAnnotations();
+            });
+        }
     }
 
     public static void ConfigureForwardedFor(this IServiceCollection services, AppConfig config)
