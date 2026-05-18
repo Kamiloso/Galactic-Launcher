@@ -1,72 +1,64 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using GalacticLauncher.Frontend.ViewModels.Interfaces;
-using GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
+﻿using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.AdminViewModels;
 
-namespace GalacticLauncher.Frontend.ViewModels.MainPanelViewModels
+namespace GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
+
+internal class AdminViewModel : NotifierBase, INavigationAware
 {
-    internal class AdminViewModel : INotifyPropertyChanged, INavigationAware
+    private TagsViewModel? _tagsPage;
+    private UsersViewModel? _usersPage;
+    private AllGamesViewModel? _allGamesPage;
+
+    private object? _currentPage;
+    public object? CurrentPage
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private readonly MainWindowViewModel _mainWindowViewModel;
+        get => _currentPage;
+        set
+        {
+            _currentPage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CurrentActivePage));
+        }
+    }
 
-        private TagsViewModel? _tagsPage;
-        private UsersViewModel? _usersPage;
-        private AllGamesViewModel? _allGamesPage;
+    public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
 
-        private object? _currentPage;
-        public object? CurrentPage
-        {
-            get => _currentPage;
-            set
-            {
-                _currentPage = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(CurrentActivePage));
-            }
-        }
-        public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
-        public AdminViewModel(MainWindowViewModel mainWindowViewModel)
-        {
-            _mainWindowViewModel = mainWindowViewModel;
-            ShowTags();
-        }
-        public void OnActivated()
-        {
-        }
+    public AdminViewModel()
+    {
+        ShowTags();
+    }
 
-        private void SetCurrentPage(object page)
-        {
-            CurrentPage = page;
+    public void OnActivated()
+    {
+        ;
+    }
 
-            if (page is INavigationAware nav)
-            {
-                nav.OnActivated();
-            }
-        }
+    private void SetCurrentPage(object page)
+    {
+        CurrentPage = page;
 
-        public void ShowAllGames()
+        if (page is INavigationAware nav)
         {
-            _allGamesPage ??= new AllGamesViewModel(this);
-            SetCurrentPage(_allGamesPage);
+            nav.OnActivated();
         }
+    }
 
-        public void ShowTags()
-        {
-            _tagsPage ??= new TagsViewModel(this);
-            SetCurrentPage(_tagsPage);
-        }
+    public void ShowAllGames()
+    {
+        _allGamesPage ??= new AllGamesViewModel(this);
+        SetCurrentPage(_allGamesPage);
+    }
 
-        public void ShowUsers()
-        {
-            _usersPage ??= new UsersViewModel(this);
-            SetCurrentPage(_usersPage);
-        }
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+    public void ShowTags()
+    {
+        _tagsPage ??= new TagsViewModel(this);
+        SetCurrentPage(_tagsPage);
+    }
+
+    public void ShowUsers()
+    {
+        _usersPage ??= new UsersViewModel(this);
+        SetCurrentPage(_usersPage);
     }
 }
 

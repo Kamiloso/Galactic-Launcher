@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
 using GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
-using GalacticLauncher.Frontend.Networking;
 using System.Diagnostics;
 
 namespace GalacticLauncher.Frontend.Views.MainWindowView;
@@ -16,12 +15,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        DataContext = new MainWindowViewModel()
-        {
-            Api = new HttpService(
-                GalacticClientProvider.HttpClient
-                )
-        };
+        DataContext = new MainWindowViewModel();
     }
 
     public void ToggleTheme()

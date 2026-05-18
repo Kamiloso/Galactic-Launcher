@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GalacticLauncher.Frontend.ViewModels.Interfaces;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
 
 namespace GalacticLauncher.Frontend.ViewModels.AdminViewModels

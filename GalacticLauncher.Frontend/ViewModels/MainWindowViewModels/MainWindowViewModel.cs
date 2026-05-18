@@ -1,65 +1,45 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Threading.Tasks;
-using GalacticLauncher.Core.Models;
-using GalacticLauncher.Frontend.Networking;
-using GalacticLauncher.Frontend.ViewModels.Interfaces;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
 
 namespace GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
 
-internal class MainWindowViewModel : INotifyPropertyChanged
+internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
 {
-    private HomeViewModel? _homePage;
-    private LibraryViewModel? _libraryPage;
-    private GameViewModel? _gamePage;
-    private AdminViewModel? _adminPage;
-
     private object? _currentPage;
     public object? CurrentPage
     {
         get => _currentPage;
         set
         {
-            _currentPage = value; 
-            OnPropertyChanged(); 
-            OnPropertyChanged(nameof(CurrentActivePage)); 
+            _currentPage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CurrentActivePage));
         }
     }
     public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
 
+    private readonly HomeViewModel _homePage;
+    private readonly LibraryViewModel _libraryPage;
+    private readonly GameViewModel _gamePage;
+    private readonly AdminViewModel _adminPage;
+
     public MainWindowViewModel()
     {
-        CurrentPage = new HomeViewModel(this);
+        _homePage = new HomeViewModel(this);
+        _libraryPage = new LibraryViewModel(this);
+        _gamePage = new GameViewModel();
+        _adminPage = new AdminViewModel();
+
+        CurrentPage = _homePage;
     }
 
-    #region View navigation
-    public void ShowHome()
-    {
-        _homePage ??= new HomeViewModel(this);
-        SetCurrentPage(_homePage);
-    }
+    public void ShowHome() => SetPage(_homePage);
+    public void ShowLibrary() => SetPage(_libraryPage);
+    public void ShowGame() => SetPage(_gamePage);
+    public void ShowAdmin() => SetPage(_adminPage);
 
-    public void ShowLibrary()
-    {
-        _libraryPage ??= new LibraryViewModel(this);
-        SetCurrentPage(_libraryPage);
-    }
-
-    public void ShowGame()
-    {
-        _gamePage ??= new GameViewModel();
-        SetCurrentPage(_gamePage);
-    }
-
-    public void ShowAdmin()
-    {
-        _adminPage ??= new AdminViewModel(this);
-        SetCurrentPage(_adminPage);
-    }
-
-    private void SetCurrentPage(object page)
+    private void SetPage(object page)
     {
         CurrentPage = page;
 
@@ -68,49 +48,4 @@ internal class MainWindowViewModel : INotifyPropertyChanged
             nav.OnActivated();
         }
     }
-
-    #endregion
-
-    // TODO: Rozdzielić rzeczy związane z Api do osobnego modelu
-
-    public required IHttpService Api { get; init; }
-
-    private string _responseJson = "";
-    public string ResponseJson
-    {
-        get => _responseJson;
-        set { _responseJson = value; OnPropertyChanged(); }
-    }
-
-    public async Task SendRequestAsync()
-    {
-        ResponseJson = "Pobieranie danych z serwera...";
-        try
-        {
-            Game gameInfo = await Api.PostAsync<Game, Game>(
-                "testing/game-echo",
-                new Game{
-                    Id = 123,
-                    Name = "Space Eternity 3",
-                    Description = "Some Description...",
-                    IconUrl = null
-                });
-
-            ResponseJson = JsonSerializer.Serialize(gameInfo);
-        }
-        catch (ApiException ex)
-        {
-            ResponseJson = $"Wystąpił błąd:\n{ex.Message}";
-        }
-    }
-
-    #region View Notifier
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    #endregion
 }

@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GalacticLauncher.Frontend.ViewModels.Interfaces;
+﻿using GalacticLauncher.Frontend.Infrastructure;
 
-namespace GalacticLauncher.Frontend.ViewModels.MainPanelViewModels
+namespace GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
+
+internal class GameViewModel : NotifierBase, INavigationAware
 {
-    public class GameViewModel : INotifyPropertyChanged, INavigationAware
+    public void OnActivated()
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public void OnActivated()
-        {
-        }
     }
 }

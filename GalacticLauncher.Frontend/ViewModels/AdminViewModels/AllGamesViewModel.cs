@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
-using GalacticLauncher.Frontend.ViewModels.Interfaces;
+using GalacticLauncher.Frontend.Infrastructure;
 
 namespace GalacticLauncher.Frontend.ViewModels.AdminViewModels
 {

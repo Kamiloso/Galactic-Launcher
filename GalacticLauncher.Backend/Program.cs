@@ -50,7 +50,6 @@ services.AddControllers();
 // ----- APP SECTION -----
 
 var app = builder.Build();
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 app.ConfigureMiddleware(config);
 app.MapControllers();
