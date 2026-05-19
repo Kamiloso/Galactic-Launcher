@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Networking;
+namespace GalacticLauncher.Frontend.Services.Networking;
 
 public interface IHttpService
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GalacticLauncher.Frontend.Networking;
+namespace GalacticLauncher.Frontend.Services.Networking;
 
 internal class ApiException(string message, int statusCode, Exception? innerException = null)
     : Exception(message, innerException)

@@ -2,5 +2,5 @@
 
 internal interface INavigationAware
 {
-    void OnActivated();
+    void OnActivate();
 }

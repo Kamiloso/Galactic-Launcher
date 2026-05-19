@@ -3,7 +3,7 @@ using System;
 using System.Net.Http;
 using System.Security.Cryptography;
 
-namespace GalacticLauncher.Frontend.Networking;
+namespace GalacticLauncher.Frontend.Services.Networking;
 
 internal static class GalacticClientProvider
 {

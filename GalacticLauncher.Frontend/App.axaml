@@ -2,9 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.App"
 			 
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
-			 xmlns:vma="using:GalacticLauncher.Frontend.ViewModels.AdminViewModels"
-             xmlns:views="using:GalacticLauncher.Frontend.Views.MainPanelViews"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
+			 xmlns:vma="using:GalacticLauncher.Frontend.ViewModels.AdminPanels"
+             xmlns:views="using:GalacticLauncher.Frontend.Views.Windows"
 			 
              RequestedThemeVariant="Default">
 	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
@@ -26,7 +26,7 @@
 		<DataTemplate DataType="{x:Type vma:TagsViewModel}">
 			<views:TagsView />
 		</DataTemplate>
-		<DataTemplate DataType="{x:Type vma:AllGamesViewModel}">
+		<DataTemplate DataType="{x:Type vma:GamesViewModel}">
 			<views:AllGamesView />
 		</DataTemplate>
 		<DataTemplate DataType="{x:Type vma:UsersViewModel}">

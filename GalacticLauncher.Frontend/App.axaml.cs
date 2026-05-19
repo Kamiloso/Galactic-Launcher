@@ -1,7 +1,13 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Networking;
+using GalacticLauncher.Frontend.ViewModels.AdminPanels;
+using GalacticLauncher.Frontend.ViewModels.Panels;
+using GalacticLauncher.Frontend.ViewModels.Windows;
 using GalacticLauncher.Frontend.Views.MainWindowView;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GalacticLauncher.Frontend;
 
@@ -16,7 +22,32 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
+            var services = new ServiceCollection();
+
+            // Roots
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<MainWindowViewModel>();
+
+            // View Services
+            services.AddSingleton<Navigator>();
+
+            // View Models
+            services.AddSingleton<HomeViewModel>();
+            services.AddSingleton<GameViewModel>();
+            services.AddSingleton<LibraryViewModel>();
+            services.AddSingleton<AdminViewModel>();
+            
+            services.AddSingleton<AdGamesViewModel>();
+            services.AddSingleton<AdTagsViewModel>();
+            services.AddSingleton<AdUsersViewModel>();
+
+            // Model Services
+            services.AddSingleton<IHttpService, HttpService>();
+            services.AddSingleton<IBackendTalker, BackendTalker>();
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            desktop.MainWindow = serviceProvider.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();

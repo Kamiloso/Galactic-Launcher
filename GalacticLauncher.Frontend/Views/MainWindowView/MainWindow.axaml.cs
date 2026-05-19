@@ -2,20 +2,37 @@ using System;
 using Avalonia.Controls;
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
-using GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
+using GalacticLauncher.Frontend.ViewModels.Windows;
 using System.Diagnostics;
 
 namespace GalacticLauncher.Frontend.Views.MainWindowView;
 
-public partial class MainWindow : Window
+internal partial class MainWindow : Window
 {
     private bool _isGalaxyTheme = true;
 
-    public MainWindow()
+    public MainWindow(MainWindowViewModel mainWindowViewModel)
     {
         InitializeComponent();
 
-        DataContext = new MainWindowViewModel();
+        DataContext = mainWindowViewModel;
+
+        // TODO
+
+        // ----- MAGDA -----
+        // Przenieś logikę kolorów możliwie ile się da do osobnej klasy.
+        // Możesz to oprzeć na eventach w jakimś serwisie ThemeManager, który
+        // będzie emitował eventy o zmianie motywu, a MainWindow będzie
+        // się na nie subskrybował i zmieniał motyw.
+
+        // Generalnie inspiruj się klasą Navigator.
+
+        // A skoro metoda poniżej jest statyczna, to zastanów się,
+        // czy ona w ogóle powinna się tu znajdować i czy nie można jej
+        // gdzieś przenieść (choćby do ThemeManagera, o którym wspomniałem wyżej).
+
+        // Za logikę ToggleTheme też powinien odpowiadać ThemeManager.
+        // Okno powinno być możliwie głupie.
     }
 
     public void ToggleTheme()

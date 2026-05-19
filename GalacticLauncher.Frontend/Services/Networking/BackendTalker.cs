@@ -2,7 +2,7 @@
 using GalacticLauncher.Core.Models;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Networking;
+namespace GalacticLauncher.Frontend.Services.Networking;
 
 public interface IBackendTalker
 {

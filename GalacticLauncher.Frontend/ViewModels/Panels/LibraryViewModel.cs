@@ -1,9 +1,9 @@
 ﻿using GalacticLauncher.Frontend.Infrastructure;
-using GalacticLauncher.Frontend.ViewModels.MainWindowViewModels;
+using GalacticLauncher.Frontend.Services;
 
-namespace GalacticLauncher.Frontend.ViewModels.MainPanelViewModels;
+namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal class LibraryViewModel(MainWindowViewModel mainWindowViewModel) : NotifierBase, INavigationAware
+internal class LibraryViewModel(Navigator navigator) : NotifierBase
 {
     //only temporary okay
     private readonly string _allGames = "no";
@@ -23,11 +23,6 @@ internal class LibraryViewModel(MainWindowViewModel mainWindowViewModel) : Notif
 
     public string CurrentActiveMode => CurrentMode?.GetType().Name ?? "";
 
-    public void OnActivated()
-    {
-        ;
-    }
-
     public void ShowFavourites()
     {
         _currentMode = _favourite;
@@ -40,6 +35,6 @@ internal class LibraryViewModel(MainWindowViewModel mainWindowViewModel) : Notif
 
     public void ShowGame()
     {
-        mainWindowViewModel.ShowGame();
+        navigator.NavigateTo<GameViewModel>();
     }
 }

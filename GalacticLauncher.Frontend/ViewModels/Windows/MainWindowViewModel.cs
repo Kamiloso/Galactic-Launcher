@@ -1,0 +1,70 @@
+﻿using GalacticLauncher.Frontend.Infrastructure;
+using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.ViewModels.Panels;
+using System;
+using System.ComponentModel;
+
+namespace GalacticLauncher.Frontend.ViewModels.Windows;
+
+internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
+{
+    private object? _currentPage;
+    public object? CurrentPage
+    {
+        get => _currentPage;
+        set
+        {
+            _currentPage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(CurrentActivePage));
+        }
+    }
+    public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
+
+    private readonly Navigator _navigator;
+    private readonly HomeViewModel _homeViewModel;
+    private readonly GameViewModel _gameViewModel;
+    private readonly LibraryViewModel _libraryViewModel;
+    private readonly AdminViewModel _adminViewModel;
+
+    public MainWindowViewModel(
+        Navigator navigator,
+        HomeViewModel homeViewModel,
+        GameViewModel gameViewModel,
+        LibraryViewModel libraryViewModel,
+        AdminViewModel adminViewModel
+        )
+    {
+        _navigator = navigator;
+        _homeViewModel = homeViewModel;
+        _gameViewModel = gameViewModel;
+        _libraryViewModel = libraryViewModel;
+        _adminViewModel = adminViewModel;
+
+        CurrentPage = homeViewModel;
+
+        _navigator.OnNavigate += SetMainPage;
+
+        void SetMainPage(Type pageType) // place it here to not accidentally use it outside
+        {
+            CurrentPage = pageType switch
+            {
+                _ when pageType == typeof(HomeViewModel) => _homeViewModel,
+                _ when pageType == typeof(GameViewModel) => _gameViewModel,
+                _ when pageType == typeof(LibraryViewModel) => _libraryViewModel,
+                _ when pageType == typeof(AdminViewModel) => _adminViewModel,
+                _ => throw new ArgumentException($"Unknown page type: {pageType.FullName}")
+            };
+
+            if (CurrentPage is INavigationAware nav)
+            {
+                nav.OnActivate();
+            }
+        }
+    }
+
+    public void ShowHome() => _navigator.NavigateTo<HomeViewModel>();
+    public void ShowGame() => _navigator.NavigateTo<GameViewModel>();
+    public void ShowLibrary() => _navigator.NavigateTo<LibraryViewModel>();
+    public void ShowAdmin() => _navigator.NavigateTo<AdminViewModel>();
+}

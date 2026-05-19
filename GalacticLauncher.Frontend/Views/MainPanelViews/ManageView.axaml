@@ -51,7 +51,7 @@
 					<Button Classes="favouriteAll"
 							Content="GAMES"
 							Grid.Column="2"
-							Command="{Binding ShowAllGames}"
+							Command="{Binding ShowGames}"
 							Classes.active="{Binding CurrentPage, 
 							Converter={StaticResource PageTypeToBoolConverter}, 
 							ConverterParameter=AllGamesViewModel}">
