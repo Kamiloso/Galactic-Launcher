@@ -1,6 +1,6 @@
 using Dapper;
+using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Infrastructure;
-using GalacticLauncher.Backend.Models;
 using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;

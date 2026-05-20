@@ -1,4 +1,5 @@
 ﻿using GalacticLauncher.Core;
+using GalacticLauncher.Frontend.Domain.Exceptions;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.Services.Networking;
 
-public interface IHttpService
+public interface IHttpPoster
 {
     Task GetAsync(string endpoint);
     Task<TResult> GetAsync<TResult>(string endpoint);
@@ -15,7 +16,7 @@ public interface IHttpService
     Task<TResult> PostAsync<TQuery, TResult>(string endpoint, TQuery payload);
 }
 
-internal class HttpService(HttpClient httpClient) : IHttpService
+internal class HttpPoster(HttpClient httpClient) : IHttpPoster
 {
     private record ProblemDetailsDto(string? Title, int? Status, string? Detail);
 

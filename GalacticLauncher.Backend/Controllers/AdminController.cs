@@ -19,7 +19,7 @@ public class AdminController(
     public ActionResult<LoginResult> ReqAdmin(
         [FromBody] LoginRequest loginRequest)
     {
-        LogCallToConsole(new { username = loginRequest.Username });
+        LogCallToConsole(new { username = loginRequest.Username }, important: true);
 
         return HandleEndpoint(() =>
             adminService.AuthenticateAdmin(loginRequest));

@@ -1,4 +1,5 @@
-﻿using GalacticLauncher.Backend.Infrastructure;
+﻿using GalacticLauncher.Backend.Domain.Exceptions;
+using GalacticLauncher.Backend.Infrastructure;
 using GalacticLauncher.Backend.Services;
 using GalacticLauncher.Core.Models;
 using Microsoft.AspNetCore.Mvc;

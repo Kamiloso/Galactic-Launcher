@@ -21,12 +21,12 @@ INSERT IGNORE INTO games_tags (id_game, id_tag) VALUES
 (3, 1), (3, 4); -- Neon Drifter
 
 -- 4. Dodawanie wersji gier
-INSERT IGNORE INTO versions (id, id_game, caption, type, description, is_primary, release_date, platform, download_url, exec_location, alert) VALUES
-(1, 1, 'v1.0.0', 'release', 'Initial stable release with full procedural universe generation.', 1, '2026-05-10', 'windows', 'https://dl.galactic.test/se3/v1.0.0-win.zip', 'SpaceEternity3.exe', 'stable'),
-(2, 1, 'v1.1.0-alpha', 'alpha', 'Testing new multiplayer sync engine.', 0, '2026-05-15', 'linux', 'https://dl.galactic.test/se3/v1.1.0a-linux.tar.gz', './SpaceEternity3', 'alert'),
-(3, 2, 'v0.5.0', 'beta', 'Early beta introducing the custom client-server architecture.', 1, '2026-04-20', 'windows', 'https://dl.galactic.test/larnix/v0.5.0-win.zip', 'Larnix.exe', 'stable'),
-(4, 2, 'v0.5.1-snapshot', 'snapshot', 'Fixing memory allocation bugs in the networking protocol.', 0, '2026-05-16', 'windows', 'https://dl.galactic.test/larnix/snapshot-win.zip', 'Larnix.exe', 'danger'),
-(5, 3, 'v2.1', 'release', 'Added new neon tracks and improved rendering performance.', 1, '2025-11-11', 'macsilicon', 'https://dl.galactic.test/neon/v2.1-mac.dmg', 'NeonDrifter.app', 'stable');
+INSERT IGNORE INTO versions (id, id_game, caption, type, description, is_primary, release_date, platform, download_url, exec_location, sha256_hash, alert) VALUES
+(1, 1, 'v1.0.0', 'release', 'Initial stable release with full procedural universe generation.', 1, '2026-05-10', 'windows', 'https://dl.galactic.test/se3/v1.0.0-win.zip', 'SpaceEternity3.exe', 'sha256_hash_1', 'stable'),
+(2, 1, 'v1.1.0-alpha', 'alpha', 'Testing new multiplayer sync engine.', 0, '2026-05-15', 'linux', 'https://dl.galactic.test/se3/v1.1.0a-linux.tar.gz', './SpaceEternity3', 'sha256_hash_2', 'alert'),
+(3, 2, 'v0.5.0', 'beta', 'Early beta introducing the custom client-server architecture.', 1, '2026-04-20', 'windows', 'https://dl.galactic.test/larnix/v0.5.0-win.zip', 'Larnix.exe', 'sha256_hash_3', 'stable'),
+(4, 2, 'v0.5.1-snapshot', 'snapshot', 'Fixing memory allocation bugs in the networking protocol.', 0, '2026-05-16', 'windows', 'https://dl.galactic.test/larnix/snapshot-win.zip', 'Larnix.exe', null, 'danger'),
+(5, 3, 'v2.1', 'release', 'Added new neon tracks and improved rendering performance.', 1, '2025-11-11', 'macsilicon', 'https://dl.galactic.test/neon/v2.1-mac.dmg', 'NeonDrifter.app', null, 'stable');
 
 -- 5. Dodawanie obrazów (Assetów)
 INSERT IGNORE INTO images (id, id_game, download_url, type, sort_index) VALUES

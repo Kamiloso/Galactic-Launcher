@@ -1,6 +1,6 @@
 using GalacticLauncher.Core;
 
-namespace GalacticLauncher.Backend.Models;
+namespace GalacticLauncher.Backend.Domain.Models;
 
 // Represents the 'versions' table
 public record VersionEntity
@@ -14,6 +14,7 @@ public record VersionEntity
     public required Platform Platform { get; init; }
     public required string DownloadUrl { get; init; }
     public required string ExecLocation { get; init; }
+    public required string? Sha256Hash { get; init; }
     public required AlertLevel Alert { get; init; }
     public required long IdGame { get; init; }
 }

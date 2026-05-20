@@ -5,6 +5,8 @@ namespace GalacticLauncher.Core;
 
 public static class Utils
 {
+    public static string AppName => "GalacticLauncher";
+
     public static bool IsProduction => !IsDevelopment;
     public static bool IsDevelopment =>
         HasArgumentCLI("--debug") ||
@@ -36,7 +38,34 @@ public static class Utils
                     : Platform.MacIntel;
             }
 
-            throw new PlatformNotSupportedException("Couldn't identify current platform.");
+            throw new PlatformNotSupportedException();
+        }
+    }
+
+    public static string RootPath
+    {
+        get
+        {
+            string basePath = CurrentPlatform switch
+            {
+                // Windows: %LocalAppData%
+                Platform.Windows => Environment.GetFolderPath(
+                    Environment.SpecialFolder.LocalApplicationData),
+
+                // Linux: ~/.local/share
+                Platform.Linux => Environment.GetFolderPath(
+                    Environment.SpecialFolder.LocalApplicationData),
+
+                // macOS: ~/Library/Application Support
+                Platform.MacSilicon or Platform.MacIntel => Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                    "Library",
+                    "Application Support"),
+
+                _ => throw new PlatformNotSupportedException()
+            };
+
+            return Path.Combine(basePath, AppName);
         }
     }
 
@@ -61,5 +90,26 @@ public static class Utils
             .GetType()
             .GetProperties()
             .Any(prop => IsNullRecursive(prop.GetValue(obj)));
+    }
+
+    public static bool IsPathInside(string path, string basePath)
+    {
+        string fullPath = Normalize(path);
+        string fullBasePath = Normalize(basePath);
+
+        var comparison = CurrentPlatform == Platform.Linux
+            ? StringComparison.Ordinal
+            : StringComparison.OrdinalIgnoreCase;
+
+        return fullPath.StartsWith(fullBasePath, comparison);
+
+        // Hack: We append a trailing separator everywhere.
+        static string Normalize(string path)
+        {
+            path = Path.GetFullPath(path);
+            return path.EndsWith(Path.DirectorySeparatorChar)
+                ? path
+                : path + Path.DirectorySeparatorChar;
+        }
     }
 }

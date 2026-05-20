@@ -1,6 +1,6 @@
 using GalacticLauncher.Core;
 
-namespace GalacticLauncher.Backend.Models;
+namespace GalacticLauncher.Backend.Domain.Models;
 
 // Represents the 'images' table
 public record ImageEntity

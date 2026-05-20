@@ -1,4 +1,4 @@
-namespace GalacticLauncher.Backend.Models;
+namespace GalacticLauncher.Backend.Domain.Models;
 
 // Represents the 'history' table
 public record HistoryEntity

@@ -28,6 +28,7 @@ CREATE TABLE versions (
     platform enum('windows', 'linux', 'macsilicon', 'macintel') not null,
     download_url text not null,
     exec_location text not null,
+    sha256_hash VARCHAR(255) default null,
     alert enum('stable', 'alert', 'danger') not null,
     id_game bigint not null,
     foreign key(id_game) references games(id) on delete cascade

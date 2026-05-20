@@ -1,6 +1,6 @@
 ﻿using GalacticLauncher.Core.Models;
 
-namespace GalacticLauncher.Backend.Models.Conversions;
+namespace GalacticLauncher.Backend.Domain.Models.Conversions;
 
 internal static class ToDomainExtensions
 {
@@ -46,6 +46,7 @@ internal static class ToDomainExtensions
     {
         return new Version
         {
+            Id = version.Id,
             Caption = version.Caption,
             Type = version.Type,
             Description = version.Description,
@@ -54,6 +55,7 @@ internal static class ToDomainExtensions
             Platform = version.Platform,
             DownloadUrl = version.DownloadUrl,
             ExecLocation = version.ExecLocation,
+            Sha256Hash = version.Sha256Hash,
             Alert = version.Alert,
         };
     }

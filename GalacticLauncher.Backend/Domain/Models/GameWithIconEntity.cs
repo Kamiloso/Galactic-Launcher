@@ -1,4 +1,4 @@
-﻿namespace GalacticLauncher.Backend.Models;
+﻿namespace GalacticLauncher.Backend.Domain.Models;
 
 // Dynamically constructed SQL object based on 'games' table
 // with additional field for icon url from 'images' table (if exists)

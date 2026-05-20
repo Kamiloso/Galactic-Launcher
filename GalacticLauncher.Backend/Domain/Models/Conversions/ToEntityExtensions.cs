@@ -1,6 +1,7 @@
-﻿using GalacticLauncher.Core.Models;
+﻿using GalacticLauncher.Backend.Domain.Models;
+using GalacticLauncher.Core.Models;
 
-namespace GalacticLauncher.Backend.Models.Conversions;
+namespace GalacticLauncher.Backend.Domain.Models.Conversions;
 
 public static class ToEntityExtensions
 {
@@ -27,6 +28,7 @@ public static class ToEntityExtensions
     {
         return new VersionEntity()
         {
+            Id = version.Id,
             Caption = version.Caption,
             Type = version.Type,
             Description = version.Description,
@@ -35,6 +37,7 @@ public static class ToEntityExtensions
             Platform = version.Platform,
             DownloadUrl = version.DownloadUrl,
             ExecLocation = version.ExecLocation,
+            Sha256Hash = version.Sha256Hash,
             Alert = version.Alert,
             IdGame = idGame,
         };

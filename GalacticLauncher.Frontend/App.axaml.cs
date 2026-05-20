@@ -1,7 +1,12 @@
+global using Version = GalacticLauncher.Core.Models.Version;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using GalacticLauncher.Core;
+using GalacticLauncher.Frontend.Infrastructure.Client;
 using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Executables;
+using GalacticLauncher.Frontend.Services.Files;
 using GalacticLauncher.Frontend.Services.Networking;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
 using GalacticLauncher.Frontend.ViewModels.Panels;
@@ -36,14 +41,21 @@ public partial class App : Application
             services.AddSingleton<GameViewModel>();
             services.AddSingleton<LibraryViewModel>();
             services.AddSingleton<AdminViewModel>();
-            
+
             services.AddSingleton<AdGamesViewModel>();
             services.AddSingleton<AdTagsViewModel>();
             services.AddSingleton<AdUsersViewModel>();
 
-            // Model Services
-            services.AddSingleton<IHttpService, HttpService>();
+            // Internal Model Services
+            services.AddSingleton<IHttpPoster, HttpPoster>(_ => new(HttpProvider.ApiClient));
+            services.AddSingleton<IFileDownloader, FileDownloader>(_ => new(HttpProvider.DownloadClient));
+            services.AddSingleton<IExecPathSystem, ExecPathSystem>();
+            services.AddSingleton<IFileDecompressor, FileDecompressor>();
+            services.AddSingleton<IFileHasher, FileHasher>();
+
+            // Model Services (for View Models)
             services.AddSingleton<IBackendTalker, BackendTalker>();
+            services.AddSingleton<IExecManager, ExecManager>();
 
             var serviceProvider = services.BuildServiceProvider();
 

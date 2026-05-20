@@ -1,4 +1,4 @@
-﻿namespace GalacticLauncher.Backend.Infrastructure;
+﻿namespace GalacticLauncher.Backend.Domain.Exceptions;
 
 public class ClientFaultException(string message, int statusCode) : Exception(message)
 {
