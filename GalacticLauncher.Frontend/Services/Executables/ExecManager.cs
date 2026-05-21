@@ -123,7 +123,10 @@ internal class ExecManager(
         catch (Exception ex)
         {
             try { Directory.Delete(execPath, true); } catch { } // cleanup
-            throw new ExecDownloadException("Downloading executable failed.", ex);
+
+            throw ex is DownloadException
+                ? ex
+                : new DownloadException("Downloading executable failed.", ex);
         }
         finally
         {

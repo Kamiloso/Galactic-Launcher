@@ -69,8 +69,7 @@ internal class FileDownloader(HttpClient httpClient) : IFileDownloader
         {
             int statusCode = (int)((ex as HttpRequestException)?.StatusCode ?? 0);
 
-            throw new DownloadException(
-                $"Failed to download file: {url}", statusCode, ex);
+            throw new DownloadException($"Failed to download file: {url}", statusCode, ex);
         }
     }
 }
