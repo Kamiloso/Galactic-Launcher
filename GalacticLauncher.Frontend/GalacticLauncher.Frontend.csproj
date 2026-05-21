@@ -43,6 +43,8 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
+    <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
+    <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,7 +66,7 @@
 	  <ApplicationDefinition Include="AvaloniaResources\Assets\Logo\icon.png" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Include="ViewModels\Converters\PageTypeToBoolConverter" />
+	  <None Include="ViewModels\Converters\PageTypeToBoolConverter.cs" />
 	</ItemGroup>
 	<ItemGroup>
 	  <AvaloniaResource Update="AvaloniaResources\ResourceDictionaries\fonts.axaml">

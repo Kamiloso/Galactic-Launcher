@@ -1,12 +1,13 @@
-﻿using GalacticLauncher.Frontend.Infrastructure;
+﻿using System;
+using System.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.ViewModels.Panels;
-using System;
-using System.ComponentModel;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
-internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
+internal partial class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
 {
     private object? _currentPage;
     public object? CurrentPage
@@ -62,9 +63,12 @@ internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
             }
         }
     }
-
+    [RelayCommand]
     public void ShowHome() => _navigator.NavigateTo<HomeViewModel>();
+    [RelayCommand]
     public void ShowGame() => _navigator.NavigateTo<GameViewModel>();
+    [RelayCommand]
     public void ShowLibrary() => _navigator.NavigateTo<LibraryViewModel>();
+    [RelayCommand]
     public void ShowAdmin() => _navigator.NavigateTo<AdminViewModel>();
 }

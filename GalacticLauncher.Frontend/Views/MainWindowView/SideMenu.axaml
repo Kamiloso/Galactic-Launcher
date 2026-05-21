@@ -1,9 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModels"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Windows"
 			 x:DataType="vm:MainWindowViewModel"
              x:Class="GalacticLauncher.Frontend.Views.MainWindowView.SideMenu"
 			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
+			 xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
 			 HorizontalAlignment="Left">
 
 	<UserControl.Resources>
@@ -52,19 +53,27 @@
 			<!--Options-->
 			<StackPanel Grid.Row="2" VerticalAlignment="Top">
 				<Button Classes="menuItem" Content="HOME"
-						Command="{Binding ShowHome}"
+						Command="{Binding ShowHomeCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=HomeViewModel}"/>
+						ConverterParameter=HomeViewModel}">
+					
+					<StackPanel Orientation="Horizontal">
+					<i:Icon Value="fa-house" Width="20" Height="20" Margin="0,0,10,0"/>
+					<TextBlock Text="HOME" VerticalAlignment="Center"/>
+						
+				</StackPanel>
+					
+				</Button>
 
 				<Button Classes="menuItem" Content="LIBRARY"
-						Command="{Binding ShowLibrary}"
+						Command="{Binding ShowLibraryCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
 						ConverterParameter=LibraryViewModel}"/>
 
 				<Button Classes="menuItem" Content="ADMIN"
-						Command="{Binding ShowAdmin}"
+						Command="{Binding ShowAdminCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
 						ConverterParameter=AdminViewModel}"/>

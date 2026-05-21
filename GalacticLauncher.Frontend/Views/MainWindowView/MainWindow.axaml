@@ -1,6 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModels"
+        xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Windows"
 		xmlns:views="clr-namespace:GalacticLauncher.Frontend.Views.MainWindowView"
         x:Class="GalacticLauncher.Frontend.Views.MainWindowView.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -13,7 +13,7 @@
 	<Grid ColumnDefinitions="200, *">
 		
 		<!--Side Menu-->
-		<views:SideMenu x:Name="SideBar" Grid.Column="0" />
+		<views:SideMenu x:Name="SideBar" Grid.Column="0" DataContext="{Binding}"/>
 		
 		<!--Main panel-->
 		<Grid Grid.Column="1"

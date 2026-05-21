@@ -10,7 +10,10 @@ namespace GalacticLauncher.Frontend.Views.MainWindowView;
 internal partial class MainWindow : Window
 {
     private bool _isGalaxyTheme = true;
-
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
     public MainWindow(MainWindowViewModel mainWindowViewModel)
     {
         InitializeComponent();

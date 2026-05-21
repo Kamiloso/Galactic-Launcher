@@ -1,8 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.UsersView"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminViewModels"
-			 x:DataType="vm:UsersViewModel">
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminPanels"
+			 x:DataType="vm:AdUsersViewModel">
 	
 		<!--users view-->
 		<Border Classes="SearchBorder"

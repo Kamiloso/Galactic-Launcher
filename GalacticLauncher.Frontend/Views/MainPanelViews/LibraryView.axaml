@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.LibraryView"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:LibraryViewModel"
 			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 x:CompileBindings="True">

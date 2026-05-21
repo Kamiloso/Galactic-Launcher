@@ -167,4 +167,14 @@
 		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
 	</Style>
 
+
+	<!--Icon + text-->
+	<Style Selector="Button.menuItem TextBlock">
+		<Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}"/>
+	</Style>
+
+	<Style Selector="Button.menuItem {i|Icon}">
+		<Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}"/>
+	</Style>
+
 </Styles>

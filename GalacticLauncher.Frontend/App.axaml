@@ -4,36 +4,10 @@
 			 
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 xmlns:vma="using:GalacticLauncher.Frontend.ViewModels.AdminPanels"
-             xmlns:views="using:GalacticLauncher.Frontend.Views.Windows"
+             xmlns:views="using:GalacticLauncher.Frontend.Views.MainPanelViews"
 			 
              RequestedThemeVariant="Default">
 	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
-	<Application.DataTemplates>
-
-		<DataTemplate DataType="{x:Type vm:HomeViewModel}">
-			<views:HomeView/>
-		</DataTemplate>
-		<DataTemplate DataType="{x:Type vm:LibraryViewModel}">
-			<views:LibraryView />
-		</DataTemplate>
-		<DataTemplate DataType="{x:Type vm:GameViewModel}">
-			<views:GameView />
-		</DataTemplate>
-		<DataTemplate DataType="{x:Type vm:AdminViewModel}">
-			<views:ManageView />
-		</DataTemplate>
-		<DataTemplate DataType="{x:Type vma:TagsViewModel}">
-			<views:TagsView />
-		</DataTemplate>
-		<DataTemplate DataType="{x:Type vma:GamesViewModel}">
-			<views:AllGamesView />
-		</DataTemplate>
-		<DataTemplate DataType="{x:Type vma:UsersViewModel}">
-			<views:UsersView />
-		</DataTemplate>
-	</Application.DataTemplates>
-
 	
 	<Application.Resources>
 		<ResourceDictionary>
