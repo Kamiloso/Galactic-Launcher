@@ -9,6 +9,24 @@
              RequestedThemeVariant="Default">
 	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 	
+	<Application.DataTemplates>
+		<DataTemplate DataType="{x:Type vm:HomeViewModel}">
+			<views:HomeView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:LibraryViewModel}">
+			<views:LibraryView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:AdminViewModel}">
+			<views:ManageView />
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:GameViewModel}">
+			<views:GameView />
+		</DataTemplate>
+	</Application.DataTemplates>
+	
 	<Application.Resources>
 		<ResourceDictionary>
 
@@ -20,6 +38,7 @@
 				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/Gradients.axaml"/>
 				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/fonts.axaml"/>
 				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/PinkThemeGradient.axaml"/>
+				<ResourceInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/ResourceDictionaries/Icons.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</Application.Resources>

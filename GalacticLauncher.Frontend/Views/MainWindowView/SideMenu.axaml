@@ -4,9 +4,9 @@
 			 x:DataType="vm:MainWindowViewModel"
              x:Class="GalacticLauncher.Frontend.Views.MainWindowView.SideMenu"
 			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
-			 xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
 			 HorizontalAlignment="Left">
-
+	
+	
 	<UserControl.Resources>
 		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
 	</UserControl.Resources>
@@ -52,54 +52,66 @@
 
 			<!--Options-->
 			<StackPanel Grid.Row="2" VerticalAlignment="Top">
-				<Button Classes="menuItem" Content="HOME"
+				
+				
+				<!--Home button-->
+				<Button Classes="menuItem"
 						Command="{Binding ShowHomeCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
 						ConverterParameter=HomeViewModel}">
 					
 					<StackPanel Orientation="Horizontal">
-					<i:Icon Value="fa-house" Width="20" Height="20" Margin="0,0,10,0"/>
-					<TextBlock Text="HOME" VerticalAlignment="Center"/>
+						<PathIcon Data="{StaticResource IconHome}" />
+
+						<TextBlock Text="HOME"/>
 						
 				</StackPanel>
-					
 				</Button>
 
-				<Button Classes="menuItem" Content="LIBRARY"
+				<!--Library button-->
+				<Button Classes="menuItem"
 						Command="{Binding ShowLibraryCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=LibraryViewModel}"/>
+						ConverterParameter=LibraryViewModel}">
+					
+					<StackPanel Orientation="Horizontal">
+						<PathIcon Data="{StaticResource IconGamepad}"/>
 
-				<Button Classes="menuItem" Content="ADMIN"
+						<TextBlock Text="LIBRARY"/>
+					</StackPanel>
+				</Button>
+
+				<!--Admin button-->
+				<Button Classes="menuItem"
 						Command="{Binding ShowAdminCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=AdminViewModel}"/>
+						ConverterParameter=AdminViewModel}">
+					<StackPanel Orientation="Horizontal">
+						<PathIcon Data="{StaticResource IconSecurity}"/>
+
+						<TextBlock Text="Admin"/>
+					</StackPanel>
+				</Button>
 			</StackPanel>
 
 			<!--Color theme -->
 
 			<Button Classes="menuItem"
-					Click="OnSwitchThemeClick"
-					Grid.Row="3"
+					Command="{Binding SwitchThemeCommand}"
+					Grid.Row="4"
 					Background="{DynamicResource GalaxyGradient}">
 				
 				<StackPanel Orientation="Horizontal">
 
-					<Image Source="/AvaloniaResources/Assets/Icons/palette.png"
-						   Width="20"
-						   Height="20"
-						   Margin="0,0,10,0"/>
-
-					<TextBlock Text="SWITCH COLOR THEME"
-							   VerticalAlignment="Center"
-							   FontSize="12"/>
+					<PathIcon Data="{StaticResource IconColor}"/>
+					<TextBlock Text="COLOR THEME"/>
 				</StackPanel>
 			</Button>
 
-			<!--Account-->
+			<!--
 			<Grid Grid.Row="4"
 				  RowDefinitions="1*"
 				  ColumnDefinitions="*,2*"
@@ -125,6 +137,7 @@
 							   HorizontalAlignment="Left"/>
 				</StackPanel>
 			</Grid>
+			-->
 		</Grid>
 		
 	</Border>

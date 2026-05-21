@@ -24,5 +24,6 @@
 					<ContentControl Content="{Binding CurrentPage}" />
 				</Border>
 		</Grid>
+
 	</Grid>
 </Window>

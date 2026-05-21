@@ -7,15 +7,8 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <ItemGroup>
-    <AvaloniaResource Include="AvaloniaResources\Assets\Icons\game-controller.png" />
-    <AvaloniaResource Include="AvaloniaResources\Assets\Icons\palette.png" />
-    <AvaloniaResource Include="AvaloniaResources\Assets\Icons\user.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\Placeholders\banner.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\Logo\ikonka.png" />
-    <AvaloniaResource Include="AvaloniaResources\Assets\Icons\no_recommendation.png" />
-    <AvaloniaResource Include="AvaloniaResources\Assets\Icons\checkmark.png" />
-    <AvaloniaResource Include="AvaloniaResources\Assets\Icons\search.png" />
-    <AvaloniaResource Include="AvaloniaResources\Assets\Icons\tag.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\Logo\logo.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\Icons\account.png" />
     <AvaloniaResource Include="AvaloniaResources\Assets\Fonts\Poppins-Regular.ttf" />
@@ -43,8 +36,6 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
-    <PackageReference Include="Projektanker.Icons.Avalonia" Version="9.6.2" />
-    <PackageReference Include="Projektanker.Icons.Avalonia.FontAwesome" Version="9.6.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,9 +46,6 @@
 	  <AvaloniaXaml Remove="Views\MainPanelViews\UserControl1.axaml" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Remove="AvaloniaResources\Assets\Icons\game-controller.png" />
-	  <None Remove="AvaloniaResources\Assets\Icons\palette.png" />
-	  <None Remove="AvaloniaResources\Assets\Icons\user.png" />
 	  <None Remove="AvaloniaResources\Assets\Placeholders\banner.png" />
 	  <None Remove="AvaloniaResources\Assets\Logo\icon.png" />
 	  <None Remove="AvaloniaResources\Assets\Logo\ikonka.png" />

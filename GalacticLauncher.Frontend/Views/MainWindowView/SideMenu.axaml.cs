@@ -19,11 +19,4 @@ internal partial class SideMenu : UserControl
         InitializeComponent();
         DataContext = viewModel;
     }
-    public void OnSwitchThemeClick(object sender, RoutedEventArgs e)
-    {
-        if (VisualRoot is MainWindow mainWindow)
-        {
-            mainWindow.ToggleTheme();
-        }
-    }
 }

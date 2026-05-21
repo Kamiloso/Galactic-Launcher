@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services;
@@ -27,13 +28,15 @@ internal partial class MainWindowViewModel : NotifierBase, INotifyPropertyChange
     private readonly GameViewModel _gameViewModel;
     private readonly LibraryViewModel _libraryViewModel;
     private readonly AdminViewModel _adminViewModel;
+    private readonly ThemeManager _themeManager;
 
     public MainWindowViewModel(
         Navigator navigator,
         HomeViewModel homeViewModel,
         GameViewModel gameViewModel,
         LibraryViewModel libraryViewModel,
-        AdminViewModel adminViewModel
+        AdminViewModel adminViewModel,
+        ThemeManager themeManager
         )
     {
         _navigator = navigator;
@@ -41,6 +44,10 @@ internal partial class MainWindowViewModel : NotifierBase, INotifyPropertyChange
         _gameViewModel = gameViewModel;
         _libraryViewModel = libraryViewModel;
         _adminViewModel = adminViewModel;
+        _themeManager = themeManager;
+
+        SwitchThemeCommand = new RelayCommand(() => _themeManager.ToggleTheme());
+        _themeManager.ThemeErrorOccurred += OnThemeErrorOccured;
 
         CurrentPage = homeViewModel;
 
@@ -71,4 +78,10 @@ internal partial class MainWindowViewModel : NotifierBase, INotifyPropertyChange
     public void ShowLibrary() => _navigator.NavigateTo<LibraryViewModel>();
     [RelayCommand]
     public void ShowAdmin() => _navigator.NavigateTo<AdminViewModel>();
+    public ICommand SwitchThemeCommand { get; }
+
+    private void OnThemeErrorOccured(string message)
+    {
+
+    }
 }
