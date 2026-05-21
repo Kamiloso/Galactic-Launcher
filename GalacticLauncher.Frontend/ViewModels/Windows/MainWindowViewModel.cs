@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
+using Avalonia.Data;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services;
@@ -8,8 +10,24 @@ using GalacticLauncher.Frontend.ViewModels.Panels;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
-internal partial class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
+internal partial class MainWindowViewModel : ObservableObject
 {
+    #region menu
+    //side menu
+    [ObservableProperty]
+    private double _sideMenuWidth = 84;
+
+    [ObservableProperty]
+    private bool _isExpanded = false;
+
+    [RelayCommand]
+    public void ToggleMenu()
+    {
+        SideMenuWidth = SideMenuWidth == 84 ? 200 : 84;
+        IsExpanded = !IsExpanded;
+    }
+    #endregion
+
     private object? _currentPage;
     public object? CurrentPage
     {

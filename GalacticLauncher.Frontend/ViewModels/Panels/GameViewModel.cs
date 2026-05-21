@@ -1,8 +1,9 @@
-﻿using GalacticLauncher.Frontend.Infrastructure;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using GalacticLauncher.Frontend.Infrastructure;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal class GameViewModel : NotifierBase
+internal class GameViewModel : ObservableObject
 {
     
 }

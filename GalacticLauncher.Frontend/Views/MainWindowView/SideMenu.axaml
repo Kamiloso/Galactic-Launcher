@@ -15,7 +15,7 @@
 
 	<Border Background="{DynamicResource SideMenuGradient}"
             ClipToBounds="True"
-            Width="200"
+            Width="{Binding SideMenuWidth}"
 			CornerRadius="0"
 			BorderThickness="0">
 
@@ -26,25 +26,41 @@
 					Background="{DynamicResource GalaxyGradient}"
 					CornerRadius="0">
 
-				<Grid ColumnDefinitions="*,8,*"
+				<Grid ColumnDefinitions="Auto,Auto"
 					  HorizontalAlignment="Center">
-					<Image Grid.Column="0"
-						   Source="/AvaloniaResources/Assets/Logo/logo.png"
-						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"
-						   Height="80"
-						   Width="80"
-						   Stretch="Uniform"/>
+					
+					<Button Command="{Binding ToggleMenuCommand}"
+							Background="Transparent"
+							BorderThickness="0"
+							Padding="0"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							Grid.Row="0">
 
-					<StackPanel Grid.Column="2"
+						<Button.Styles>
+							<Style Selector="Button:pointerover /template/ ContentPresenter">
+								<Setter Property="Background" Value="Transparent"/>
+							</Style>
+						</Button.Styles>
+						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Logo/logo.png"
+							   RenderOptions.BitmapInterpolationMode="HighQuality"
+							   Height="80"
+							   Width="80"
+							   Stretch="Uniform"/>
+						
+					</Button>
+
+					<StackPanel Grid.Column="1"
 								HorizontalAlignment="Left"
-								VerticalAlignment="Center">
+								VerticalAlignment="Center"
+								Margin="8,0,0,0">
 
 						<TextBlock Classes="logoGalacticStyle1" Text="GALACTIC"
-								 FontSize="21"/>
+									FontSize="21"
+								   IsVisible="{Binding IsExpanded}"/>
 						<TextBlock Classes="logoGalacticStyle2" Text="LAUNCHER"
-								 FontSize="21"/>
+								   FontSize="21"
+								   IsVisible="{Binding IsExpanded}"/>
 
 					</StackPanel>
 				</Grid>
@@ -64,7 +80,8 @@
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Data="{StaticResource IconHome}" />
 
-						<TextBlock Text="HOME"/>
+						<TextBlock Text="HOME"
+								   IsVisible="{Binding IsExpanded}"/>
 						
 				</StackPanel>
 				</Button>
@@ -79,7 +96,8 @@
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Data="{StaticResource IconGamepad}"/>
 
-						<TextBlock Text="LIBRARY"/>
+						<TextBlock Text="LIBRARY"
+								   IsVisible="{Binding IsExpanded}"/>
 					</StackPanel>
 				</Button>
 
@@ -92,29 +110,31 @@
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Data="{StaticResource IconSecurity}"/>
 
-						<TextBlock Text="Admin"/>
+						<TextBlock Text="Admin"
+								   IsVisible="{Binding IsExpanded}"/>
 					</StackPanel>
 				</Button>
 			</StackPanel>
 
 			<!--Color theme -->
-
-			<Button Classes="menuItem"
+			<Button Classes="changeTheme"
 					Command="{Binding SwitchThemeCommand}"
-					Grid.Row="4"
-					Background="{DynamicResource GalaxyGradient}">
-				
+					Grid.Row="3">
+
 				<StackPanel Orientation="Horizontal">
 
-					<PathIcon Data="{StaticResource IconColor}"/>
-					<TextBlock Text="COLOR THEME"/>
+					<PathIcon Data="{StaticResource IconColor}"
+							  Width="24"
+							  Height="24"/>
+					<TextBlock Text="COLOR THEME"
+							   IsVisible="{Binding IsExpanded}"/>
 				</StackPanel>
 			</Button>
 
-			<!--
+
 			<Grid Grid.Row="4"
 				  RowDefinitions="1*"
-				  ColumnDefinitions="*,2*"
+				  ColumnDefinitions="Auto,2*"
 				  Background="{StaticResource DarkestNight}">
 
 				<Image Grid.Row="0" Grid.Column="0"
@@ -123,21 +143,24 @@
 					   Width="40"
 					   Height="40"
 					   Stretch="Uniform"
-					   VerticalAlignment="Center"/>
+					   VerticalAlignment="Center"
+					   Margin="25,0,0,0"/>
 
 				<StackPanel Grid.Row="0" Grid.Column="1"
 							Orientation="Vertical"
 							VerticalAlignment="Center"
-							HorizontalAlignment="Left">
+							HorizontalAlignment="Left"
+							Margin="10,0,0,0">
 
-					<TextBlock Classes="accountName" Text="UNKNOWN"/>
+					<TextBlock Classes="accountName" Text="UNKNOWN"
+							   IsVisible="{Binding IsExpanded}"/>
 
 					<TextBlock Classes="sign" Text="Sign in"
 							   FontSize="13"
-							   HorizontalAlignment="Left"/>
+							   HorizontalAlignment="Left"
+							   IsVisible="{Binding IsExpanded}"/>
 				</StackPanel>
 			</Grid>
-			-->
 		</Grid>
 		
 	</Border>

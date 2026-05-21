@@ -10,12 +10,15 @@
 	<Color x:Key="GreyBlue">#b6bbe2</Color>
 
 	<!--Side Menu Gradient Colors-->
-	<Color x:Key="MidnightBlue">#051249</Color>
+	<Color x:Key="MidnightBlue">#081758</Color>
 	<Color x:Key="Nightmare">#02092b</Color>
 
 	<!--Bakcground Gradient Colors-->
 	<Color x:Key="VibrantBlue">#34279e</Color>
 	<Color x:Key="DarkBlue">#030b32</Color>
+
+	<!--Side menu darkest color-->
+	<Color x:Key="AmostBlack">#00032a</Color>
 
 	<!--Main Panel Gradient Colors-->
 	<Color x:Key="DarkSea">#08175b</Color>

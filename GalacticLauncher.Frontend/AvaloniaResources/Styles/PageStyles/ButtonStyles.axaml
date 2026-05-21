@@ -38,10 +38,8 @@
 								   HorizontalAlignment="Center"
 								   Margin="15,0,15,10"/>
 
-							<Image Source="/AvaloniaResources/Assets/Icons/no_recommendation.png"
-								   HorizontalAlignment="Center"
-								   Width="30"
-								   Height="30"/>
+							<PathIcon Data="{StaticResource IconSad}"/>
+							
 						</StackPanel>
 					</Border>
 
@@ -141,12 +139,14 @@
 		<Setter Property="FontStyle" Value="Normal"/>
 		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
 		<Setter Property="FontSize" Value="20"/>
-		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
 		<Setter Property="HorizontalContentAlignment" Value="Left"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="Padding" Value="30,10,0,10"/>
+		<Setter Property="Margin" Value="0,0,0,5"/>
+
 	</Style>
 
 	<!--Menu button Hover-->
@@ -155,7 +155,7 @@
 	</Style>
 
 	<Style Selector="Button.menuItem:pressed /template/ ContentPresenter">
-		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
 	</Style>
 
 	<!--Acive-->
@@ -168,4 +168,41 @@
 		<Setter Property="Margin" Value="10,0,0,0"/>
 	</Style>
 
+
+	<!--Change theme -->
+	<Style Selector="Button.changeTheme">
+
+		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="30,10,0,10"/>
+	</Style>
+
+	<!--Menu button Hover-->
+	<Style Selector="Button.changeTheme:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource TagBlue}"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+	</Style>
+
+	<Style Selector="Button.changeTheme:pressed /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
+	</Style>
+	
+	<Style Selector="Button.changeTheme PathIcon">
+		<Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}"/>
+	</Style>
+
+	<Style Selector="Button.changeTheme TextBlock">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="10,0,0,0"/>
+	</Style>
+	
+	
+	
+	
 </Styles>

@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen"
 		Icon="{StaticResource AppIcon}">
 	
-	<Grid ColumnDefinitions="200, *">
+	<Grid ColumnDefinitions="Auto, *">
 		
 		<!--Side Menu-->
 		<views:SideMenu x:Name="SideBar" Grid.Column="0" DataContext="{Binding}"/>

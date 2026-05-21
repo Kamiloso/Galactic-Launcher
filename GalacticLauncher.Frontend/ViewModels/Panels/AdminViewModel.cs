@@ -1,11 +1,12 @@
-﻿using GalacticLauncher.Frontend.Infrastructure;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
 using System;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal class AdminViewModel : NotifierBase
+internal class AdminViewModel : ObservableObject
 {
     private object? _currentPage;
     public object? CurrentPage

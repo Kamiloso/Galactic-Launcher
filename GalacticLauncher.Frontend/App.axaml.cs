@@ -36,6 +36,7 @@ public partial class App : Application
             // View Services
             services.AddSingleton<Navigator>();
             services.AddSingleton<ThemeManager>();
+            services.AddSingleton<INotificationService, Notifications>();
 
             // View Models
             services.AddSingleton<HomeViewModel>();

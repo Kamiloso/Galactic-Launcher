@@ -19,11 +19,7 @@
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center">
 
-					<Image Source="/AvaloniaResources/Assets/Icons/search.png"
-						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   Height="15"
-						   Width="15"
-						   Stretch="Uniform"/>
+					<PathIcon Data="{StaticResource IconSearch}"/>
 
 					<TextBlock Grid.Column="1"
 							   Classes="searchHeader"

@@ -77,10 +77,7 @@
 							   HorizontalAlignment="Center"
 							   Margin="0,20,0,10"/>
 
-					<Image Source="/AvaloniaResources/Assets/Icons/no_recommendation.png"
-						   HorizontalAlignment="Center"
-						   Width="40"
-						   Height="40"/>
+					<PathIcon Data="{StaticResource IconSad}"/>
 
 					<ContentPresenter Name="PART_ContentPresenter"
 									  Content="{TemplateBinding Content}"/>
