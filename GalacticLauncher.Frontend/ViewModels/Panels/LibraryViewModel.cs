@@ -1,15 +1,17 @@
-﻿using GalacticLauncher.Frontend.Infrastructure;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal class LibraryViewModel(Navigator navigator) : NotifierBase
+internal class LibraryViewModel(Navigator navigator) : ObservableObject
 {
     //only temporary okay
     private readonly string _allGames = "no";
     private readonly int _favourite = 1;
 
     private object? _currentMode;
+
     public object? CurrentMode
     {
         get => _currentMode;

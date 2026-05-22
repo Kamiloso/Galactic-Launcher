@@ -1,11 +1,12 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainWindowViewModels"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Windows"
 			 x:DataType="vm:MainWindowViewModel"
              x:Class="GalacticLauncher.Frontend.Views.MainWindowView.SideMenu"
 			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 HorizontalAlignment="Left">
-
+	
+	
 	<UserControl.Resources>
 		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
 	</UserControl.Resources>
@@ -14,7 +15,7 @@
 
 	<Border Background="{DynamicResource SideMenuGradient}"
             ClipToBounds="True"
-            Width="200"
+            Width="{Binding SideMenuWidth}"
 			CornerRadius="0"
 			BorderThickness="0">
 
@@ -25,25 +26,41 @@
 					Background="{DynamicResource GalaxyGradient}"
 					CornerRadius="0">
 
-				<Grid ColumnDefinitions="*,8,*"
+				<Grid ColumnDefinitions="Auto,Auto"
 					  HorizontalAlignment="Center">
-					<Image Grid.Column="0"
-						   Source="/AvaloniaResources/Assets/Logo/logo.png"
-						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   HorizontalAlignment="Center"
-						   VerticalAlignment="Center"
-						   Height="80"
-						   Width="80"
-						   Stretch="Uniform"/>
+					
+					<Button Command="{Binding ToggleMenuCommand}"
+							Background="Transparent"
+							BorderThickness="0"
+							Padding="0"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Center"
+							Grid.Row="0">
 
-					<StackPanel Grid.Column="2"
+						<Button.Styles>
+							<Style Selector="Button:pointerover /template/ ContentPresenter">
+								<Setter Property="Background" Value="Transparent"/>
+							</Style>
+						</Button.Styles>
+						<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Logo/logo.png"
+							   RenderOptions.BitmapInterpolationMode="HighQuality"
+							   Height="80"
+							   Width="80"
+							   Stretch="Uniform"/>
+						
+					</Button>
+
+					<StackPanel Grid.Column="1"
 								HorizontalAlignment="Left"
-								VerticalAlignment="Center">
+								VerticalAlignment="Center"
+								Margin="8,0,0,0">
 
 						<TextBlock Classes="logoGalacticStyle1" Text="GALACTIC"
-								 FontSize="21"/>
+									FontSize="21"
+								   IsVisible="{Binding IsExpanded}"/>
 						<TextBlock Classes="logoGalacticStyle2" Text="LAUNCHER"
-								 FontSize="21"/>
+								   FontSize="21"
+								   IsVisible="{Binding IsExpanded}"/>
 
 					</StackPanel>
 				</Grid>
@@ -51,49 +68,73 @@
 
 			<!--Options-->
 			<StackPanel Grid.Row="2" VerticalAlignment="Top">
-				<Button Classes="menuItem" Content="HOME"
-						Command="{Binding ShowHome}"
+				
+				
+				<!--Home button-->
+				<Button Classes="menuItem"
+						Command="{Binding ShowHomeCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=HomeViewModel}"/>
+						ConverterParameter=HomeViewModel}">
+					
+					<StackPanel Orientation="Horizontal">
+						<PathIcon Data="{StaticResource IconHome}" />
 
-				<Button Classes="menuItem" Content="LIBRARY"
-						Command="{Binding ShowLibrary}"
-						Classes.active="{Binding CurrentPage, 
-						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=LibraryViewModel}"/>
+						<TextBlock Text="HOME"
+								   IsVisible="{Binding IsExpanded}"/>
+						
+				</StackPanel>
+				</Button>
 
-				<Button Classes="menuItem" Content="ADMIN"
-						Command="{Binding ShowAdmin}"
+				<!--Library button-->
+				<Button Classes="menuItem"
+						Command="{Binding ShowLibraryCommand}"
 						Classes.active="{Binding CurrentPage, 
 						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=AdminViewModel}"/>
+						ConverterParameter=LibraryViewModel}">
+					
+					<StackPanel Orientation="Horizontal">
+						<PathIcon Data="{StaticResource IconGamepad}"/>
+
+						<TextBlock Text="LIBRARY"
+								   IsVisible="{Binding IsExpanded}"/>
+					</StackPanel>
+				</Button>
+
+				<!--Admin button-->
+				<Button Classes="menuItem"
+						Command="{Binding ShowAdminCommand}"
+						Classes.active="{Binding CurrentPage, 
+						Converter={StaticResource PageTypeToBoolConverter}, 
+						ConverterParameter=AdminViewModel}">
+					<StackPanel Orientation="Horizontal">
+						<PathIcon Data="{StaticResource IconSecurity}"/>
+
+						<TextBlock Text="Admin"
+								   IsVisible="{Binding IsExpanded}"/>
+					</StackPanel>
+				</Button>
 			</StackPanel>
 
 			<!--Color theme -->
+			<Button Classes="changeTheme"
+					Command="{Binding SwitchThemeCommand}"
+					Grid.Row="3">
 
-			<Button Classes="menuItem"
-					Click="OnSwitchThemeClick"
-					Grid.Row="3"
-					Background="{DynamicResource GalaxyGradient}">
-				
 				<StackPanel Orientation="Horizontal">
 
-					<Image Source="/AvaloniaResources/Assets/Icons/palette.png"
-						   Width="20"
-						   Height="20"
-						   Margin="0,0,10,0"/>
-
-					<TextBlock Text="SWITCH COLOR THEME"
-							   VerticalAlignment="Center"
-							   FontSize="12"/>
+					<PathIcon Data="{StaticResource IconColor}"
+							  Width="24"
+							  Height="24"/>
+					<TextBlock Text="COLOR THEME"
+							   IsVisible="{Binding IsExpanded}"/>
 				</StackPanel>
 			</Button>
 
-			<!--Account-->
+
 			<Grid Grid.Row="4"
 				  RowDefinitions="1*"
-				  ColumnDefinitions="*,2*"
+				  ColumnDefinitions="Auto,2*"
 				  Background="{StaticResource DarkestNight}">
 
 				<Image Grid.Row="0" Grid.Column="0"
@@ -102,18 +143,22 @@
 					   Width="40"
 					   Height="40"
 					   Stretch="Uniform"
-					   VerticalAlignment="Center"/>
+					   VerticalAlignment="Center"
+					   Margin="25,0,0,0"/>
 
 				<StackPanel Grid.Row="0" Grid.Column="1"
 							Orientation="Vertical"
 							VerticalAlignment="Center"
-							HorizontalAlignment="Left">
+							HorizontalAlignment="Left"
+							Margin="10,0,0,0">
 
-					<TextBlock Classes="accountName" Text="UNKNOWN"/>
+					<TextBlock Classes="accountName" Text="UNKNOWN"
+							   IsVisible="{Binding IsExpanded}"/>
 
 					<TextBlock Classes="sign" Text="Sign in"
 							   FontSize="13"
-							   HorizontalAlignment="Left"/>
+							   HorizontalAlignment="Left"
+							   IsVisible="{Binding IsExpanded}"/>
 				</StackPanel>
 			</Grid>
 		</Grid>

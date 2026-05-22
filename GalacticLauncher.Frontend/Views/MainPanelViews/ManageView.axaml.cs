@@ -1,13 +1,20 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using GalacticLauncher.Frontend.ViewModels.Panels;
 
 namespace GalacticLauncher.Frontend.Views.MainPanelViews;
 
-public partial class ManageView : UserControl
+internal partial class ManageView : UserControl
 {
     public ManageView()
     {
         InitializeComponent();
+    }
+    public ManageView(AdminViewModel adminViewModel)
+    {
+        InitializeComponent();
+
+        DataContext = adminViewModel;
     }
 }

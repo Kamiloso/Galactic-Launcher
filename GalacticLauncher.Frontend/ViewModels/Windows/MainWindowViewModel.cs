@@ -1,13 +1,36 @@
-﻿using GalacticLauncher.Frontend.Infrastructure;
+﻿using System;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.ViewModels.Panels;
-using System;
-using System.ComponentModel;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
-internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
+internal partial class MainWindowViewModel : ObservableObject
 {
+    private const double NARROW_MENU = 84;
+    private const double EXPANDED_MENU = 200;
+
+    [ObservableProperty]
+    private double _sideMenuWidth = NARROW_MENU;
+
+    [ObservableProperty]
+    private bool _isExpanded = false;
+
+    [RelayCommand]
+    public void ToggleMenu()
+    {
+        SideMenuWidth = SideMenuWidth == NARROW_MENU
+            ? EXPANDED_MENU
+            : NARROW_MENU;
+        IsExpanded = !IsExpanded;
+    }
+
+    public ICommand SwitchThemeCommand { get; }
+
+
     private object? _currentPage;
     public object? CurrentPage
     {
@@ -26,13 +49,15 @@ internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
     private readonly GameViewModel _gameViewModel;
     private readonly LibraryViewModel _libraryViewModel;
     private readonly AdminViewModel _adminViewModel;
+    private readonly ThemeManager _themeManager;
 
     public MainWindowViewModel(
         Navigator navigator,
         HomeViewModel homeViewModel,
         GameViewModel gameViewModel,
         LibraryViewModel libraryViewModel,
-        AdminViewModel adminViewModel
+        AdminViewModel adminViewModel,
+        ThemeManager themeManager
         )
     {
         _navigator = navigator;
@@ -40,6 +65,10 @@ internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
         _gameViewModel = gameViewModel;
         _libraryViewModel = libraryViewModel;
         _adminViewModel = adminViewModel;
+        _themeManager = themeManager;
+
+        SwitchThemeCommand = new RelayCommand(() => _themeManager.ToggleTheme());
+        _themeManager.ThemeErrorOccurred += OnThemeErrorOccured;
 
         CurrentPage = homeViewModel;
 
@@ -62,9 +91,21 @@ internal class MainWindowViewModel : NotifierBase, INotifyPropertyChanged
             }
         }
     }
-
+    [RelayCommand]
     public void ShowHome() => _navigator.NavigateTo<HomeViewModel>();
+
+    [RelayCommand]
     public void ShowGame() => _navigator.NavigateTo<GameViewModel>();
+
+    [RelayCommand]
     public void ShowLibrary() => _navigator.NavigateTo<LibraryViewModel>();
+
+    [RelayCommand]
     public void ShowAdmin() => _navigator.NavigateTo<AdminViewModel>();
+
+
+    private void OnThemeErrorOccured(string message)
+    {
+
+    }
 }

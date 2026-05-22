@@ -1,8 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.AllGamesView"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminViewModels"
-			 x:DataType="vm:AllGamesViewModel">
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminPanels"
+			 x:DataType="vm:AdGamesViewModel">
 	<Grid>
 		<!--GAMES HERE-->
 		<Border Classes="SearchBorder"
@@ -19,11 +19,7 @@
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center">
 
-					<Image Source="/AvaloniaResources/Assets/Icons/search.png"
-						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   Height="15"
-						   Width="15"
-						   Stretch="Uniform"/>
+					<PathIcon Data="{StaticResource IconSearch}"/>
 
 					<TextBlock Grid.Column="1"
 							   Classes="searchHeader"

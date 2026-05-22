@@ -4,21 +4,19 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using GalacticLauncher.Frontend.ViewModels.Windows;
 
 namespace GalacticLauncher.Frontend.Views.MainWindowView;
 
-public partial class SideMenu : UserControl
+internal partial class SideMenu : UserControl
 {
     public SideMenu()
     {
         InitializeComponent();
     }
-
-    public void OnSwitchThemeClick(object sender, RoutedEventArgs e)
+    public SideMenu(MainWindowViewModel viewModel)
     {
-        if (VisualRoot is MainWindow mainWindow)
-        {
-            mainWindow.ToggleTheme();
-        }
+        InitializeComponent();
+        DataContext = viewModel;
     }
 }

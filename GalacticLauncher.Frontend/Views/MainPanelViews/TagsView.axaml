@@ -1,8 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.TagsView"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminViewModels"
-			 x:DataType="vm:TagsViewModel">
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.AdminPanels"
+			 x:DataType="vm:AdTagsViewModel">
 	
 	<Grid ColumnDefinitions="2.5*,20,*">
 
@@ -21,11 +21,8 @@
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center">
 
-						<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
-							   RenderOptions.BitmapInterpolationMode="HighQuality"
-							   Height="15"
-							   Width="15"
-							   Stretch="Uniform"/>
+						<PathIcon Data="{StaticResource IconTag}"/>
+						
 						<TextBlock Grid.Column="1"
 								   Classes="searchHeader"
 								   Text="TAG NAME"/>
@@ -49,11 +46,7 @@
 							VerticalAlignment="Center"
 							Margin="0,10,0,0">
 
-						<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
-							   RenderOptions.BitmapInterpolationMode="HighQuality"
-							   Height="15"
-							   Width="15"
-							   Stretch="Uniform"/>
+						<PathIcon Data="{StaticResource IconTag}"/>
 						<TextBlock Grid.Column="1"
 								   Classes="searchHeader"
 								   Text="TAG DESCRIPTION"/>
@@ -86,11 +79,7 @@
 							HorizontalAlignment="Left"
 							VerticalAlignment="Center">
 
-					<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
-						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   Height="15"
-						   Width="15"
-						   Stretch="Uniform"/>
+					<PathIcon Data="{StaticResource IconTag}"/>
 
 					<TextBlock Grid.Column="1"
 							   Classes="searchHeader"

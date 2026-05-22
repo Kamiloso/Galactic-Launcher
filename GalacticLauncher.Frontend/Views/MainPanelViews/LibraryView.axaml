@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.LibraryView"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.MainPanelViewModels"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:LibraryViewModel"
 			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 x:CompileBindings="True">
@@ -66,12 +66,11 @@
 								Spacing="10"
 								HorizontalAlignment="Left"
 								VerticalAlignment="Center">
-						
-						<Image Source="/AvaloniaResources/Assets/Icons/search.png"
-							   RenderOptions.BitmapInterpolationMode="HighQuality"
+
+						<PathIcon Data="{StaticResource IconSearch}"
 							   Height="15"
 							   Width="15"
-							   Stretch="Uniform"/>
+							   Margin="0,0,0,2"/>
 
 						<TextBlock Grid.Column="1"
 								   Classes="searchHeader"
@@ -93,11 +92,7 @@
 							VerticalAlignment="Center"
 							Margin="0,10,0,0">
 
-					<Image Source="/AvaloniaResources/Assets/Icons/tag.png"
-						   RenderOptions.BitmapInterpolationMode="HighQuality"
-						   Height="15"
-						   Width="15"
-						   Stretch="Uniform"/>
+					<PathIcon Data="{StaticResource IconSearch}"/>
 
 					<TextBlock Grid.Column="1"
 							   Classes="searchHeader"
