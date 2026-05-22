@@ -12,6 +12,8 @@ namespace GalacticLauncher.Frontend.Services
 
     internal class Notifications : INotificationService
     {
+        // primary constructors - see
+
         private WindowNotificationManager? _manager;
 
         public void RegisterManager(WindowNotificationManager manager)

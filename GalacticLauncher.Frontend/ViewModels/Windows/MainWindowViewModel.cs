@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Input;
-using Avalonia.Data;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
@@ -12,10 +10,11 @@ namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
 internal partial class MainWindowViewModel : ObservableObject
 {
-    #region menu
-    //side menu
+    private const double NARROW_MENU = 84;
+    private const double EXPANDED_MENU = 200;
+
     [ObservableProperty]
-    private double _sideMenuWidth = 84;
+    private double _sideMenuWidth = NARROW_MENU;
 
     [ObservableProperty]
     private bool _isExpanded = false;
@@ -23,10 +22,14 @@ internal partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     public void ToggleMenu()
     {
-        SideMenuWidth = SideMenuWidth == 84 ? 200 : 84;
+        SideMenuWidth = SideMenuWidth == NARROW_MENU
+            ? EXPANDED_MENU
+            : NARROW_MENU;
         IsExpanded = !IsExpanded;
     }
-    #endregion
+
+    public ICommand SwitchThemeCommand { get; }
+
 
     private object? _currentPage;
     public object? CurrentPage
@@ -90,13 +93,16 @@ internal partial class MainWindowViewModel : ObservableObject
     }
     [RelayCommand]
     public void ShowHome() => _navigator.NavigateTo<HomeViewModel>();
+
     [RelayCommand]
     public void ShowGame() => _navigator.NavigateTo<GameViewModel>();
+
     [RelayCommand]
     public void ShowLibrary() => _navigator.NavigateTo<LibraryViewModel>();
+
     [RelayCommand]
     public void ShowAdmin() => _navigator.NavigateTo<AdminViewModel>();
-    public ICommand SwitchThemeCommand { get; }
+
 
     private void OnThemeErrorOccured(string message)
     {
