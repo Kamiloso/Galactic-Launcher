@@ -1,9 +1,8 @@
-﻿using GalacticLauncher.Backend.Domain.Models;
-using GalacticLauncher.Core.Models;
+﻿using GalacticLauncher.Core.Models;
 
-namespace GalacticLauncher.Backend.Domain.Models.Conversions;
+namespace GalacticLauncher.Backend.Domain.Models.Extensions;
 
-public static class ToEntityExtensions
+public static class ToEntityConverters
 {
     public static (
         GameEntity Game,

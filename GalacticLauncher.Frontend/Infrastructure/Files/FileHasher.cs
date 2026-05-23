@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Services.Files;
+namespace GalacticLauncher.Frontend.Infrastructure.Files;
 
 public interface IFileHasher
 {

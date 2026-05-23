@@ -1,8 +1,8 @@
 ﻿using GalacticLauncher.Core.Models;
 
-namespace GalacticLauncher.Backend.Domain.Models.Conversions;
+namespace GalacticLauncher.Backend.Domain.Models.Extensions;
 
-internal static class ToDomainExtensions
+internal static class ToDomainConverters
 {
     public static Game ToDomain(this GameEntity game, ImageEntity? image)
     {

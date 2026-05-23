@@ -1,9 +1,9 @@
 ﻿using GalacticLauncher.Core.Models;
 using System.Linq;
 
-namespace GalacticLauncher.Frontend.Domain.Models.Converters;
+namespace GalacticLauncher.Frontend.Domain.Models.Extensions;
 
-internal static class ToInfoExtensions
+internal static class ToInfoConverters
 {
     public static GameInfo ToInfo(this GameData gameData)
     {

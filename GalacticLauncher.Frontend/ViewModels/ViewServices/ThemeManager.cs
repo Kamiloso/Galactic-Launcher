@@ -2,9 +2,15 @@
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
 
-namespace GalacticLauncher.Frontend.Services;
+namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-internal class ThemeManager
+public interface IThemeManager
+{
+    event Action<string>? ThemeErrorOccurred;
+    void ToggleTheme();
+}
+
+internal class ThemeManager : IThemeManager
 {
     public event Action<string>? ThemeErrorOccurred;
     

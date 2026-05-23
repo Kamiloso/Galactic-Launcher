@@ -1,10 +1,10 @@
 ﻿using GalacticLauncher.Core.Dto;
 using GalacticLauncher.Core.Models;
-using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Services.Networking;
+namespace GalacticLauncher.Frontend.DataAccess.Networking;
 
 public interface IBackendTalker
 {
@@ -12,10 +12,10 @@ public interface IBackendTalker
     Task<Game> GetGameEcho(Game game);
 
     // EP: download
-    Task<Game[]> GetAllGames();
+    Task<IEnumerable<Game>> GetAllGames();
     Task<GameData> GetGameData(long id);
-    Task<Tag[]> GetAllTags();
-    Task<Game[]> GetGamesByTags(long[] tagIds);
+    Task<IEnumerable<Tag>> GetAllTags();
+    Task<IEnumerable<Game>> GetGamesByTags(IEnumerable<long> tagIds);
 
     // EP: admin
     Task<LoginResult> GetAdminToken(LoginRequest loginRequest);
@@ -29,17 +29,17 @@ internal class BackendTalker(IHttpPoster httpPoster) : IBackendTalker
         await httpPoster.PostAsync<Game, Game>("testing/game-echo", game);
 
     // EP: download
-    public async Task<Game[]> GetAllGames() =>
-        await httpPoster.GetAsync<Game[]>("download/all-games");
+    public async Task<IEnumerable<Game>> GetAllGames() =>
+        await httpPoster.GetAsync<IEnumerable<Game>>("download/all-games");
 
     public async Task<GameData> GetGameData(long id) =>
         await httpPoster.GetAsync<GameData>($"download/game-data?id={id}");
 
-    public async Task<Tag[]> GetAllTags() =>
-        await httpPoster.GetAsync<Tag[]>("download/all-tags");
+    public async Task<IEnumerable<Tag>> GetAllTags() =>
+        await httpPoster.GetAsync<IEnumerable<Tag>>("download/all-tags");
 
-    public async Task<Game[]> GetGamesByTags(long[] tagIds) =>
-        await httpPoster.PostAsync<long[], Game[]>($"download/games-by-tags", tagIds);
+    public async Task<IEnumerable<Game>> GetGamesByTags(IEnumerable<long> tagIds) =>
+        await httpPoster.PostAsync<IEnumerable<long>, IEnumerable<Game>>($"download/games-by-tags", tagIds);
 
     // EP: admin
     public async Task<LoginResult> GetAdminToken(LoginRequest loginRequest) =>

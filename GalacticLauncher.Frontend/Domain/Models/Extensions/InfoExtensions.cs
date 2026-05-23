@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GalacticLauncher.Frontend.Domain.Models.Extensions;
 
-internal static class ModelExtensions
+internal static class InfoExtensions
 {
     public static GameData RemoveIncompatiblePlatforms(this GameData gameData)
     {

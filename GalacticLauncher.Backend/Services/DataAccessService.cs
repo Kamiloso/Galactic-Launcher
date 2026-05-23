@@ -1,6 +1,6 @@
 ﻿using GalacticLauncher.Backend.Domain.Exceptions;
 using GalacticLauncher.Backend.Domain.Models;
-using GalacticLauncher.Backend.Domain.Models.Conversions;
+using GalacticLauncher.Backend.Domain.Models.Extensions;
 using GalacticLauncher.Backend.Infrastructure.DbScopes;
 using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Core.Models;

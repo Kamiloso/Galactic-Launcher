@@ -1,7 +1,7 @@
 ﻿using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
-using GalacticLauncher.Frontend.Services.Files;
+using GalacticLauncher.Frontend.Infrastructure.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +23,7 @@ public interface IExecManager
 
 internal class ExecManager(
     IExecPathSystem execPathSystem,
+    IExecRunner execRunner,
     IFileDownloader fileDownloader,
     IFileHasher fileHasher,
     IFileDecompressor fileDecompressor) : IExecManager
@@ -124,9 +125,8 @@ internal class ExecManager(
         {
             try { Directory.Delete(execPath, true); } catch { } // cleanup
 
-            throw ex is DownloadException
-                ? ex
-                : new DownloadException("Downloading executable failed.", ex);
+            DownloadException.WrapThrow(
+                "An error occurred while downloading the executable.", ex);
         }
         finally
         {
@@ -144,6 +144,17 @@ internal class ExecManager(
 
     public void Play(ExecInfo execInfo)
     {
-        throw new NotImplementedException();
+        try
+        {
+            string execFilePath = execPathSystem.FindExecFilePath(execInfo)
+                ?? throw new FileNotFoundException("Executable file not found.");
+
+            execRunner.Run(execFilePath, "");
+        }
+        catch (Exception ex)
+        {
+            ExecutableRunException.WrapThrow(
+                "An error occurred while trying to run the executable.", ex);
+        }
     }
 }

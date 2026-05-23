@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Services.Networking;
+namespace GalacticLauncher.Frontend.DataAccess.Networking;
 
 public interface IHttpPoster
 {
@@ -68,20 +68,23 @@ internal class HttpPoster(HttpClient httpClient) : IHttpPoster
     private static async Task ExecuteSafelyAsync(Func<Task> action)
     {
         try { await action(); }
-        catch (Exception ex) { throw WrapException(ex); }
+        catch (Exception ex)
+        {
+            ApiException.WrapThrow(
+                "An error occurred while communicating with the server.", ex);
+        }
     }
 
     private static async Task<T> ExecuteSafelyAsync<T>(Func<Task<T>> action)
     {
         try { return await action(); }
-        catch (Exception ex) { throw WrapException(ex); }
-    }
+        catch (Exception ex)
+        {
+            ApiException.WrapThrow(
+                "An error occurred while communicating with the server.", ex);
 
-    private static ApiException WrapException(Exception ex)
-    {
-        return ex is ApiException apiException
-            ? apiException
-            : new ApiException("Error while connecting to the server.", ex);
+            return default!; // unreachable
+        }
     }
 
     private async static Task<T> HandleJsonResponseAsync<T>(HttpResponseMessage response)

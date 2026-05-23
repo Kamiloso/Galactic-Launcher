@@ -1,4 +1,4 @@
-﻿namespace GalacticLauncher.Frontend.Infrastructure;
+﻿namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 internal interface INavigationAware
 {

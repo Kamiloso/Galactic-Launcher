@@ -12,5 +12,9 @@ public class PageTypeToBoolConverter : IValueConverter
 
         return value.GetType().Name == parameter.ToString();
     }
-    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => null;
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return null;
+    }
 }

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using GalacticLauncher.Frontend.Infrastructure;
-using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
+using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;

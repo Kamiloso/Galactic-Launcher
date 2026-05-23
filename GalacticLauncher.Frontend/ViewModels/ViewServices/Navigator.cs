@@ -1,8 +1,16 @@
 ﻿using System;
 
-namespace GalacticLauncher.Frontend.Services;
+namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-internal class Navigator
+public interface INavigator
+{
+    event Action<Type>? OnNavigate;
+    event Action<Type>? OnAdminPanelNavigate;
+    void NavigateTo<T>();
+    void AdminPanelNavigateTo<T>();
+}
+
+internal class Navigator : INavigator
 {
     public event Action<Type>? OnNavigate;
     public event Action<Type>? OnAdminPanelNavigate;
