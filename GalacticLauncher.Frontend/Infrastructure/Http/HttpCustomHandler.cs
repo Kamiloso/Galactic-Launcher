@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Infrastructure.Client;
+namespace GalacticLauncher.Frontend.Infrastructure.Http;
 
 internal class HttpCustomHandler(bool denyInsecure, bool allowAutoRedirect, string? pinCertSHA256 = null) : DelegatingHandler(
     new HttpClientHandler()

@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using GalacticLauncher.Frontend.Infrastructure;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal class LibraryViewModel(Navigator navigator) : ObservableObject
+internal class LibraryViewModel : ObservableObject
 {
     //only temporary okay
     private readonly string _allGames = "no";
@@ -25,6 +25,19 @@ internal class LibraryViewModel(Navigator navigator) : ObservableObject
 
     public string CurrentActiveMode => CurrentMode?.GetType().Name ?? "";
 
+    private readonly ICacheRefresher _cacheRefresher;
+    private readonly INavigator _navigator;
+
+    public LibraryViewModel(
+        ICacheRefresher cacheRefresher,
+        INavigator navigator)
+    {
+        _cacheRefresher = cacheRefresher;
+        _navigator = navigator;
+
+        _cacheRefresher.RefreshAll();
+    }
+
     public void ShowFavourites()
     {
         _currentMode = _favourite;
@@ -37,6 +50,6 @@ internal class LibraryViewModel(Navigator navigator) : ObservableObject
 
     public void ShowGame()
     {
-        navigator.NavigateTo<GameViewModel>();
+        _navigator.NavigateTo<GameViewModel>(1); // TODO: pass game id
     }
 }

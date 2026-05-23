@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Input;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
@@ -68,33 +70,38 @@ internal partial class MainWindowViewModel : ObservableObject
         SwitchThemeCommand = new RelayCommand(() => _themeManager.ToggleTheme());
         _themeManager.ThemeErrorOccurred += OnThemeErrorOccured;
 
-        CurrentPage = homeViewModel;
+        _navigator.OnNavigate += InnerNavigate;
+        _navigator.NavigateTo<HomeViewModel>();
 
-        _navigator.OnNavigate += SetMainPage;
-
-        void SetMainPage(Type pageType) // place it here to not accidentally use it outside
+        void InnerNavigate(Type pageType, object[] args)
         {
             CurrentPage = pageType switch
             {
                 _ when pageType == typeof(HomeViewModel) => _homeViewModel,
-                _ when pageType == typeof(GameViewModel) => _gameViewModel,
                 _ when pageType == typeof(LibraryViewModel) => _libraryViewModel,
                 _ when pageType == typeof(AdminViewModel) => _adminViewModel,
+                _ when pageType == typeof(GameViewModel) => _gameViewModel,
                 _ => throw new ArgumentException($"Unknown page type: {pageType.FullName}")
             };
 
             if (CurrentPage is INavigationAware nav)
             {
-                nav.OnActivate();
+                nav.OnActivate(args);
             }
         }
     }
 
-    [RelayCommand] public void ShowHome() => _navigator.NavigateTo<HomeViewModel>();
-    [RelayCommand] public void ShowGame() => _navigator.NavigateTo<GameViewModel>();
-    [RelayCommand] public void ShowLibrary() => _navigator.NavigateTo<LibraryViewModel>();
-    [RelayCommand] public void ShowAdmin() => _navigator.NavigateTo<AdminViewModel>();
+    [RelayCommand]
+    public void ShowHome() =>
+        _navigator.NavigateTo<HomeViewModel>();
 
+    [RelayCommand]
+    public void ShowLibrary() =>
+        _navigator.NavigateTo<LibraryViewModel>();
+
+    [RelayCommand]
+    public void ShowAdmin() =>
+        _navigator.NavigateTo<AdminViewModel>();
 
     private void OnThemeErrorOccured(string message)
     {

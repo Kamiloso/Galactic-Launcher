@@ -3,7 +3,7 @@ using System;
 using System.Net.Http;
 using System.Threading;
 
-namespace GalacticLauncher.Frontend.Infrastructure.Client;
+namespace GalacticLauncher.Frontend.Infrastructure.Http;
 
 internal static class HttpProvider
 {

@@ -56,25 +56,29 @@
 										 ColumnSpacing="20"
 										 HorizontalAlignment="Center">
 								<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="0"
 										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
 								</Button>
 								<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="1"
 										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
 								</Button>
 								<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="2"
 										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
 								</Button>
 								<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="3"
 										Tag="NO GAME FOUND"
 										Background="{DynamicResource MainPanelGradient}">
 
@@ -122,18 +126,21 @@
 										 HorizontalAlignment="Center">
 
 								<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="4"
 										Tag="NO GAME ADDED"
 										Background="{DynamicResource MainPanelGradient}">
 								</Button>
 								<Button Classes="imageClickable"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="5"
 										Tag="NO GAME ADDED"
 										Background="{DynamicResource MainPanelGradient}">
 								</Button>
 								<Button Classes="imageClickable"
 										Tag="NO GAME ADDED"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="6"
 										Background="{DynamicResource MainPanelGradient}">
 								</Button>
 							</UniformGrid>
@@ -164,7 +171,8 @@
 										 HorizontalAlignment="Center">
 								<Button Classes="imageClickable"
 										Tag="NO GAME PLAYED YET"
-										Command="{Binding ShowGame}"
+										Command="{Binding ShowGameCommand}"
+										CommandParameter="7"
 										Background="{DynamicResource MainPanelGradient}">
 								</Button>
 							</UniformGrid>

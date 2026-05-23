@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.DataAccess.Networking;
+namespace GalacticLauncher.Frontend.Tools.Networking;
 
 public interface IBackendTalker
 {

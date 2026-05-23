@@ -6,7 +6,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.DataAccess.Networking;
+namespace GalacticLauncher.Frontend.Tools.Networking;
 
 public interface IHttpPoster
 {

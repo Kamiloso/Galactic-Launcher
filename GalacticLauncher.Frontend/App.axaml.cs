@@ -2,17 +2,18 @@ global using Version = GalacticLauncher.Core.Models.Version;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using GalacticLauncher.Frontend.Infrastructure.Client;
+using GalacticLauncher.Frontend.Infrastructure.Http;
+using GalacticLauncher.Frontend.Repositories;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Executables;
+using GalacticLauncher.Frontend.Tools.Files;
+using GalacticLauncher.Frontend.Tools.Networking;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
 using GalacticLauncher.Frontend.ViewModels.Panels;
+using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Frontend.ViewModels.Windows;
 using GalacticLauncher.Frontend.Views.MainWindowView;
 using Microsoft.Extensions.DependencyInjection;
-using GalacticLauncher.Frontend.Infrastructure.Files;
-using GalacticLauncher.Frontend.ViewModels.ViewServices;
-using GalacticLauncher.Frontend.Services.Cache;
-using GalacticLauncher.Frontend.DataAccess.Networking;
 
 namespace GalacticLauncher.Frontend;
 
@@ -48,18 +49,24 @@ public partial class App : Application
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<INotifications, Notifications>();
 
-            // Infrastructure Services
-            services.AddSingleton<IHttpPoster, HttpPoster>(_ => new(HttpProvider.ApiClient));
-            services.AddSingleton<IBackendTalker, BackendTalker>();
+            // Tools
             services.AddSingleton<IFileDownloader, FileDownloader>(_ => new(HttpProvider.DownloadClient));
             services.AddSingleton<IFileDecompressor, FileDecompressor>();
             services.AddSingleton<IFileHasher, FileHasher>();
             services.AddSingleton<IJsonFiles, JsonFiles>();
+            services.AddSingleton<IHttpPoster, HttpPoster>(_ => new(HttpProvider.ApiClient));
+            services.AddSingleton<IBackendTalker, BackendTalker>();
 
-            // Model Services (for View Models)
+            // Repositories
+            services.AddSingleton<ICacheRepository, CacheRepository>();
+            services.AddSingleton<IDataRepository, DataRepository>();
+
+            // Services
             services.AddSingleton<IExecManager, ExecManager>();
             services.AddSingleton<IExecPathSystem, ExecPathSystem>();
+            services.AddSingleton<IExecRunner, ExecRunner>();
             services.AddSingleton<ICacheRefresher, CacheRefresher>();
+            services.AddSingleton<ICacheProvider, CacheProvider>();
 
             var serviceProvider = services.BuildServiceProvider();
 

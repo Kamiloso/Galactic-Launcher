@@ -4,16 +4,19 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
-using GalacticLauncher.Frontend.DataAccess.Networking;
-using GalacticLauncher.Frontend.DataAccess.Repositories;
+using GalacticLauncher.Frontend.Tools.Networking;
+using GalacticLauncher.Frontend.Repositories;
 
 namespace GalacticLauncher.Frontend.Services.Cache;
 
 public interface ICacheRefresher
 {
-    event Action? OnRefreshAllGames;
+    bool IsRefreshing { get; }
+
+    event Action? OnRefreshAll;
     event Action<long>? OnRefreshGame;
-    Task RefreshAllGames();
+
+    Task RefreshAll();
     Task RefreshGame(long id);
 }
 
@@ -21,41 +24,61 @@ internal class CacheRefresher(
     IBackendTalker backendTalker,
     ICacheRepository cacheRepository) : ICacheRefresher
 {
-    public event Action? OnRefreshAllGames;
+    public bool IsRefreshing => _refreshCount > 0;
+
+    public event Action? OnRefreshAll;
     public event Action<long>? OnRefreshGame;
 
-    public async Task RefreshAllGames()
-    {
-        IEnumerable<Game> games;
+    private int _refreshCount;
 
-        try
+    public async Task RefreshAll() =>
+        await DuringRefresh(async () =>
         {
-            games = await backendTalker.GetAllGames();
-            cacheRepository.SaveAllGames(games);
-        }
-        catch (ApiException) { }
+            IEnumerable<Game> games;
 
-        OnRefreshAllGames?.Invoke();
-    }
-
-    public async Task RefreshGame(long id)
-    {
-        GameData gameData;
-
-        try
-        {
-            gameData = (await backendTalker.GetGameData(id))
-                .RemoveIncompatiblePlatforms();
-            cacheRepository.SaveGameData(gameData);
-        }
-        catch (ApiException ex)
-        {
-            if (ex.StatusCode == 404) // not found - game probably removed
+            try
             {
-                cacheRepository.ForgetGameEntry(id);
+                games = await backendTalker.GetAllGames();
+                cacheRepository.SetAllGames(games);
             }
-        }
+            catch (ApiException) { }
 
-        OnRefreshGame?.Invoke(id);
+            OnRefreshAll?.Invoke();
+        });
+
+    public async Task RefreshGame(long id) =>
+        await DuringRefresh(async () =>
+        {
+            GameData gameData;
+
+            try
+            {
+                gameData = (await backendTalker.GetGameData(id))
+                    .RemoveIncompatiblePlatforms();
+                cacheRepository.SetGameData(gameData);
+            }
+            catch (ApiException ex)
+            {
+                if (ex.StatusCode == 404) // not found - game probably removed
+                {
+                    cacheRepository.ForgetGameEntry(id);
+                }
+            }
+
+            OnRefreshGame?.Invoke(id);
+        });
+
+    private async Task DuringRefresh(Func<Task> task)
+    {
+        _refreshCount++;
+
+        try
+        {
+            await task();
+        }
+        finally
+        {
+            _refreshCount--;
+        }
     }
 }

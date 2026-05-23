@@ -1,13 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using GalacticLauncher.Frontend.Infrastructure;
+using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal class HomeViewModel(Navigator navigator) : ObservableObject
+internal partial class HomeViewModel(INavigator navigator) : ObservableObject
 {
-    public void ShowGame()
+    [RelayCommand]
+    public void ShowGame(string id_)
     {
-        navigator.NavigateTo<GameViewModel>();
+        long id = long.Parse(id_);
+        navigator.NavigateTo<GameViewModel>(id);
     }
 }

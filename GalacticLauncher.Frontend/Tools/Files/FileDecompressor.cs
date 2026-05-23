@@ -5,7 +5,7 @@ using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Infrastructure.Files;
+namespace GalacticLauncher.Frontend.Tools.Files;
 
 public interface IFileDecompressor
 {

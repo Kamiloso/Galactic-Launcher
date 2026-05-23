@@ -1,7 +1,7 @@
 ﻿using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
-using GalacticLauncher.Frontend.Infrastructure.Files;
+using GalacticLauncher.Frontend.Tools.Files;
 using System;
 using System.Collections.Generic;
 using System.IO;

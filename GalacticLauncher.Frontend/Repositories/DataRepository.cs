@@ -1,12 +1,12 @@
 ﻿using GalacticLauncher.Core;
 using GalacticLauncher.Frontend.Domain.Models;
-using GalacticLauncher.Frontend.Infrastructure.Files;
+using GalacticLauncher.Frontend.Tools.Files;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 
-namespace GalacticLauncher.Frontend.DataAccess.Repositories;
+namespace GalacticLauncher.Frontend.Repositories;
 
 public interface IDataRepository
 {

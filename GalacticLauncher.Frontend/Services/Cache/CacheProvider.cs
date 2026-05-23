@@ -1,7 +1,7 @@
 ﻿using GalacticLauncher.Core.Models;
-using GalacticLauncher.Frontend.DataAccess.Repositories;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
+using GalacticLauncher.Frontend.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +10,9 @@ namespace GalacticLauncher.Frontend.Services.Cache;
 
 public interface ICacheProvider
 {
-    public IEnumerable<long> AllGameIds();
-    public GameDisplay GetDisplayOf(long id);
+    IEnumerable<long> AllGameIds();
+    GameDisplay GetDisplayOf(long id);
+    VersionDisplay[] GetVersionDisplaysOf(long id);
 }
 
 internal class CacheProvider(
@@ -31,15 +32,24 @@ internal class CacheProvider(
         if (game == null && gameData != null)
         {
             throw new InvalidOperationException(
-                $"{nameof(GameData)} exists where {nameof(Game)} doesn't exist.");
+                $"Inconsistent {nameof(Game)} / {nameof(GameData)} existence at id {id}.");
         }
 
         return game?.ToDisplay(gameData)
-            ?? new GameDisplay
+            ?? new GameDisplay()
             {
-                Title = $"Unknown Game (id: {id})",
-                Description = "...",
+                Id = id,
+                Title = $"Unknown Game {id}",
+                Description = "",
                 IconUrl = null,
             };
+    }
+
+    public VersionDisplay[] GetVersionDisplaysOf(long id)
+    {
+        GameData? gameData = cacheRepository.GetGameData(id);
+        return gameData?.Versions
+            .Select(v => v.ToDisplay()).ToArray()
+            ?? [];
     }
 }

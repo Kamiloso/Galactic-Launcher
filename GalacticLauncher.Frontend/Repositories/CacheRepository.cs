@@ -4,17 +4,17 @@ using System.Linq;
 using GalacticLauncher.Core;
 using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Domain.Models;
-using GalacticLauncher.Frontend.Infrastructure.Files;
+using GalacticLauncher.Frontend.Tools.Files;
 
-namespace GalacticLauncher.Frontend.DataAccess.Repositories;
+namespace GalacticLauncher.Frontend.Repositories;
 
 public interface ICacheRepository
 {
     IEnumerable<Game> GetAllGames();
     Game? GetGame(long id);
     GameData? GetGameData(long id);
-    void SaveAllGames(IEnumerable<Game> games);
-    void SaveGameData(GameData gameData);
+    void SetAllGames(IEnumerable<Game> games);
+    void SetGameData(GameData gameData);
     void ForgetGameEntry(long id);
 }
 
@@ -49,7 +49,7 @@ internal class CacheRepository : ICacheRepository
         return _gameDataCache.TryGetValue(id, out var data) ? data : null;
     }
 
-    public void SaveAllGames(IEnumerable<Game> games)
+    public void SetAllGames(IEnumerable<Game> games)
     {
         _gameCache.Clear();
 
@@ -70,11 +70,14 @@ internal class CacheRepository : ICacheRepository
         SaveToDisk();
     }
 
-    public void SaveGameData(GameData gameData)
+    public void SetGameData(GameData gameData)
     {
-        _gameDataCache[gameData.Id] = gameData;
+        if (_gameCache.ContainsKey(gameData.Id))
+        {
+            _gameDataCache[gameData.Id] = gameData;
 
-        SaveToDisk();
+            SaveToDisk();
+        }
     }
 
     public void ForgetGameEntry(long id)
@@ -91,6 +94,9 @@ internal class CacheRepository : ICacheRepository
 
         _gameCache.Clear();
         _gameDataCache.Clear();
+
+        if (Utils.IsDevelopment && Utils.DevelopmentIgnoreCache)
+            return; // skip loading cache if needed (only in development)
 
         CacheStorage? model;
         if ((model = _jsonFiles.Load<CacheStorage>(filePath)) != null) // any errors = reset cache

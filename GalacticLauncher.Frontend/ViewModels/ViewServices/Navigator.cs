@@ -4,24 +4,33 @@ namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 public interface INavigator
 {
-    event Action<Type>? OnNavigate;
-    event Action<Type>? OnAdminPanelNavigate;
-    void NavigateTo<T>();
-    void AdminPanelNavigateTo<T>();
+    event Action<Type, object[]>? OnNavigate;
+    event Action<Type, object[]>? OnGamesPanelNavigate;
+    event Action<Type, object[]>? OnAdminPanelNavigate;
+
+    void NavigateTo<T>(params object[] args);
+    void GamesPanelNavigateTo<T>(params object[] args);
+    void AdminPanelNavigateTo<T>(params object[] args);
 }
 
 internal class Navigator : INavigator
 {
-    public event Action<Type>? OnNavigate;
-    public event Action<Type>? OnAdminPanelNavigate;
+    public event Action<Type, object[]>? OnNavigate;
+    public event Action<Type, object[]>? OnGamesPanelNavigate;
+    public event Action<Type, object[]>? OnAdminPanelNavigate;
 
-    public void NavigateTo<T>()
+    public void NavigateTo<T>(params object[] args)
     {
-        OnNavigate?.Invoke(typeof(T));
+        OnNavigate?.Invoke(typeof(T), args);
     }
 
-    public void AdminPanelNavigateTo<T>()
+    public void GamesPanelNavigateTo<T>(params object[] args)
     {
-        OnAdminPanelNavigate?.Invoke(typeof(T));
+        OnGamesPanelNavigate?.Invoke(typeof(T), args);
+    }
+
+    public void AdminPanelNavigateTo<T>(params object[] args)
+    {
+        OnAdminPanelNavigate?.Invoke(typeof(T), args);
     }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using System;
 
-namespace GalacticLauncher.Frontend.Infrastructure.Files;
+namespace GalacticLauncher.Frontend.Tools.Files;
 
 public interface IJsonFiles
 {

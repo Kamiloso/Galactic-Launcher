@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
@@ -7,6 +8,17 @@ namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
 internal class AdminViewModel : ObservableObject
 {
+    // TODO: Magda
+    // Make this thing more compact. Use MVVM toolkit,
+    // to reduce boilerplate, and make it more readable.
+
+    // Also rename CurrentPage and CurrentActivePage,
+    // because for now they look really similar,
+    // but are actually different things.
+    // Maybe CurrentPage and CurrentPageName?
+
+    // Also fix this in the MainWindowViewModel, since it has the same issue.
+
     private object? _currentPage;
     public object? CurrentPage
     {
@@ -20,26 +32,27 @@ internal class AdminViewModel : ObservableObject
     }
     public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
 
-    private readonly Navigator _navigator;
     private readonly AdGamesViewModel _gamesViewModel;
     private readonly AdTagsViewModel _tagsViewModel;
     private readonly AdUsersViewModel _usersViewModel;
+    private readonly INavigator _navigator;
 
     public AdminViewModel(
-        Navigator navigator,
         AdGamesViewModel gamesViewModel,
         AdTagsViewModel tagsViewModel,
-        AdUsersViewModel usersViewModel
+        AdUsersViewModel usersViewModel,
+        INavigator navigator
         )
     {
-        _navigator = navigator;
         _gamesViewModel = gamesViewModel;
         _tagsViewModel = tagsViewModel;
         _usersViewModel = usersViewModel;
+        _navigator = navigator;
 
-        SetAdminPage(typeof(AdTagsViewModel));
+        _navigator.OnAdminPanelNavigate += InnerNavigate;
+        _navigator.NavigateTo<AdGamesViewModel>();
 
-        void SetAdminPage(Type pageType)
+        void InnerNavigate(Type pageType, object[] args)
         {
             CurrentPage = pageType switch
             {
@@ -51,13 +64,18 @@ internal class AdminViewModel : ObservableObject
 
             if (CurrentPage is INavigationAware nav)
             {
-                nav.OnActivate();
+                nav.OnActivate(args);
             }
         }
     }
 
-    public void ShowGames() => _navigator.AdminPanelNavigateTo<AdGamesViewModel>();
-    public void ShowTags() => _navigator.AdminPanelNavigateTo<AdTagsViewModel>();
-    public void ShowUsers() => _navigator.AdminPanelNavigateTo<AdUsersViewModel>();
+    public void ShowGames() =>
+        _navigator.AdminPanelNavigateTo<AdGamesViewModel>();
+
+    public void ShowTags() =>
+        _navigator.AdminPanelNavigateTo<AdTagsViewModel>();
+
+    public void ShowUsers() =>
+        _navigator.AdminPanelNavigateTo<AdUsersViewModel>();
 }
 
