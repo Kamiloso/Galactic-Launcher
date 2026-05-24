@@ -22,6 +22,7 @@ internal static class ToInfoConverters
             DownloadUrl = version.DownloadUrl,
             ExecLocation = version.ExecLocation,
             Sha256Hash = version.Sha256Hash,
+            CliArgs = version.CliArgs ?? string.Empty,
         };
     }
 

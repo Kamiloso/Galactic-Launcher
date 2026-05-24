@@ -40,6 +40,7 @@ internal class CacheProvider(
             {
                 Id = id,
                 Title = $"Unknown Game {id}",
+                Author = "Unknown Author",
                 Description = "",
                 IconUrl = null,
             };

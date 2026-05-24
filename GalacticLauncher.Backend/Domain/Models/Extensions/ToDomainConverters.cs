@@ -10,6 +10,7 @@ internal static class ToDomainConverters
         {
             Id = game.Id,
             Name = game.Name,
+            Author = game.Author,
             Description = game.Description,
             IconUrl = image?.DownloadUrl,
         };
@@ -22,6 +23,7 @@ internal static class ToDomainConverters
             Id = game.Id,
             Name = game.Name,
             Description = game.Description,
+            Author = game.Author,
             IconUrl = game.IconUrl,
         };
     }
@@ -35,6 +37,7 @@ internal static class ToDomainConverters
         {
             Id = game.Id,
             Name = game.Name,
+            Author = game.Author,
             Description = game.Description,
             Versions = [.. versions.Select(ToDomain)],
             Images = [.. images.Select(ToDomain)],
@@ -50,6 +53,7 @@ internal static class ToDomainConverters
             Caption = version.Caption,
             Type = version.Type,
             Description = version.Description,
+            CliArgs = version.CliArgs,
             IsPrimary = version.IsPrimary,
             ReleaseDate = version.ReleaseDate,
             Platform = version.Platform,
@@ -76,7 +80,7 @@ internal static class ToDomainConverters
         {
             Id = tag.Id,
             Name = tag.Name,
-            Description = tag.Description
+            Description = tag.Description,
         };
     }
 }

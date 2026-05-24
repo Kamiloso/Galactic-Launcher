@@ -149,7 +149,7 @@ internal class ExecManager(
             string execFilePath = execPathSystem.FindExecFilePath(execInfo)
                 ?? throw new FileNotFoundException("Executable file not found.");
 
-            execRunner.Run(execFilePath, "");
+            execRunner.Run(execFilePath, execInfo.CliArgs);
         }
         catch (Exception ex)
         {
