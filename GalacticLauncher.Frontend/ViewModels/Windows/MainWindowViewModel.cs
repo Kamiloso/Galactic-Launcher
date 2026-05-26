@@ -1,13 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Avalonia.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
+using System;
+using System.Windows.Input;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
@@ -74,7 +71,6 @@ internal partial class MainWindowViewModel : ObservableObject
 
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
-
 
         void InnerNavigate(Type pageType, object[] args)
         {

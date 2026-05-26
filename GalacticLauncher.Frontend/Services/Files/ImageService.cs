@@ -3,47 +3,52 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GalacticLauncher.Core;
+using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Tools.Files;
 
 namespace GalacticLauncher.Frontend.Services.Files
 {
     public interface IImageService
     {
-        Task<string?> GetImageAsync(long gameId, string url);
+        Task<string> DownloadImageAsync(long gameId, string url);
     }
 
     internal class ImageService(IFileDownloader downloader) : IImageService
     {
-        private static readonly string ImagesFolder = Path.GetFullPath(Path.Combine(Utils.RootPath, "images"));
-        private static readonly string[] AllowedExtensions = [".jpg", ".jpeg", ".png", ".bmp", ".webp"];
-
-        public async Task<string?> GetImageAsync(long gameId, string url)
+        public async Task<string> DownloadImageAsync(long gameId, string url)
         {
-            string extension = Path.GetExtension(url).ToLowerInvariant();
-            if (string.IsNullOrEmpty(extension) || !AllowedExtensions.Contains(extension))
+            if (IsAllowedExtension(url, out string extension))
             {
-                return null;
+                throw new DownloadException("Unsupported image format.");
             }
 
-            string fileName = $"icon_{gameId}{extension}";
-            string fullPath = Path.GetFullPath(Path.Combine(ImagesFolder, fileName));
+            string imagesPath = Path.Combine(Utils.RootPath, "images");
+            string filePath = Path.Combine(imagesPath, $"icon_{gameId}{extension}");
 
-            if (!Directory.Exists(ImagesFolder))
+            if (!Directory.Exists(imagesPath))
             {
-                Directory.CreateDirectory(ImagesFolder);
+                Directory.CreateDirectory(imagesPath);
             }
             else
             {
-                var oldFiles = Directory.GetFiles(ImagesFolder, $"icon_{gameId}.*");
+                string[] oldFiles = Directory.GetFiles(imagesPath, $"icon_{gameId}.*");
                 foreach (var oldFile in oldFiles)
                 {
                     File.Delete(oldFile);
                 }
             }
 
-            await downloader.DownloadFileAsync(url, fullPath);
+            await downloader.DownloadFileAsync(url, filePath);
 
-            return fullPath;
+            return filePath;
+        }
+
+        private static bool IsAllowedExtension(string url, out string extension)
+        {
+            string[] allowed = [".jpg", ".jpeg", ".png", ".bmp", ".webp"];
+
+            extension = $"{Path.GetExtension(url)}".ToLowerInvariant();
+            return allowed.Contains(extension);
         }
     }
 }

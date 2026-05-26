@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Services.Files;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
@@ -20,11 +21,12 @@ namespace GalacticLauncher.Frontend.ViewModels.Buttons
 
         public async Task LoadAsync(string url)
         {
-            string? path = await _imageService.GetImageAsync(GameId, url);
-            if(path != null && File.Exists(path))
+            try
             {
-                Icon = new Bitmap(path);
+                Icon = new Bitmap(
+                    await _imageService.DownloadImageAsync(GameId, url));
             }
+            catch { }
         }
 
         [RelayCommand]

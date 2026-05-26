@@ -25,10 +25,6 @@ internal class CacheRepository : ICacheRepository
     private readonly Dictionary<long, Game> _gameCache = [];
     private readonly Dictionary<long, GameData> _gameDataCache = [];
 
-    private readonly HashSet<long> _favoriteIds = [];
-    private readonly HashSet<long> _libraryIds = [];
-
-
     private readonly IJsonFiles _jsonFiles;
 
     public CacheRepository(IJsonFiles jsonFiles)

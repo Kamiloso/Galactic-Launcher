@@ -8,6 +8,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Files;
 using GalacticLauncher.Frontend.ViewModels.Buttons;
@@ -65,7 +66,7 @@ internal partial class HomeViewModel: ObservableObject
             var recc = new GameButtonViewModel(id, _imageService, _navigator);
             Recommendations.Add(recc);
 
-            var display = _cacheProvider.GetDisplayOf(id);
+            GameDisplay display = _cacheProvider.GetDisplayOf(id);
             if (display.IconUrl != null)
             {
                 loadTasks.Add(recc.LoadAsync(display.IconUrl));
