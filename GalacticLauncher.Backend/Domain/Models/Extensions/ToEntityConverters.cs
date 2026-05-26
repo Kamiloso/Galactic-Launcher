@@ -16,6 +16,7 @@ public static class ToEntityConverters
             {
                 Name = game.Name,
                 Description = game.Description,
+                Author = game.Author,
             },
             Versions: [.. game.Versions.Select(v => v.ToEntity(game.Id))],
             Images: [.. game.Images.Select(i => i.ToEntity(game.Id))],
@@ -31,6 +32,7 @@ public static class ToEntityConverters
             Caption = version.Caption,
             Type = version.Type,
             Description = version.Description,
+            CliArgs = version.CliArgs,
             IsPrimary = version.IsPrimary,
             ReleaseDate = version.ReleaseDate,
             Platform = version.Platform,
