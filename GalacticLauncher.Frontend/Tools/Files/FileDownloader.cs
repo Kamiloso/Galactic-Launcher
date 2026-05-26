@@ -26,6 +26,12 @@ internal class FileDownloader(HttpClient httpClient) : IFileDownloader
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default)
     {
+        string? directoryPath = Path.GetDirectoryName(targetPath);
+        if (!string.IsNullOrEmpty(directoryPath) && !Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
         try
         {
             using HttpResponseMessage response = await httpClient.GetAsync(

@@ -20,10 +20,12 @@ internal class DataRepository : IDataRepository
 {
     private const string DATA_FILENAME = "launcher_data.json";
 
-    private readonly Dictionary<string, HashSet<long>> _data = [];
+    //changed it to have data about the sequence in which each game has been added (for homeviewmodel)
+
+    private readonly Dictionary<string, List<long>> _data = [];
 
     private readonly IJsonFiles _jsonFiles;
-
+ 
     public DataRepository(IJsonFiles jsonFiles)
     {
         _jsonFiles = jsonFiles;
@@ -33,25 +35,27 @@ internal class DataRepository : IDataRepository
 
     public IEnumerable<long> GetAll(string ckey)
     {
-        return _data.TryGetValue(ckey, out var set) ? [.. set] : [];
+        return _data.TryGetValue(ckey, out var list) ? [.. list] : [];
     }
 
     public void Add(string ckey, long id)
     {
-        if (!_data.TryGetValue(ckey, out var set))
+        if (!_data.TryGetValue(ckey, out var list))
         {
-            _data[ckey] = set = [];
+            _data[ckey] = list = [];
         }
-
-        set.Add(id);
-        SaveToDisk();
+        if (!list.Contains(id))
+        {
+            list.Add(id);
+            SaveToDisk();
+        }
     }
 
     public void Remove(string ckey, long id)
     {
-        if (_data.TryGetValue(ckey, out var set) && set.Remove(id))
+        if (_data.TryGetValue(ckey, out var list) && list.Remove(id))
         {
-            if (set.Count == 0)
+            if (list.Count == 0)
             {
                 _data.Remove(ckey);
             }
@@ -94,7 +98,7 @@ internal class DataRepository : IDataRepository
         DataStorage model = new()
         {
             Keys = [.. _data.Keys],
-            Values = [.. _data.Values.Select(hset => hset.ToImmutableArray())],
+            Values = [.. _data.Values.Select(list => list.ToImmutableArray())],
         };
 
         _jsonFiles.Save(filePath, model);

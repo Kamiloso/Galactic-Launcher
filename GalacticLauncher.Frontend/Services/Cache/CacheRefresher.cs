@@ -59,6 +59,7 @@ internal class CacheRefresher(
             }
             catch (ApiException ex)
             {
+
                 if (ex.StatusCode == 404) // not found - game probably removed
                 {
                     cacheRepository.ForgetGameEntry(id);

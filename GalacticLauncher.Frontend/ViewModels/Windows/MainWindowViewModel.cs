@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -72,6 +74,7 @@ internal partial class MainWindowViewModel : ObservableObject
 
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
+
 
         void InnerNavigate(Type pageType, object[] args)
         {
