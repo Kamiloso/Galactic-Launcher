@@ -23,10 +23,13 @@ namespace GalacticLauncher.Frontend.ViewModels.Buttons
         {
             try
             {
-                Icon = new Bitmap(
-                    await _imageService.DownloadImageAsync(GameId, url));
+                string file = await _imageService.DownloadImageAsync(GameId, url);
+                if (File.Exists(file))
+                {
+                    Icon = new Bitmap(file);
+                }
             }
-            catch { }
+            catch (DownloadException) { }
         }
 
         [RelayCommand]
