@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.HomeView"
-			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
+			 xmlns:vm="clr-namespace:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:HomeViewModel"
 			 x:CompileBindings="True">
 
@@ -52,44 +52,31 @@
 								Classes="galaxyBorder"
 								Height="220">
 
-							<UniformGrid Columns="4"
-										 ColumnSpacing="20"
-										 HorizontalAlignment="Center">
-								<Button Classes="imageClickable"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="0"
-										Tag="NO GAME FOUND"
-										Background="{DynamicResource MainPanelGradient}">
+							<ItemsControl ItemsSource="{Binding Recommendations}"
+										  Background="Transparent">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<UniformGrid Columns="4" ColumnSpacing="20" HorizontalAlignment="Center"/>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
 
-								</Button>
-								<Button Classes="imageClickable"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="1"
-										Tag="NO GAME FOUND"
-										Background="{DynamicResource MainPanelGradient}">
-
-								</Button>
-								<Button Classes="imageClickable"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="2"
-										Tag="NO GAME FOUND"
-										Background="{DynamicResource MainPanelGradient}">
-
-								</Button>
-								<Button Classes="imageClickable"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="3"
-										Tag="NO GAME FOUND"
-										Background="{DynamicResource MainPanelGradient}">
-
-								</Button>
-
-							</UniformGrid>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Classes="imageClickable"
+												Command="{Binding ShowGameCommand}"
+												Background="{DynamicResource MainPanelGradient}"
+												Tag="NO GAMES FOUND">
+											<Image Source="{Binding Icon}"/>
+										</Button>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+							
 						</Border>
 					</Grid>
 				</Viewbox>
 
-				<!--Quick start-->
+				<!--favorites-->
 				<Viewbox Grid.Row="2"
 						 Stretch="Uniform"
 						 HorizontalAlignment="Stretch"
@@ -101,7 +88,7 @@
 						  Width="852"
 						  Height="267">
 
-						<!--quick start header-->
+						<!--favorites header-->
 						<Border Grid.Row="0"
 								Grid.Column="0"
 								Classes="galaxyHeader"
@@ -109,12 +96,12 @@
 								VerticalAlignment="Top"
 								Height="36">
 							<TextBlock Classes="homeHeader"
-									   Text="DIVE RIGHT IN"
+									   Text="YOUR FAVORITES"
 									   HorizontalAlignment="Left"
 									   VerticalAlignment="Center"/>
 									   
 						</Border>
-						<!--quick start-->
+						<!--favorites-->
 						<Border Grid.Row="2"
 								Grid.Column="0"
 								Classes="galaxyBorder"
@@ -125,28 +112,11 @@
 										 ColumnSpacing="12"
 										 HorizontalAlignment="Center">
 
-								<Button Classes="imageClickable"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="4"
-										Tag="NO GAME ADDED"
-										Background="{DynamicResource MainPanelGradient}">
-								</Button>
-								<Button Classes="imageClickable"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="5"
-										Tag="NO GAME ADDED"
-										Background="{DynamicResource MainPanelGradient}">
-								</Button>
-								<Button Classes="imageClickable"
-										Tag="NO GAME ADDED"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="6"
-										Background="{DynamicResource MainPanelGradient}">
-								</Button>
+								
 							</UniformGrid>
 						</Border>
 
-						<!--last played header-->
+						<!--last added header-->
 						<Border Grid.Row="0"
 								Grid.Column="2"
 								Classes="galaxyHeader"
@@ -155,11 +125,11 @@
 								Height="36">
 							
 							<TextBlock Classes="homeHeader"
-									   Text="CONTINUE"
+									   Text="NEW"
 									   HorizontalAlignment="Left"
 									   VerticalAlignment="Center"/>
 						</Border>
-						<!--last play-->
+						<!--last added-->
 						<Border Grid.Row="2"
 								Grid.Column="2"
 								Classes="galaxyBorder"
@@ -169,12 +139,7 @@
 							<UniformGrid Columns="1"
 										 ColumnSpacing="12"
 										 HorizontalAlignment="Center">
-								<Button Classes="imageClickable"
-										Tag="NO GAME PLAYED YET"
-										Command="{Binding ShowGameCommand}"
-										CommandParameter="7"
-										Background="{DynamicResource MainPanelGradient}">
-								</Button>
+								
 							</UniformGrid>
 						</Border>
 						

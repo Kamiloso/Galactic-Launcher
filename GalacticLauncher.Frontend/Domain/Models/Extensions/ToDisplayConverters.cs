@@ -13,7 +13,7 @@ internal static class ToDisplayConverters
             Title = game.Name,
             Author = game.Author,
             Description = game.Description,
-            IconUrl = gameData?.Versions.Count().ToString(),
+            IconUrl = game.IconUrl,
         };
     }
 

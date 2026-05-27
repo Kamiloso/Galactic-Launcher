@@ -6,6 +6,8 @@ using GalacticLauncher.Frontend.Infrastructure.Http;
 using GalacticLauncher.Frontend.Repositories;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Executables;
+using GalacticLauncher.Frontend.Services.Files;
+using GalacticLauncher.Frontend.Services.UserData;
 using GalacticLauncher.Frontend.Tools.Files;
 using GalacticLauncher.Frontend.Tools.Networking;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
@@ -67,6 +69,10 @@ public partial class App : Application
             services.AddSingleton<IExecRunner, ExecRunner>();
             services.AddSingleton<ICacheRefresher, CacheRefresher>();
             services.AddSingleton<ICacheProvider, CacheProvider>();
+            services.AddSingleton<IUserDataService, UserDataService>();
+            services.AddSingleton<IImageService, ImageService>();
+            services.AddSingleton<IGameSelectionService, GameSelectionService>();
+
 
             var serviceProvider = services.BuildServiceProvider();
 
