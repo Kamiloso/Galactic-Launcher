@@ -1,7 +1,7 @@
 USE galactic;
 
 -- 1. Dodawanie gier (w tym Twoich rzeczywistych projektów dla lepszego kontekstu testowego)
-INSERT IGNORE INTO games (id, name, description) VALUES
+INSERT IGNORE INTO games (id, name, author, description) VALUES
 (4, 'Teeworlds', 'Magda', 'A free online multiplayer game, available for all major operating systems. Battle with up to 16 players in a variety of game modes, including Team Deathmatch and Capture The Flag. You can even design your own maps!'),
 (5, 'Sonic 2 Robot Blast', 'Magda', "Sonic Robo Blast 2 is a 3D open-source Sonic the Hedgehog fangame built using a modified version of the Doom Legacy port of Doom. SRB2 is closely inspired by the original Sonic games from the Sega Genesis, and attempts to recreate the design in 3D. While SRB2 isn't fully completed, it already features tons of levels, enemies, speed, and quite a lot of the fun that the original Sonic games provided."),
 (6, 'Canabalt', 'Kamiloso', 'Endless runner game'),
