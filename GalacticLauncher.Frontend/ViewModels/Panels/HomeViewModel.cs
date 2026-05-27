@@ -26,7 +26,9 @@ internal partial class HomeViewModel: ObservableObject
 
     public ObservableCollection<GameButtonViewModel> Recommendations { get; } = [];
     public ObservableCollection<GameButtonViewModel> Favourites { get; } = [];
-    public GameButtonViewModel? LastAdded { get; private set; }
+
+    [ObservableProperty]
+    private GameButtonViewModel? _lastAdded;
 
     public HomeViewModel(
         IImageService imageService, 
@@ -43,42 +45,70 @@ internal partial class HomeViewModel: ObservableObject
         _cacheRefresher = cacheRefresher;
 
 
-        _cacheRefresher.OnRefreshAll += RefreshHome;
-        _ = InitializeAsync();
+        _cacheRefresher.OnRefreshAll += Refresh;
+        _ =UpdateImages();
     }
-
-    private void Clear()
+    private async void Refresh()
     {
-        Recommendations.Clear();
-        Favourites.Clear();
-        LastAdded = null;
+        await UpdateImages();
     }
-
-    private async Task InitializeAsync()
+    private async Task UpdateImages()
     {
-        Clear();
+        var recommended = _gameSelectionService.GetRecommendedGames(4).ToList();
+        var favorite = _gameSelectionService.GetFavoriteGames(3).ToList();
+        var lastAddedId = _gameSelectionService.GetLastAddedLibraryGame();
 
-        var recIds = _gameSelectionService.GetRecommendedGames(4);
-        var loadTasks = new List<Task>();
-
-        foreach (var id in recIds)
+        await Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            var recc = new GameButtonViewModel(id, _imageService, _navigator);
-            Recommendations.Add(recc);
+            await RefreshCollections(Recommendations, recommended, 4);
+            await RefreshCollections(Favourites, favorite, 3);
 
-            GameDisplay display = _cacheProvider.GetDisplayOf(id);
-            if (display.IconUrl != null)
+            if (lastAddedId == null)
             {
-                loadTasks.Add(recc.LoadAsync(display.IconUrl));
+                LastAdded = new GameButtonViewModel(-1, _imageService, _navigator);
             }
-        }
-        await Task.WhenAll(loadTasks);
+            else if (LastAdded?.GameId != lastAddedId)
+            {
+                var vm = new GameButtonViewModel(lastAddedId.Value, _imageService, _navigator);
+                var display = _cacheProvider.GetDisplayOf(lastAddedId.Value);
+                if (display?.IconUrl != null)
+                    await vm.LoadAsync(display.IconUrl);
+
+                LastAdded = vm;
+            }
+        });
     }
 
-    private async void RefreshHome()
+    private async Task RefreshCollections(ObservableCollection<GameButtonViewModel> collection, List<long> targetIds, int capacity)
     {
-        await InitializeAsync();
+        var toRemove = collection.Where(vm => !targetIds.Contains(vm.GameId)).ToList();
+        foreach (var vm in toRemove) collection.Remove(vm);
+
+        if (targetIds.Count == 0)
+        {
+            for (int i = 0; i < capacity; i++)
+            {
+                collection.Add(new GameButtonViewModel(-1, _imageService, _navigator));
+            }
+            return;
+        }
+
+        var tasks = new List<Task>();
+        foreach (var id in targetIds)
+        {
+            if (collection.Any(vm => vm.GameId == id)) continue;
+
+            var vm = new GameButtonViewModel(id, _imageService, _navigator);
+            collection.Add(vm);
+
+            var display = _cacheProvider.GetDisplayOf(id);
+            if (display?.IconUrl != null)
+                tasks.Add(vm.LoadAsync(display.IconUrl));
+        }
+
+        await Task.WhenAll(tasks);
     }
 
-
+    [RelayCommand]
+    public async Task RefreshPage() => await UpdateImages();
 }

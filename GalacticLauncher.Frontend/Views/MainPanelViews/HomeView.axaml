@@ -3,6 +3,7 @@
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.HomeView"
 			 xmlns:vm="clr-namespace:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:HomeViewModel"
+			 xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.Buttons"
 			 x:CompileBindings="True">
 
 
@@ -17,11 +18,24 @@
 				  VerticalAlignment="Center">
 
 				<!--Welcome back!-->
-				<TextBlock Classes="slogan"
-						   Grid.Row="0"
-						   Text="WELCOME BACK!"
-						   HorizontalAlignment="Left"
-						   VerticalAlignment="Bottom"/>
+				<Grid ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch" Grid.Row="0">
+					
+					<TextBlock Classes="slogan"
+							   Text="WELCOME BACK!"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Bottom"
+							   Grid.Column="0"/>
+
+					<Button Classes="refreshButton"
+							HorizontalAlignment="Right"
+							Command="{Binding RefreshPageCommand}"
+							Grid.Column="1">
+
+						<PathIcon Data="{StaticResource IconRefresh}"/>
+					</Button>
+						
+				</Grid>
+
 
 				<!--Recommendations-->
 				<Viewbox Grid.Row="1"
@@ -61,12 +75,15 @@
 								</ItemsControl.ItemsPanel>
 
 								<ItemsControl.ItemTemplate>
-									<DataTemplate>
+									<DataTemplate x:DataType="btn:GameButtonViewModel">
 										<Button Classes="imageClickable"
 												Command="{Binding ShowGameCommand}"
-												Background="{DynamicResource MainPanelGradient}"
-												Tag="NO GAMES FOUND">
-											<Image Source="{Binding Icon}"/>
+												IsEnabled="{Binding IsGameValid}"
+												Tag="{Binding StatusMessage}"
+												Background="{DynamicResource MainPanelGradient}">
+											
+											<Image Source="{Binding Icon}"
+												   IsVisible="{Binding IsGameValid}"/>
 										</Button>
 									</DataTemplate>
 								</ItemsControl.ItemTemplate>
@@ -108,12 +125,26 @@
 								VerticalAlignment="Top"
 								Height="220">
 
-							<UniformGrid Columns="3"
-										 ColumnSpacing="12"
-										 HorizontalAlignment="Center">
+							<ItemsControl ItemsSource="{Binding Favourites}">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<UniformGrid Columns="3" ColumnSpacing="10" HorizontalAlignment="Center"/>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate x:DataType="btn:GameButtonViewModel">
+										<Button Classes="imageClickable"
+												Command="{Binding ShowGameCommand}"
+												IsEnabled="{Binding IsGameValid}"
+												Tag="{Binding StatusMessage}"
+												Background="{DynamicResource MainPanelGradient}">
 
-								
-							</UniformGrid>
+											<Image Source="{Binding Icon}"
+												   IsVisible="{Binding IsGameValid}"/>
+										</Button>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
 						</Border>
 
 						<!--last added header-->
@@ -136,11 +167,21 @@
 								VerticalAlignment="Top"
 								Height="220">
 
-							<UniformGrid Columns="1"
-										 ColumnSpacing="12"
-										 HorizontalAlignment="Center">
-								
-							</UniformGrid>
+							<ContentControl Content="{Binding LastAdded}">
+								<ContentControl.ContentTemplate>
+									<DataTemplate x:DataType="btn:GameButtonViewModel">
+										<Button Classes="imageClickable"
+												Command="{Binding ShowGameCommand}"
+												IsEnabled="{Binding IsGameValid}"
+												Tag="{Binding StatusMessage}"
+												Background="{DynamicResource MainPanelGradient}">
+
+											<Image Source="{Binding Icon}"
+												   IsVisible="{Binding IsGameValid}"/>
+										</Button>
+									</DataTemplate>
+								</ContentControl.ContentTemplate>
+							</ContentControl>
 						</Border>
 						
 					</Grid>

@@ -82,7 +82,6 @@
 
 						<TextBlock Text="HOME"
 								   IsVisible="{Binding IsExpanded}"/>
-						
 				</StackPanel>
 				</Button>
 

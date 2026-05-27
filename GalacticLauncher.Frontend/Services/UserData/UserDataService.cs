@@ -16,6 +16,8 @@ namespace GalacticLauncher.Frontend.Services.UserData
 
         void ClearFavourites();
         void ClearLibrary();
+
+
     }
     internal class UserDataService(IDataRepository dataRepository) : IUserDataService
     {

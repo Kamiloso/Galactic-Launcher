@@ -15,6 +15,7 @@ using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Frontend.ViewModels.Windows;
 using GalacticLauncher.Frontend.Views.MainWindowView;
+using GalacticLauncher.Frontend.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GalacticLauncher.Frontend;
@@ -45,6 +46,8 @@ public partial class App : Application
             services.AddSingleton<AdGamesViewModel>();
             services.AddSingleton<AdTagsViewModel>();
             services.AddSingleton<AdUsersViewModel>();
+
+            services.AddSingleton<LoadingViewModel>();
 
             // View Services
             services.AddSingleton<INavigator, Navigator>();

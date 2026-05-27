@@ -30,10 +30,10 @@ INSERT IGNORE INTO versions (id, id_game, caption, type, description, is_primary
 
 -- 5. Dodawanie obrazów (Assetów)
 INSERT IGNORE INTO images (id, id_game, download_url, type, sort_index) VALUES
-(9, 4, 'https://res.cloudinary.com/dzjps8efi/image/upload/v1779738306/teeworlds_1_wa3rsl.png','icon',0),
-(10, 5, 'https://res.cloudinary.com/dzjps8efi/image/upload/v1779738377/sonic_scfuw8.png','icon',0),
-(11, 6, 'https://res.cloudinary.com/dzjps8efi/image/upload/v1779738327/canabalt_s42mvq.png', 'icon', 0),
-(12, 7, 'https://res.cloudinary.com/dzjps8efi/image/upload/v1779738287/endlesssky_a5ig4i.png','icon',0),
-(13, 8, 'https://res.cloudinary.com/dzjps8efi/image/upload/v1779738400/dustracing_urdwvm.png','icon',0),
-(14, 9, 'https://res.cloudinary.com/dzjps8efi/image/upload/v1779738388/sdl_j66hff.png','icon',0);
+(9, 4, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','icon',0),
+(10, 5, 'https://drive.google.com/uc?id=1yCbBx7WG7NWqXaqUm8Ti7QRAhy1X_Wnd&export=download','icon',0),
+(11, 6, 'https://drive.google.com/uc?id=1jzexuK2J_oEIHvkDfyrky5G_xE9FzqF&export=download', 'icon', 0),
+(12, 7, 'https://drive.google.com/uc?id=1-SU_jwne0QwjMuciW4c83FG5ZBTDrT8D&export=download','icon',0),
+(13, 8, 'https://drive.google.com/uc?id=1tAa5xbpbviIi5xhB8VIKoKELq8I50k7k&export=download','icon',0),
+(14, 9, 'https://drive.google.com/uc?id=12JW5hJlSFo9G-Xymtk3vYUjLRTetEVMD&export=download','icon',0);
 

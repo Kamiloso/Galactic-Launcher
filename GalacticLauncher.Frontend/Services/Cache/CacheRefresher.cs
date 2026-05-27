@@ -18,6 +18,8 @@ public interface ICacheRefresher
 
     Task RefreshAll();
     Task RefreshGame(long id);
+
+    Task RefreshTags();
 }
 
 internal class CacheRefresher(
@@ -30,6 +32,20 @@ internal class CacheRefresher(
     public event Action<long>? OnRefreshGame;
 
     private int _refreshCount;
+
+    public async Task RefreshTags() =>
+        await DuringRefresh(async () =>
+        {
+            IEnumerable<Tag> tags;
+            try
+            {
+                tags = await backendTalker.GetAllTags();
+                cacheRepository.SetAllTags(tags);
+            }
+            catch (ApiException) { }
+
+            OnRefreshAll?.Invoke();
+        });
 
     public async Task RefreshAll() =>
         await DuringRefresh(async () =>

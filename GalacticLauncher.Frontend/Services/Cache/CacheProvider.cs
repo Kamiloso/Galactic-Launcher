@@ -11,6 +11,10 @@ namespace GalacticLauncher.Frontend.Services.Cache;
 public interface ICacheProvider
 {
     IEnumerable<long> AllGameIds();
+    IEnumerable<long> GetTagsForGame(long gameId);
+
+    IEnumerable<Tag> GetAllTags();
+
     GameDisplay GetDisplayOf(long id);
     VersionDisplay[] GetVersionDisplaysOf(long id);
 }
@@ -51,5 +55,31 @@ internal class CacheProvider(
         return gameData?.Versions
             .Select(v => v.ToDisplay()).ToArray()
             ?? [];
+    }
+
+    public IEnumerable<Tag> GetAllTags()
+    {
+        return cacheRepository.GetAllTags();
+    }
+
+    public IEnumerable<long> GetTagsForGame(long gameId)
+    {
+        GameData? gameData = cacheRepository.GetGameData(gameId);
+        if (gameData?.Tags == null) return Enumerable.Empty<long>();
+
+        var allSystemTagIds = cacheRepository.GetAllTags().Select(t => t.Id);
+        var gameTagIds = GetGameTagsIds(gameData);
+
+        return gameTagIds.Intersect(allSystemTagIds);
+    }
+
+    private IEnumerable<long> GetGameTagsIds(GameData gameData)
+    {
+        List<long> ids = [];
+        foreach(var tag in gameData.Tags)
+        {
+            ids.Add(tag.Id);
+        }
+        return ids;
     }
 }

@@ -11,11 +11,13 @@ namespace GalacticLauncher.Frontend.Repositories;
 public interface ICacheRepository
 {
     IEnumerable<Game> GetAllGames();
+    IEnumerable<Tag> GetAllTags();
     Game? GetGame(long id);
     GameData? GetGameData(long id);
     void SetAllGames(IEnumerable<Game> games);
     void SetGameData(GameData gameData);
     void ForgetGameEntry(long id);
+    void SetAllTags(IEnumerable<Tag> tags);
 }
 
 internal class CacheRepository : ICacheRepository
@@ -24,6 +26,7 @@ internal class CacheRepository : ICacheRepository
 
     private readonly Dictionary<long, Game> _gameCache = [];
     private readonly Dictionary<long, GameData> _gameDataCache = [];
+    private readonly Dictionary<long, Tag> _tagsCache = [];
 
     private readonly IJsonFiles _jsonFiles;
 
@@ -34,6 +37,20 @@ internal class CacheRepository : ICacheRepository
         LoadFromDisk();
     }
 
+    public IEnumerable<Tag> GetAllTags()
+    {
+        return [.. _tagsCache.Values];
+    }
+
+    public void SetAllTags(IEnumerable<Tag> tags)
+    {
+        _tagsCache.Clear();
+
+        foreach (var tag in tags)
+        {
+            _tagsCache[tag.Id] = tag;
+        }
+    }
     public IEnumerable<Game> GetAllGames()
     {
         return [.. _gameCache.Values];

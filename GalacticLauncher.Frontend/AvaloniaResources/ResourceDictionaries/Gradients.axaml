@@ -7,7 +7,12 @@
 	<Color x:Key="DarkestNight">#00032d</Color>
 	<Color x:Key="LightBlue">#eef0ff</Color>
 	<Color x:Key="TagBlue">#2a37b1</Color>
+	<Color x:Key="TagDarkBlue">#00082f</Color>
 	<Color x:Key="GreyBlue">#b6bbe2</Color>
+
+	<Color x:Key="GalaxyOceanBlue">#669eff</Color>
+	<Color x:Key="GalaxyDeepOcean">#2857ff</Color>
+	<Color x:Key="GalaxyUnderWater">#0048ff</Color>
 
 	<!--Side Menu Gradient Colors-->
 	<Color x:Key="MidnightBlue">#081758</Color>
