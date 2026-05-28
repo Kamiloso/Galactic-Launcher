@@ -8,8 +8,7 @@ namespace GalacticLauncher.Backend.Controllers;
 [ApiController]
 [Route("testing")]
 public class TestingController(
-    ILogger<TestingController> logger
-    ) : ControllerBack(logger)
+    ILogger<TestingController> logger) : ControllerBack(logger)
 {
     [HttpPost("game-echo")]
     [EnableRateLimiting("LowCost")]

@@ -53,4 +53,36 @@ public abstract class ControllerBack(
         return HandleEndpointAsync(
             () => Task.FromResult(execute()), method).Result;
     }
+
+    protected async Task<ActionResult> HandleEndpointAsync(Func<Task> execute,
+    [CallerMemberName] string method = "")
+    {
+        ActionResult<int> response = await HandleEndpointAsync(
+            async () =>
+            {
+                await execute.Invoke();
+                return 0;
+            },
+            method);
+
+        return response.Result is OkObjectResult
+            ? Ok()
+            : response.Result!;
+    }
+
+    protected ActionResult HandleEndpoint(Action execute,
+        [CallerMemberName] string method = "")
+    {
+        ActionResult<int> response = HandleEndpoint(
+            () =>
+            {
+                execute.Invoke();
+                return 0;
+            },
+            method);
+
+        return response.Result is OkObjectResult
+            ? Ok()
+            : response.Result!;
+    }
 }

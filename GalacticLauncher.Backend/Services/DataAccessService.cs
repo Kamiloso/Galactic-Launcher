@@ -17,8 +17,7 @@ public interface IDataAccessService
 }
 
 internal class DataAccessService(
-    IAppScopeFactory scopeFactory
-    ) : IDataAccessService
+    IAppScopeFactory scopeFactory) : IDataAccessService
 {
     public async Task<GameData> GetGameDataById(long id)
     {

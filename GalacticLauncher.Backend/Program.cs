@@ -42,6 +42,7 @@ services.AddScoped<ITagRepository, TagRepository>();
 // Services
 services.AddSingleton<IAppScopeFactory, AppScopeFactory>();
 services.AddSingleton<IDataAccessService, DataAccessService>();
+services.AddSingleton<IDataUpdateService, DataUpdateService>();
 services.AddSingleton<IAdminService, AdminService>();
 
 // Controllers

@@ -11,8 +11,7 @@ namespace GalacticLauncher.Backend.Controllers;
 [Route("download")]
 public class DownloadController(
     ILogger<DownloadController> logger,
-    IDataAccessService dataAccessService
-    ) : ControllerBack(logger)
+    IDataAccessService dataAccessService) : ControllerBack(logger)
 {
     [HttpGet("all-games")]
     [EnableRateLimiting("MediumCost")]
