@@ -44,39 +44,34 @@ internal partial class HomeViewModel: ObservableObject
         _cacheProvider = cacheProvider;
         _cacheRefresher = cacheRefresher;
 
+        _cacheRefresher.OnRefreshAll += async () => await UpdateImages();
 
-        _cacheRefresher.OnRefreshAll += Refresh;
-        _ =UpdateImages();
+        _ = _cacheRefresher.RefreshAll();
+        _ = UpdateImages();
     }
-    private async void Refresh()
-    {
-        await UpdateImages();
-    }
+
     private async Task UpdateImages()
     {
         var recommended = _gameSelectionService.GetRecommendedGames(4).ToList();
         var favorite = _gameSelectionService.GetFavoriteGames(3).ToList();
         var lastAddedId = _gameSelectionService.GetLastAddedLibraryGame();
 
-        await Dispatcher.UIThread.InvokeAsync(async () =>
+        await RefreshCollections(Recommendations, recommended, 4);
+        await RefreshCollections(Favourites, favorite, 3);
+
+        if (lastAddedId == null)
         {
-            await RefreshCollections(Recommendations, recommended, 4);
-            await RefreshCollections(Favourites, favorite, 3);
+            LastAdded = new GameButtonViewModel(-1, _imageService, _navigator);
+        }
+        else if (LastAdded?.GameId != lastAddedId)
+        {
+            var vm = new GameButtonViewModel(lastAddedId.Value, _imageService, _navigator);
+            var display = _cacheProvider.GetDisplayOf(lastAddedId.Value);
+            if (display?.IconUrl != null)
+                await vm.LoadAsync(display.IconUrl);
 
-            if (lastAddedId == null)
-            {
-                LastAdded = new GameButtonViewModel(-1, _imageService, _navigator);
-            }
-            else if (LastAdded?.GameId != lastAddedId)
-            {
-                var vm = new GameButtonViewModel(lastAddedId.Value, _imageService, _navigator);
-                var display = _cacheProvider.GetDisplayOf(lastAddedId.Value);
-                if (display?.IconUrl != null)
-                    await vm.LoadAsync(display.IconUrl);
-
-                LastAdded = vm;
-            }
-        });
+            LastAdded = vm;
+        }
     }
 
     private async Task RefreshCollections(ObservableCollection<GameButtonViewModel> collection, List<long> targetIds, int capacity)
