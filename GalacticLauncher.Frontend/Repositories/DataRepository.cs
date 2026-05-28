@@ -20,8 +20,6 @@ internal class DataRepository : IDataRepository
 {
     private const string DATA_FILENAME = "launcher_data.json";
 
-    //changed it to have data about the sequence in which each game has been added (for homeviewmodel)
-
     private readonly Dictionary<string, List<long>> _data = [];
 
     private readonly IJsonFiles _jsonFiles;
@@ -44,9 +42,11 @@ internal class DataRepository : IDataRepository
         {
             _data[ckey] = list = [];
         }
+
         if (!list.Contains(id))
         {
             list.Add(id);
+
             SaveToDisk();
         }
     }

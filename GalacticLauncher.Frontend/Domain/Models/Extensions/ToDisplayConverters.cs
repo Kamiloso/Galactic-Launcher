@@ -1,11 +1,10 @@
 ﻿using GalacticLauncher.Core.Models;
-using System.Linq;
 
 namespace GalacticLauncher.Frontend.Domain.Models.Extensions;
 
 internal static class ToDisplayConverters
 {
-    public static GameDisplay ToDisplay(this Game game, GameData? gameData = null)
+    public static GameDisplay ToDisplay(this Game game)
     {
         return new GameDisplay
         {
@@ -13,6 +12,17 @@ internal static class ToDisplayConverters
             Title = game.Name,
             Description = game.Description,
             IconUrl = game.IconUrl,
+        };
+    }
+
+    public static GameDisplay ToDisplay(this GameData gameData)
+    {
+        return new GameDisplay
+        {
+            Id = gameData.Id,
+            Title = gameData.Name,
+            Description = gameData.Description,
+            IconUrl = gameData.IconUrl,
         };
     }
 

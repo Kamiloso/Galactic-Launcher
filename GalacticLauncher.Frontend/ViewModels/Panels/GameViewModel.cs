@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services.Cache;
+using GalacticLauncher.Frontend.Services.Executables;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -29,13 +30,16 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
     private readonly ICacheProvider _cacheProvider;
     private readonly ICacheRefresher _cacheRefresher;
+    private readonly IExecManager _execManager;
 
     public GameViewModel(
         ICacheProvider cacheProvider,
-        ICacheRefresher cacheRefresher)
+        ICacheRefresher cacheRefresher,
+        IExecManager execManager)
     {
         _cacheProvider = cacheProvider;
         _cacheRefresher = cacheRefresher;
+        _execManager = execManager;
 
         _cacheRefresher.OnRefreshAll +=
             () => { if (_init) _ = _cacheRefresher.RefreshGame(_id); };
@@ -51,7 +55,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ResetSelections();
         UpdateView();
 
-        _ = _cacheRefresher.RefreshAll();
+        _ = _cacheRefresher.RefreshGame(_id);
     }
 
     private void ResetSelections()

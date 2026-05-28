@@ -6,8 +6,7 @@ using GalacticLauncher.Frontend.Infrastructure.Http;
 using GalacticLauncher.Frontend.Repositories;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Executables;
-using GalacticLauncher.Frontend.Services.Files;
-using GalacticLauncher.Frontend.Services.UserData;
+using GalacticLauncher.Frontend.Services.Images;
 using GalacticLauncher.Frontend.Tools.Files;
 using GalacticLauncher.Frontend.Tools.Networking;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
@@ -17,6 +16,7 @@ using GalacticLauncher.Frontend.ViewModels.Windows;
 using GalacticLauncher.Frontend.Views.MainWindowView;
 using GalacticLauncher.Frontend.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using GalacticLauncher.Frontend.Services.Data;
 
 namespace GalacticLauncher.Frontend;
 
@@ -53,6 +53,7 @@ public partial class App : Application
             services.AddSingleton<INavigator, Navigator>();
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<INotifications, Notifications>();
+            services.AddSingleton<IGameButtonFactory, GameButtonFactory>();
 
             // Tools
             services.AddSingleton<IFileDownloader, FileDownloader>(_ => new(HttpProvider.DownloadClient));
@@ -72,9 +73,8 @@ public partial class App : Application
             services.AddSingleton<IExecRunner, ExecRunner>();
             services.AddSingleton<ICacheRefresher, CacheRefresher>();
             services.AddSingleton<ICacheProvider, CacheProvider>();
-            services.AddSingleton<IUserDataService, UserDataService>();
-            services.AddSingleton<IImageService, ImageService>();
-            services.AddSingleton<IGameSelectionService, GameSelectionService>();
+            services.AddSingleton<IImageProvider, ImageProvider>();
+            services.AddSingleton<IGameDataService, GameDataService>();
 
 
             var serviceProvider = services.BuildServiceProvider();

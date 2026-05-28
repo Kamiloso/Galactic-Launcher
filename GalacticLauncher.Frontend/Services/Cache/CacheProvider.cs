@@ -10,10 +10,9 @@ namespace GalacticLauncher.Frontend.Services.Cache;
 
 public interface ICacheProvider
 {
-    IEnumerable<long> AllGameIds();
-    IEnumerable<long> GetTagsForGame(long gameId);
-
+    IEnumerable<long> GetAllGameIds();
     IEnumerable<Tag> GetAllTags();
+    IEnumerable<long> GetGameTagIds(long id);
 
     GameDisplay GetDisplayOf(long id);
     VersionDisplay[] GetVersionDisplaysOf(long id);
@@ -22,10 +21,29 @@ public interface ICacheProvider
 internal class CacheProvider(
     ICacheRepository cacheRepository) : ICacheProvider
 {
-    public IEnumerable<long> AllGameIds()
+    public IEnumerable<long> GetAllGameIds()
     {
         return [.. cacheRepository.GetAllGames()
             .Select(game => game.Id)];
+    }
+
+    public IEnumerable<Tag> GetAllTags()
+    {
+        return cacheRepository.GetAllTags();
+    }
+
+    public IEnumerable<long> GetGameTagIds(long gameId)
+    {
+        GameData? gameData = cacheRepository.GetGameData(gameId);
+        if (gameData?.Tags == null) return [];
+
+        var allTagIds = cacheRepository.GetAllTags()
+            .Select(t => t.Id);
+
+        var gameTagIds = gameData.Tags
+            .Select(t => t.Id);
+
+        return gameTagIds.Intersect(allTagIds);
     }
 
     public GameDisplay GetDisplayOf(long id)
@@ -39,14 +57,17 @@ internal class CacheProvider(
                 $"Inconsistent {nameof(Game)} / {nameof(GameData)} existence at id {id}.");
         }
 
-        return game?.ToDisplay(gameData)
-            ?? new GameDisplay()
-            {
-                Id = id,
-                Title = $"Unknown Game {id}",
-                Description = "",
-                IconUrl = null,
-            };
+        return gameData?.ToDisplay()
+            ?? game?.ToDisplay()
+            ?? FallbackDisplay(id);
+
+        static GameDisplay FallbackDisplay(long id) => new()
+        {
+            Id = id,
+            Title = $"Unknown Game {id}",
+            Description = "",
+            IconUrl = null,
+        };
     }
 
     public VersionDisplay[] GetVersionDisplaysOf(long id)
@@ -55,31 +76,5 @@ internal class CacheProvider(
         return gameData?.Versions
             .Select(v => v.ToDisplay()).ToArray()
             ?? [];
-    }
-
-    public IEnumerable<Tag> GetAllTags()
-    {
-        return cacheRepository.GetAllTags();
-    }
-
-    public IEnumerable<long> GetTagsForGame(long gameId)
-    {
-        GameData? gameData = cacheRepository.GetGameData(gameId);
-        if (gameData?.Tags == null) return Enumerable.Empty<long>();
-
-        var allSystemTagIds = cacheRepository.GetAllTags().Select(t => t.Id);
-        var gameTagIds = GetGameTagsIds(gameData);
-
-        return gameTagIds.Intersect(allSystemTagIds);
-    }
-
-    private IEnumerable<long> GetGameTagsIds(GameData gameData)
-    {
-        List<long> ids = [];
-        foreach(var tag in gameData.Tags)
-        {
-            ids.Add(tag.Id);
-        }
-        return ids;
     }
 }

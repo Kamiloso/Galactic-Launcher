@@ -15,37 +15,35 @@ public interface ICacheRefresher
 
     event Action? OnRefreshAll;
     event Action<long>? OnRefreshGame;
+    event Action? OnRefreshTags;
 
     Task RefreshAll();
     Task RefreshGame(long id);
-
     Task RefreshTags();
 }
 
-internal class CacheRefresher(
-    IBackendTalker backendTalker,
-    ICacheRepository cacheRepository) : ICacheRefresher
+internal class CacheRefresher : ICacheRefresher
 {
     public bool IsRefreshing => _refreshCount > 0;
 
     public event Action? OnRefreshAll;
     public event Action<long>? OnRefreshGame;
+    public event Action? OnRefreshTags;
 
     private int _refreshCount;
 
-    public async Task RefreshTags() =>
-        await DuringRefresh(async () =>
-        {
-            IEnumerable<Tag> tags;
-            try
-            {
-                tags = await backendTalker.GetAllTags();
-                cacheRepository.SetAllTags(tags);
-            }
-            catch (ApiException) { }
+    private readonly IBackendTalker _backendTalker;
+    private readonly ICacheRepository _cacheRepository;
 
-            OnRefreshAll?.Invoke();
-        });
+    public CacheRefresher(
+        IBackendTalker backendTalker,
+        ICacheRepository cacheRepository)
+    {
+        _backendTalker = backendTalker;
+        _cacheRepository = cacheRepository;
+
+        _ = RefreshAll();
+    }
 
     public async Task RefreshAll() =>
         await DuringRefresh(async () =>
@@ -54,8 +52,8 @@ internal class CacheRefresher(
 
             try
             {
-                games = await backendTalker.GetAllGames();
-                cacheRepository.SetAllGames(games);
+                games = await _backendTalker.GetAllGames();
+                _cacheRepository.SetAllGames(games);
             }
             catch (ApiException) { }
 
@@ -69,19 +67,33 @@ internal class CacheRefresher(
 
             try
             {
-                gameData = (await backendTalker.GetGameData(id))
+                gameData = (await _backendTalker.GetGameData(id))
                     .RemoveIncompatiblePlatforms();
-                cacheRepository.SetGameData(gameData);
+                _cacheRepository.SetGameData(gameData);
             }
             catch (ApiException ex)
             {
                 if (ex.StatusCode == 404) // not found - game probably removed
                 {
-                    cacheRepository.ForgetGameEntry(id);
+                    _cacheRepository.ForgetGameEntry(id);
                 }
             }
 
             OnRefreshGame?.Invoke(id);
+        });
+
+    public async Task RefreshTags() =>
+        await DuringRefresh(async () =>
+        {
+            IEnumerable<Tag> tags;
+            try
+            {
+                tags = await _backendTalker.GetAllTags();
+                _cacheRepository.SetAllTags(tags);
+            }
+            catch (ApiException) { }
+
+            OnRefreshTags?.Invoke();
         });
 
     private async Task DuringRefresh(Func<Task> task)
@@ -90,7 +102,7 @@ internal class CacheRefresher(
 
         try
         {
-            await task();
+            await task.Invoke();
         }
         finally
         {

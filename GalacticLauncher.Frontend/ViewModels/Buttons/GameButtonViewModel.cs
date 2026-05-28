@@ -1,74 +1,76 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Domain.Exceptions;
-using GalacticLauncher.Frontend.Services.Files;
+using GalacticLauncher.Frontend.Services.Images;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-namespace GalacticLauncher.Frontend.ViewModels.Buttons
+namespace GalacticLauncher.Frontend.ViewModels.Buttons;
+
+internal partial class GameButtonViewModel(
+    IImageProvider imageProvider,
+    INavigator navigator) : ObservableObject
 {
-    internal partial class GameButtonViewModel: ObservableObject
+    private const string EMPTY_STATUS = "";
+    private const string GAME_NOT_FOUND = "NO GAME";
+    private const string LOADING_IMAGE = "LOADING IMAGE...";
+    private const string IMAGE_NOT_FOUND = "IMAGE NOT FOUND";
+
+    [ObservableProperty]
+    private bool _isGameValid;
+
+    [ObservableProperty]
+    private long _gameId;
+
+    [ObservableProperty]
+    private string _statusMessage = EMPTY_STATUS;
+
+    [ObservableProperty]
+    private Bitmap? _icon;
+
+    public required long? Id
     {
-        private const string NO_IMAGE = "NO IMAGE FOUND";
-        private const string NO_GAME = "NO GAME FOUND";
-
-        [ObservableProperty]
-        private bool _isGameValid;
-        public long GameId { get; }
-
-        private readonly IImageService _imageService;
-        private readonly INavigator _navigator;
-
-        [ObservableProperty]
-        private Bitmap? _icon;
-
-        [ObservableProperty]
-        private string _statusMessage = NO_IMAGE;
-
-        public GameButtonViewModel(
-            long gameId, 
-            IImageService imageService, 
-            INavigator navigator
-        )
+        get => IsGameValid ? GameId : null;
+        init
         {
-            GameId = gameId;
-            _imageService = imageService;
-            _navigator = navigator;
+            IsGameValid = value.HasValue;
+            GameId = value ?? 0;
+        }
+    }
 
-            ShowGameCommand.NotifyCanExecuteChanged();
+    [RelayCommand]
+    public void ShowGame()
+    {
+        navigator.NavigateTo<GameViewModel>(GameId);
+    }
+
+    public void SetInactiveLook()
+    {
+        StatusMessage = GAME_NOT_FOUND;
+    }
+
+    public async Task SetActiveLookAsync(string? url)
+    {
+        if (url == null)
+        {
+            StatusMessage = IMAGE_NOT_FOUND;
+            return;
         }
 
-        public async Task LoadAsync(string url)
+        StatusMessage = LOADING_IMAGE;
+
+        try
         {
+            string filePath = await imageProvider.GetImagePathAsync(url);
 
-            if (GameId == -1)
-            {
-                StatusMessage = NO_GAME;
-                IsGameValid = false;
-                return;
-            }
-            IsGameValid = true;
-
-            try
-            {
-                string file = await _imageService.DownloadImageAsync(GameId, url);
-                if (File.Exists(file))
-                {
-                    var bitmap = new Bitmap(file);
-                    Icon = bitmap;
-                }
-            }
-            catch (DownloadException)
-            { 
-                StatusMessage = NO_IMAGE;
-            }
+            Icon = new Bitmap(filePath);
+            StatusMessage = EMPTY_STATUS;
         }
-
-
-        [RelayCommand]
-        public void ShowGame() => _navigator.NavigateTo<GameViewModel>(GameId);
+        catch (DownloadException)
+        {
+            StatusMessage = IMAGE_NOT_FOUND;
+        }
     }
 }
