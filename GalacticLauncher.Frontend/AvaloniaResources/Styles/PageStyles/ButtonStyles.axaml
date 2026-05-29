@@ -17,37 +17,40 @@
 				<Panel Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
 
 					<Border BorderThickness="6"
-							BorderBrush="{DynamicResource GalaxyGradient}"
+                          BorderBrush="{DynamicResource GalaxyGradient}"
 							Background="Transparent"
 							CornerRadius="0"
+							ClipToBounds="True"
+							Padding="0"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch">
-						
-						<StackPanel Orientation="Vertical"
-									HorizontalAlignment="Center"
-									VerticalAlignment="Center">
-							
-							<TextBlock FontFamily="{DynamicResource Rajdhani}"
-								   FontStyle="Normal"
-								   Foreground="{StaticResource GreyBlue}"
-								   FontSize="16"
-								   Text="{TemplateBinding Tag}"
-								   TextAlignment="Center"
-								   TextWrapping="WrapWithOverflow"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Center"
-								   Margin="15,0,15,10"/>
+							<Grid>
+								<StackPanel Orientation="Vertical"
+											HorizontalAlignment="Center"
+											VerticalAlignment="Center">
 
-							<PathIcon Data="{StaticResource IconSad}"/>
-							
-						</StackPanel>
+									<TextBlock FontFamily="{DynamicResource Rajdhani}"
+										   FontStyle="Normal"
+										   Foreground="{StaticResource GreyBlue}"
+										   FontSize="16"
+										   Text="{TemplateBinding Tag}"
+										   TextAlignment="Center"
+										   TextWrapping="WrapWithOverflow"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"
+										   Margin="15,0,15,10"/>
+
+									<PathIcon Data="{StaticResource IconSad}"/>
+
+								</StackPanel>
+
+								<ContentPresenter Name="PART_ContentPresenter"
+											  Content="{TemplateBinding Content}"
+											  Margin="0"
+											  HorizontalContentAlignment="Stretch"
+											  VerticalContentAlignment="Stretch"/>
+							</Grid>
 					</Border>
-
-					<ContentPresenter Name="PART_ContentPresenter"
-									  Content="{TemplateBinding Content}"
-									  Margin="0"
-									  HorizontalContentAlignment="Stretch"
-									  VerticalContentAlignment="Stretch"/>
 				</Panel>
 			</ControlTemplate>
 		</Setter>

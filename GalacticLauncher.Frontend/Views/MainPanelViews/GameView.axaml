@@ -85,8 +85,55 @@
 										</Grid>
 									</Grid>
 								</Grid>
-							</Viewbox>
-						</Grid>
+                      </Viewbox>
+					</Grid>
+
+					<StackPanel Grid.Row="1" Margin="20,20,20,0" Spacing="10">
+						<ProgressBar Minimum="0"
+								 Maximum="1"
+								 Height="6"
+								 Value="{Binding DownloadProgress}"
+								 IsVisible="{Binding IsProgressVisible}" />
+
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<Button Content="{Binding DownloadButtonText}"
+									Command="{Binding DownloadSelectedVersionCommand}"
+									IsEnabled="{Binding IsDownloadEnabled}" />
+							<Button Content="Cancel"
+									Command="{Binding CancelDownloadCommand}"
+									IsEnabled="{Binding IsCancelEnabled}" />
+							<Button Content="Play"
+									Command="{Binding PlaySelectedVersionCommand}"
+									IsEnabled="{Binding IsPlayEnabled}" />
+							<Button Content="Delete"
+									Command="{Binding DeleteSelectedVersionCommand}"
+									IsEnabled="{Binding IsDeleteEnabled}" />
+						</StackPanel>
+
+						<ComboBox ItemsSource="{Binding AvailableVersions}"
+									SelectedItem="{Binding SelectedVersion}"
+									PlaceholderText="Select version"
+									HorizontalAlignment="Left"
+									Width="260">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Caption}" />
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+
+						<TextBox Text="{Binding GameDisplayDebugJson}"
+									IsReadOnly="True"
+									AcceptsReturn="True"
+									TextWrapping="Wrap"
+									Height="160" />
+
+						<TextBox Text="{Binding SelectedVersionDebugJson}"
+									IsReadOnly="True"
+									AcceptsReturn="True"
+									TextWrapping="Wrap"
+									Height="160" />
+					</StackPanel>
 					</Grid>
 				</Grid>
 			</Border>

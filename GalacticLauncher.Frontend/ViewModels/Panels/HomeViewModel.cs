@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.Buttons;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
@@ -16,27 +14,28 @@ internal partial class HomeViewModel : ObservableObject
     private const int FAV_CAPACITY = 3;
 
     private readonly ICacheRefresher _cacheRefresher;
-    private readonly IGameDataService _gameDataService;
+    private readonly IGameListManager _gameListManager;
+    private readonly ILastGameManager _lastGameManager;
     private readonly IGameButtonFactory _gameButtonFactory;
 
     public ObservableCollection<GameButtonViewModel> Recommendations { get; } = [];
-    public ObservableCollection<GameButtonViewModel> Favourites { get; } = [];
+    public ObservableCollection<GameButtonViewModel> Library { get; } = [];
 
     [ObservableProperty]
-    private GameButtonViewModel? _lastAdded;
+    private GameButtonViewModel? _recent;
 
     public HomeViewModel(
         ICacheRefresher cacheRefresher,
-        IGameDataService gameDataService,
+        IGameListManager gameListManager,
+        ILastGameManager lastGameManager,
         IGameButtonFactory gameButtonFactory)
     {
         _cacheRefresher = cacheRefresher;
-        _gameDataService = gameDataService;
+        _gameListManager = gameListManager;
+        _lastGameManager = lastGameManager;
         _gameButtonFactory = gameButtonFactory;
 
         _cacheRefresher.OnRefreshAll += UpdateImages;
-
-        UpdateImages();
     }
 
     [RelayCommand]
@@ -56,7 +55,7 @@ internal partial class HomeViewModel : ObservableObject
     {
         Recommendations.Clear();
 
-        List<long> list = [.. _gameDataService
+        List<long> list = [.. _gameListManager
             .ObtainAllRecommendations(LIB_CAPACITY)];
 
         for (int i = 0; i < LIB_CAPACITY; i++)
@@ -69,14 +68,14 @@ internal partial class HomeViewModel : ObservableObject
 
     private void RefreshFavorites()
     {
-        Favourites.Clear();
+        Library.Clear();
 
-        List<long> list = [.. _gameDataService
-            .ObtainFavoriteRecommendations(FAV_CAPACITY)];
+        List<long> list = [.. _gameListManager
+            .ObtainLibraryRecommendations(FAV_CAPACITY)];
 
         for (int i = 0; i < FAV_CAPACITY; i++)
         {
-            Favourites.Add(i < list.Count
+            Library.Add(i < list.Count
                 ? _gameButtonFactory.CreateAndStartLoading(list[i])
                 : _gameButtonFactory.CreateEmpty());
         }
@@ -84,11 +83,9 @@ internal partial class HomeViewModel : ObservableObject
 
     private void RefreshLastAdded()
     {
-        List<long?> libGames = [.. _gameDataService.GetLibraryGames()];
+        long? last = _lastGameManager.GetLastGame();
 
-        long? last = libGames.FirstOrDefault();
-
-        LastAdded = last != null
+        Recent = last != null
             ? _gameButtonFactory.CreateAndStartLoading(last.Value)
             : _gameButtonFactory.CreateEmpty();
     }

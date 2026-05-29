@@ -1,5 +1,4 @@
 ﻿using GalacticLauncher.Frontend.Repositories;
-using GalacticLauncher.Frontend.Services.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using GalacticLauncher.Core.Extensions;
 
 namespace GalacticLauncher.Frontend.Services.Data;
 
-public interface IGameDataService
+public interface IGameListManager
 {
     IEnumerable<long> GetAllGames();
     IEnumerable<long> GetLibraryGames();
@@ -30,9 +29,9 @@ public interface IGameDataService
     void RemoveFromFavorite(long gameId);
 }
 
-internal class GameDataService(
+internal class GameListManager(
     IDataRepository dataRepository,
-    ICacheProvider cacheProvider) : IGameDataService
+    ICacheProvider cacheProvider) : IGameListManager
 {
     private List<long> _shuffledAll = [];
     private List<long> _shuffledLibrary = [];
@@ -43,7 +42,7 @@ internal class GameDataService(
     public IEnumerable<long> GetAllGames()
     {
         return cacheProvider.GetAllGameIds()
-            .OrderBy(id => cacheProvider.GetDisplayOf(id).Title);
+            .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
     public IEnumerable<long> GetLibraryGames()
@@ -57,7 +56,7 @@ internal class GameDataService(
         }
 
         return dataRepository.GetAll(Const.KEY_LIB)
-            .OrderBy(id => cacheProvider.GetDisplayOf(id).Title);
+            .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
     public IEnumerable<long> GetFavoriteGames()
@@ -71,7 +70,7 @@ internal class GameDataService(
         }
 
         return dataRepository.GetAll(Const.KEY_LIB)
-            .OrderBy(id => cacheProvider.GetDisplayOf(id).Title);
+            .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
     public IEnumerable<long> ObtainAllRecommendations(int limit)

@@ -113,7 +113,7 @@
 								VerticalAlignment="Top"
 								Height="36">
 							<TextBlock Classes="homeHeader"
-									   Text="YOUR FAVORITES"
+									   Text="YOUR GAMES"
 									   HorizontalAlignment="Left"
 									   VerticalAlignment="Center"/>
 									   
@@ -125,7 +125,7 @@
 								VerticalAlignment="Top"
 								Height="220">
 
-							<ItemsControl ItemsSource="{Binding Favourites}">
+							<ItemsControl ItemsSource="{Binding Library}">
 								<ItemsControl.ItemsPanel>
 									<ItemsPanelTemplate>
 										<UniformGrid Columns="3" ColumnSpacing="10" HorizontalAlignment="Center"/>
@@ -156,7 +156,7 @@
 								Height="36">
 							
 							<TextBlock Classes="homeHeader"
-									   Text="NEW"
+									   Text="RECENT"
 									   HorizontalAlignment="Left"
 									   VerticalAlignment="Center"/>
 						</Border>
@@ -167,7 +167,7 @@
 								VerticalAlignment="Top"
 								Height="220">
 
-							<ContentControl Content="{Binding LastAdded}">
+							<ContentControl Content="{Binding Recent}">
 								<ContentControl.ContentTemplate>
 									<DataTemplate x:DataType="btn:GameButtonViewModel">
 										<Button Classes="imageClickable"

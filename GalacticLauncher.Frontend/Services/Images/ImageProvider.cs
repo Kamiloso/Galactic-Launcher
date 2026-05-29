@@ -18,12 +18,14 @@ public interface IImageProvider
 
 internal class ImageProvider(IFileDownloader fileDownloader) : IImageProvider
 {
+    private const string IMG_FOLDER = "Images";
+
     private readonly Dictionary<string, Task<string>> _downloads = [];
     private readonly Dictionary<string, string> _ramCache = [];
 
     public async Task<string> GetImagePathAsync(string url)
     {
-        string imgPath = Path.Combine(Utils.RootPath, "images");
+        string imgPath = Path.Combine(Utils.RootPath, IMG_FOLDER);
         string uniqueFileName = UrlToUniqueFileName(url);
 
         if (!Directory.Exists(imgPath))

@@ -1,4 +1,4 @@
-﻿using GalacticLauncher.Frontend.Services.Cache;
+﻿using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Images;
 using GalacticLauncher.Frontend.ViewModels.Buttons;
 
@@ -28,7 +28,7 @@ internal class GameButtonFactory(
     {
         var gbvm = new GameButtonViewModel(imageProvider, navigator) { Id = gameId };
 
-        string? url = cacheProvider.GetDisplayOf(gameId).IconUrl;
+        string? url = cacheProvider.GetGameOf(gameId)?.IconUrl;
 
         _ = gbvm.SetActiveLookAsync(url);
 

@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Core.Models;
-using GalacticLauncher.Frontend.Domain.Models;
-using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.Services.Images;
 using GalacticLauncher.Frontend.ViewModels.Buttons;
 using GalacticLauncher.Frontend.ViewModels.Tags;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
@@ -18,16 +14,6 @@ namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
 internal partial class LibraryViewModel : ObservableObject
 {
-    public enum LibraryViewMode
-    {
-        YourGames = 0,
-        Favorites = 1,
-        MoreGames = 2,
-    }
-
-    [ObservableProperty]
-    private LibraryViewMode _currentMode = 0;
-
     [ObservableProperty]
     private string? _searchGames;
 
@@ -38,46 +24,53 @@ internal partial class LibraryViewModel : ObservableObject
     public ObservableCollection<TagViewModel> FoundTags { get; } = [];
     public ObservableCollection<TagViewModel> AddedTags { get; } = [];
 
-    public bool IsYourGamesPage => CurrentMode == LibraryViewMode.YourGames;
-    public bool IsFavoritePage => CurrentMode == LibraryViewMode.Favorites;
-    public bool IsMoreGamesPage => CurrentMode == LibraryViewMode.MoreGames;
-
+    public bool HasFoundGames => FoundGames.Count == 0;
     public bool HasNoFoundTags => FoundTags.Count == 0;
     public bool HasAddedTags => AddedTags.Count > 0;
     public bool HasNoTags => !AddedTags.Any() && !FoundTags.Any();
 
-    public bool HasFoundGames => FoundGames.Count == 0;
+    [ObservableProperty]
+    private LibraryViewMode _currentMode = LibraryViewMode.YourGames;
 
-    private List<long> _gamePoolIds = [];
+    public bool IsYourGamesPage => CurrentMode == LibraryViewMode.YourGames;
+    public bool IsFavoritePage => CurrentMode == LibraryViewMode.Favorites;
+    public bool IsMoreGamesPage => CurrentMode == LibraryViewMode.MoreGames;
+
+    public enum LibraryViewMode
+    {
+        YourGames = 0,
+        Favorites = 1,
+        MoreGames = 2,
+    }
+
     private List<Tag> _allAvailableTags = [];
 
     private readonly ICacheRefresher _cacheRefresher;
-    private readonly INavigator _navigator;
-    private readonly IGameDataService _gameDataService;
+    private readonly IGameListManager _gameListManager;
     private readonly ICacheProvider _cacheProvider;
-    private readonly IImageProvider _imageService;
+    private readonly IGameButtonFactory _gameButtonFactory;
 
     public LibraryViewModel(
         ICacheRefresher cacheRefresher,
-        INavigator navigator,
-        IGameDataService gameDataService,
+        IGameListManager gameListManager,
         ICacheProvider cacheProvider,
-        IImageProvider imageService)
+        IGameButtonFactory gameButtonFactory)
     {
         _cacheRefresher = cacheRefresher;
-        _navigator = navigator;
-        _gameDataService = gameDataService;
+        _gameListManager = gameListManager;
         _cacheProvider = cacheProvider;
-        _imageService = imageService;
+        _gameButtonFactory = gameButtonFactory;
 
         _cacheRefresher.OnRefreshAll += RefreshPage;
-        UpdateTags();
+
+        RefreshPage();
     }
 
     [RelayCommand]
     public void RefreshPage()
     {
-        _ = RefreshLibrary();
+        RefreshFoundGames(GetGamePoolIds());
+        UpdateTags();
     }
 
     [RelayCommand]
@@ -89,15 +82,7 @@ internal partial class LibraryViewModel : ObservableObject
         OnPropertyChanged(nameof(IsFavoritePage));
         OnPropertyChanged(nameof(IsMoreGamesPage));
 
-        _gamePoolIds = [.. mode switch
-        {
-            LibraryViewMode.YourGames => _gameDataService.GetLibraryGames(),
-            LibraryViewMode.Favorites => _gameDataService.GetFavoriteGames(),
-            LibraryViewMode.MoreGames => _gameDataService.GetAllGames(),
-            _ => throw new NotSupportedException($"Unsupported library view mode: {mode}")
-        }];
-
-        _ = UpdateImages();
+        RefreshPage();
     }
 
     partial void OnSearchGamesChanged(string? value)
@@ -133,14 +118,13 @@ internal partial class LibraryViewModel : ObservableObject
 
     private void ApplyFilters()
     {
-        IEnumerable<long> filteredIds = _gamePoolIds;
+        IEnumerable<long> filteredIds = GetGamePoolIds();
 
         if (!string.IsNullOrWhiteSpace(SearchGames))
         {
             filteredIds = filteredIds.Where(id =>
-                _cacheProvider.GetDisplayOf(id)?.Title?
-                    .Contains(SearchGames, StringComparison.OrdinalIgnoreCase) ?? false
-            );
+                _cacheProvider.GetGameOf(id)?.Name?
+                    .Contains(SearchGames, StringComparison.OrdinalIgnoreCase) ?? false);
         }
 
         if (AddedTags.Any())
@@ -154,8 +138,7 @@ internal partial class LibraryViewModel : ObservableObject
             });
         }
 
-        _ = RefreshFoundGames(FoundGames, [.. filteredIds]);
-        OnPropertyChanged(nameof(HasFoundGames));
+        RefreshFoundGames(filteredIds);
     }
 
     private void ToggleTag(TagViewModel tvm)
@@ -180,12 +163,6 @@ internal partial class LibraryViewModel : ObservableObject
         OnPropertyChanged(nameof(HasAddedTags));
 
         ApplyFilters();
-    }
-
-    private async Task RefreshLibrary()
-    {
-        await UpdateImages();
-        UpdateTags();
     }
 
     private void UpdateTags()
@@ -219,54 +196,36 @@ internal partial class LibraryViewModel : ObservableObject
             else
             {
                 targetCollection.Add(new TagViewModel(tagData, ToggleTag));
-            } 
-        }
-    }
-
-    private async Task UpdateImages()
-    {
-        _gamePoolIds = [.. CurrentMode switch
-        {
-            LibraryViewMode.YourGames => _gameDataService.GetLibraryGames(),
-            LibraryViewMode.Favorites => _gameDataService.GetFavoriteGames(),
-            LibraryViewMode.MoreGames => _gameDataService.GetAllGames(),
-            _ => throw new NotSupportedException($"Unsupported library view mode: {CurrentMode}")
-        }];
-
-        await RefreshFoundGames(FoundGames, [.. _gamePoolIds]);
-    }
-
-    private async Task RefreshFoundGames(
-        ObservableCollection<GameButtonViewModel> found,
-        List<long> targetIds)
-    {
-        List<GameButtonViewModel> toRemove = [.. found
-            .Where(vm => !targetIds.Contains(vm.GameId))];
-
-        foreach (var vm in toRemove)
-        {
-            found.Remove(vm);
-        }
-
-        List<Task> tasks = [];
-        foreach (var id in targetIds)
-        {
-            if (found.Any(bvm => bvm.GameId == id)) continue;
-
-            var bvm = new GameButtonViewModel(_imageService, _navigator) { Id = id };
-            found.Add(bvm);
-
-            GameDisplay display = _cacheProvider.GetDisplayOf(id);
-
-            if (display?.IconUrl != null)
-            {
-                Task task = bvm.SetActiveLookAsync(display.IconUrl);
-                tasks.Add(task);
             }
         }
+    }
 
-        await Task.WhenAll(tasks);
+    private IEnumerable<long> GetGamePoolIds(Predicate<long>? predicate = null)
+    {
+        var collection =  CurrentMode switch
+        {
+            LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(),
+            LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(),
+            LibraryViewMode.MoreGames => _gameListManager.GetAllGames(),
+            _ => throw new NotSupportedException()
+        };
+
+        return collection.Where(id => predicate?.Invoke(id) ?? true);
+    }
+
+    private void RefreshFoundGames(IEnumerable<long> gamePoolIds)
+    {
+        FoundGames.Clear();
+
+        foreach (long id in gamePoolIds)
+        {
+            var gbvm = _gameButtonFactory.CreateAndStartLoading(id);
+            FoundGames.Add(gbvm);
+        }
 
         OnPropertyChanged(nameof(HasFoundGames));
+        OnPropertyChanged(nameof(HasNoFoundTags));
+        OnPropertyChanged(nameof(HasAddedTags));
+        OnPropertyChanged(nameof(HasNoTags));
     }
 }

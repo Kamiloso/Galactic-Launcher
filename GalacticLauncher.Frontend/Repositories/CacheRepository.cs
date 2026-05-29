@@ -1,23 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using GalacticLauncher.Core;
+using GalacticLauncher.Core.Models;
+using GalacticLauncher.Frontend.Tools.Files;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GalacticLauncher.Core;
-using GalacticLauncher.Core.Models;
-using GalacticLauncher.Frontend.Domain.Models;
-using GalacticLauncher.Frontend.Tools.Files;
 
 namespace GalacticLauncher.Frontend.Repositories;
 
 public interface ICacheRepository
 {
-    IEnumerable<Game> GetAllGames();
-    IEnumerable<Tag> GetAllTags();
     Game? GetGame(long id);
     GameData? GetGameData(long id);
+    IEnumerable<Game> GetAllGames();
+    IEnumerable<Tag> GetAllTags();
     void SetAllGames(IEnumerable<Game> games);
     void SetGameData(GameData gameData);
-    void ForgetGameEntry(long id);
     void SetAllTags(IEnumerable<Tag> tags);
+    void ForgetGameEntry(long id);
 }
 
 internal class CacheRepository : ICacheRepository
@@ -37,25 +36,6 @@ internal class CacheRepository : ICacheRepository
         LoadFromDisk();
     }
 
-    public IEnumerable<Tag> GetAllTags()
-    {
-        return [.. _tagsCache.Values];
-    }
-
-    public void SetAllTags(IEnumerable<Tag> tags)
-    {
-        _tagsCache.Clear();
-
-        foreach (var tag in tags)
-        {
-            _tagsCache[tag.Id] = tag;
-        }
-    }
-    public IEnumerable<Game> GetAllGames()
-    {
-        return [.. _gameCache.Values];
-    }
-
     public Game? GetGame(long id)
     {
         return _gameCache.TryGetValue(id, out var game) ? game : null;
@@ -64,6 +44,16 @@ internal class CacheRepository : ICacheRepository
     public GameData? GetGameData(long id)
     {
         return _gameDataCache.TryGetValue(id, out var data) ? data : null;
+    }
+
+    public IEnumerable<Game> GetAllGames()
+    {
+        return [.. _gameCache.Values];
+    }
+
+    public IEnumerable<Tag> GetAllTags()
+    {
+        return [.. _tagsCache.Values];
     }
 
     public void SetAllGames(IEnumerable<Game> games)
@@ -97,12 +87,33 @@ internal class CacheRepository : ICacheRepository
         }
     }
 
+    public void SetAllTags(IEnumerable<Tag> tags)
+    {
+        _tagsCache.Clear();
+
+        foreach (var tag in tags)
+        {
+            _tagsCache[tag.Id] = tag;
+        }
+
+        SaveToDisk();
+    }
+
     public void ForgetGameEntry(long id)
     {
         _gameCache.Remove(id);
         _gameDataCache.Remove(id);
 
         SaveToDisk();
+    }
+
+    #region Disk Storage
+
+    private record CacheStorage
+    {
+        public required Game[]? GameCache { get; init; }
+        public required GameData[]? GameDataCache { get; init; }
+        public required Tag[]? TagsCache { get; init; }
     }
 
     private void LoadFromDisk()
@@ -118,11 +129,14 @@ internal class CacheRepository : ICacheRepository
         CacheStorage? model;
         if ((model = _jsonFiles.Load<CacheStorage>(filePath)) != null) // any errors = reset cache
         {
-            model.GameCache.ToList()
+            model.GameCache?.ToList()
                 .ForEach(game => _gameCache[game.Id] = game);
 
-            model.GameDataCache.ToList()
+            model.GameDataCache?.ToList()
                 .ForEach(gameData => _gameDataCache[gameData.Id] = gameData);
+
+            model.TagsCache?.ToList()
+                .ForEach(tag => _tagsCache[tag.Id] = tag);
         }
     }
 
@@ -134,8 +148,11 @@ internal class CacheRepository : ICacheRepository
         {
             GameCache = [.. _gameCache.Values],
             GameDataCache = [.. _gameDataCache.Values],
+            TagsCache = [.. _tagsCache.Values]
         };
 
         _jsonFiles.Save(filePath, model);
     }
+
+    #endregion
 }

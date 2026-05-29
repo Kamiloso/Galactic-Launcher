@@ -20,8 +20,8 @@ INSERT IGNORE INTO tags (id, name, description) VALUES
 
 -- 4. Dodawanie wersji gier
 INSERT IGNORE INTO versions (id, id_game, caption, type, description, is_primary, release_date, platform, download_url, exec_location, sha256_hash, alert) VALUES
-(6, 4, 'v0.7.5','release','Fixed using correct array measurements when placing egg doodads',1,'2025-11-11','windows','https://github.com/teeworlds/teeworlds/releases/download/0.7.5/teeworlds-0.7.5-win64.zip','Teeworld.exe',null,'stable'),
-(7, 4, 'v0.7.3.1','release','Fix platform-specific client libraries for Linux',1,'2025-11-11','windows','https://github.com/teeworlds/teeworlds/releases/download/0.7.3.1/teeworlds-0.7.3.1-win64.zip','Teeworld.exe',null,'stable'),
+(6, 4, 'v0.7.5','release','Fixed using correct array measurements when placing egg doodads',1,'2025-11-11','windows','https://github.com/teeworlds/teeworlds/releases/download/0.7.5/teeworlds-0.7.5-win64.zip','teeworlds-0.7.5-win64\\teeworlds.exe',null,'stable'),
+(7, 4, 'v0.7.3.1','release','Fix platform-specific client libraries for Linux',1,'2025-11-11','windows','https://github.com/teeworlds/teeworlds/releases/download/0.7.3.1/teeworlds-0.7.3.1-win64.zip','teeworlds-0.7.3.1-win64\\teeworlds.exe',null,'stable'),
 (8, 5, 'v1.22.1.5','release','Fixed nothing', 1, '2025-11-11','windows','https://github.com/STJr/SRB2/releases/download/SRB2_release_2.2.15/SRB2-v2215-Full.zip','Sonic.exe',null, 'stable'),
 (9, 6, 'v1.1.1','release','Fixed bleeding',1,'2025-11-11','windows','https://github.com/ninjamuffin99/canabalt-hf/releases/download/bleeding/canabalt-windows-2024-07-11-main.zip','Canabalt.exe',null,'stable'),
 (10, 7, 'v0.10.16','release','Reverted changes to movement AI from the previous release, fixing various issues with ship movement introduced there.',1,'2025-11-11','windows','https://github.com/endless-sky/endless-sky/releases/download/v0.10.16/EndlessSky-win64-v0.10.16.zip', 'EndlessSky.exe',null,'stable'),

@@ -7,7 +7,7 @@ using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Tools.Networking;
 using GalacticLauncher.Frontend.Repositories;
 
-namespace GalacticLauncher.Frontend.Services.Cache;
+namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface ICacheRefresher
 {

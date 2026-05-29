@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using GalacticLauncher.Frontend.Infrastructure.Http;
 using GalacticLauncher.Frontend.Repositories;
-using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Executables;
 using GalacticLauncher.Frontend.Services.Images;
 using GalacticLauncher.Frontend.Tools.Files;
@@ -33,6 +32,9 @@ public partial class App : Application
         {
             var services = new ServiceCollection();
 
+            // Avalonia
+            services.AddSingleton(desktop);
+
             // Roots
             services.AddSingleton<MainWindow>();
             services.AddSingleton<MainWindowViewModel>();
@@ -50,10 +52,11 @@ public partial class App : Application
             services.AddSingleton<LoadingViewModel>();
 
             // View Services
-            services.AddSingleton<INavigator, Navigator>();
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<INotifications, Notifications>();
             services.AddSingleton<IGameButtonFactory, GameButtonFactory>();
+            services.AddSingleton<INavigator, Navigator>();
+            services.AddSingleton<ITerminator, Terminator>();
 
             // Tools
             services.AddSingleton<IFileDownloader, FileDownloader>(_ => new(HttpProvider.DownloadClient));
@@ -74,7 +77,8 @@ public partial class App : Application
             services.AddSingleton<ICacheRefresher, CacheRefresher>();
             services.AddSingleton<ICacheProvider, CacheProvider>();
             services.AddSingleton<IImageProvider, ImageProvider>();
-            services.AddSingleton<IGameDataService, GameDataService>();
+            services.AddSingleton<IGameListManager, GameListManager>();
+            services.AddSingleton<ILastGameManager, LastGameManager>();
 
 
             var serviceProvider = services.BuildServiceProvider();

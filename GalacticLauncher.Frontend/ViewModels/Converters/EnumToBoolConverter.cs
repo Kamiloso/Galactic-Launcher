@@ -2,21 +2,20 @@
 using System.Globalization;
 using Avalonia.Data.Converters;
 
-namespace GalacticLauncher.Frontend.ViewModels.Converters
+namespace GalacticLauncher.Frontend.ViewModels.Converters;
+
+public class EnumToBoolConverter : IValueConverter
 {
-    public class EnumToBoolConverter : IValueConverter
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo? culture)
     {
-        public object Convert(object? value, Type targetType, object? parameter, CultureInfo? culture)
-        {
-            if (value == null || parameter == null)
-                return false;
+        if (value == null || parameter == null)
+            return false;
 
-            return value.Equals(parameter);
-        }
+        return value.Equals(parameter);
+    }
 
-        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo? culture)
-        {
-            throw new NotImplementedException();
-        }
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo? culture)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -4,6 +4,7 @@ using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Tools.Files;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -18,7 +19,7 @@ public interface IExecManager
     void Delete(ExecInfo execInfo);
     Task Download(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default);
     bool IsDownloading(ExecInfo execInfo);
-    void Play(ExecInfo execInfo);
+    Process Play(ExecInfo execInfo);
 }
 
 internal class ExecManager(
@@ -142,19 +143,22 @@ internal class ExecManager(
         return _downloadings.Contains(identity);
     }
 
-    public void Play(ExecInfo execInfo)
+    public Process Play(ExecInfo execInfo)
     {
         try
         {
             string execFilePath = execPathSystem.FindExecFilePath(execInfo)
                 ?? throw new FileNotFoundException("Executable file not found.");
 
-            execRunner.Run(execFilePath, "");
+            return execRunner.RunProcess(execFilePath, "" /* Put CLI from Vlad here */ )
+                ?? throw new FileNotFoundException("System couldn't start the executable.");
         }
         catch (Exception ex)
         {
             ExecutableRunException.WrapThrow(
                 "An error occurred while trying to run the executable.", ex);
+
+            throw new(); // unreachable
         }
     }
 }
