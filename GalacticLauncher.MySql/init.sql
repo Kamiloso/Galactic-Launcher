@@ -15,6 +15,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON galactic.* TO 'galactic_app'@'%';
 CREATE TABLE games (
     id bigint primary key auto_increment not null,
     name VARCHAR(255) not null,
+    author VARCHAR(255) not null default 'Unknown',
     description text not null
     );
 
@@ -23,6 +24,7 @@ CREATE TABLE versions (
     caption VARCHAR(255) not null,
     type enum('alpha', 'beta', 'release', 'snapshot') not null,
     description text not null,
+    cli_args VARCHAR(500) default null,
     is_primary boolean not null,
     release_date date not null default (current_date), 
     platform enum('windows', 'linux', 'macsilicon', 'macintel') not null,

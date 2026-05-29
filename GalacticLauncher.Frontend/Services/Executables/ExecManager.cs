@@ -150,7 +150,7 @@ internal class ExecManager(
             string execFilePath = execPathSystem.FindExecFilePath(execInfo)
                 ?? throw new FileNotFoundException("Executable file not found.");
 
-            return execRunner.RunProcess(execFilePath, "" /* Put CLI from Vlad here */ )
+            return execRunner.RunProcess(execFilePath, execInfo.CliArgs)
                 ?? throw new FileNotFoundException("System couldn't start the executable.");
         }
         catch (Exception ex)

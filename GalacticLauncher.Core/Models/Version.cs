@@ -6,6 +6,7 @@ public record Version
     public required string Caption { get; init; }
     public required VersionType Type { get; init; }
     public required string Description { get; init; }
+    public string? CliArgs { get; init; }
     public required bool IsPrimary { get; init; }
     public DateOnly ReleaseDate { get; init; }
     public required Platform Platform { get; init; }
