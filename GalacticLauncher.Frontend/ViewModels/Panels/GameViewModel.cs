@@ -236,9 +236,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         GameData? gameData = _cacheProvider.GetGameDataOf(_id);
         if (gameData == null) return null;
 
-        return gameData
-            .ToInfo()
-            .UpgradeToExecInfo(SelectedVersion);
+        return gameData.ToExecInfo(SelectedVersion);
     }
 
     private void UpdateViewModeFromSelectedVersion()

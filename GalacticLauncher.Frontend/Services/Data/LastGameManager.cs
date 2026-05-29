@@ -1,6 +1,5 @@
 ﻿using GalacticLauncher.Core;
 using GalacticLauncher.Frontend.Repositories;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace GalacticLauncher.Frontend.Services.Data;
@@ -12,13 +11,21 @@ public interface ILastGameManager
 }
 
 internal class LastGameManager(
+    ICacheRepository cacheRepository,
     IDataRepository dataRepository) : ILastGameManager
 {
     public long? GetLastGame()
     {
-        List<long?> list = [.. dataRepository.GetAll(Const.KEY_LST)];
+        long? id = dataRepository.GetAll(Const.KEY_LST)
+            .Select(id => (long?)id)
+            .FirstOrDefault();
 
-        return list.FirstOrDefault();
+        if (id.HasValue && cacheRepository.GetGame(id.Value) != null)
+        {
+            return id.Value;
+        }
+
+        return null;
     }
 
     public void SetLastGame(long? gameId)
