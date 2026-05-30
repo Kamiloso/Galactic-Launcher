@@ -6,15 +6,19 @@ namespace GalacticLauncher.Frontend.Tools.Classes;
 
 internal class TaskObserver : IDisposable
 {
+    public bool IsRunning => _task != null && !_task.IsCompleted;
+
     private CancellationTokenSource? _cts;
     private Task? _task;
 
-    public void Start(Func<CancellationToken, Task> run)
+    public Task Start(Func<CancellationToken, Task> run)
     {
         Terminate();
 
         _cts = new CancellationTokenSource();
         _task = run(_cts.Token);
+
+        return _task;
     }
 
     public void Terminate()
@@ -27,14 +31,6 @@ internal class TaskObserver : IDisposable
         }
 
         _task = null;
-    }
-
-    public async Task AwaitableTask()
-    {
-        if (_task != null)
-        {
-            await _task;
-        }
     }
 
     public void Dispose()

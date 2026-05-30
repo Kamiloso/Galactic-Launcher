@@ -6,31 +6,17 @@ using System;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal class AdminViewModel : ObservableObject
+internal partial class AdminViewModel : ObservableObject
 {
-    // TODO: Magda
-    // Make this thing more compact. Use MVVM toolkit,
-    // to reduce boilerplate, and make it more readable.
-
-    // Also rename CurrentPage and CurrentActivePage,
-    // because for now they look really similar,
-    // but are actually different things.
-    // Maybe CurrentPage and CurrentPageName?
-
-    // Also fix this in the MainWindowViewModel, since it has the same issue.
-
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsGamesPage))]
+    [NotifyPropertyChangedFor(nameof(IsTagsPage))]
+    [NotifyPropertyChangedFor(nameof(IsUsersPage))]
     private object? _currentPage;
-    public object? CurrentPage
-    {
-        get => _currentPage;
-        set
-        {
-            _currentPage = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CurrentActivePage));
-        }
-    }
-    public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
+
+    public bool IsGamesPage => CurrentPage is AdGamesViewModel;
+    public bool IsTagsPage => CurrentPage is AdTagsViewModel;
+    public bool IsUsersPage => CurrentPage is AdUsersViewModel;
 
     private readonly AdGamesViewModel _gamesViewModel;
     private readonly AdTagsViewModel _tagsViewModel;
@@ -59,7 +45,7 @@ internal class AdminViewModel : ObservableObject
                 _ when pageType == typeof(AdGamesViewModel) => _gamesViewModel,
                 _ when pageType == typeof(AdTagsViewModel) => _tagsViewModel,
                 _ when pageType == typeof(AdUsersViewModel) => _usersViewModel,
-                _ => throw new ArgumentException($"Unknown page type: {pageType.FullName}")
+                _ => throw new NotSupportedException()
             };
 
             if (CurrentPage is INavigationAware nav)
@@ -78,4 +64,3 @@ internal class AdminViewModel : ObservableObject
     public void ShowUsers() =>
         _navigator.AdminPanelNavigateTo<AdUsersViewModel>();
 }
-

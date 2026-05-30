@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.ViewModels.Buttons;
+using GalacticLauncher.Frontend.ViewModels.Controls;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
@@ -35,16 +35,11 @@ internal partial class HomeViewModel : ObservableObject
         _lastGameManager = lastGameManager;
         _gameButtonFactory = gameButtonFactory;
 
-        _cacheRefresher.OnRefreshAll += UpdateImages;
+        _cacheRefresher.OnInitialize += RefreshPage;
     }
 
     [RelayCommand]
     public void RefreshPage()
-    {
-        UpdateImages();
-    }
-
-    private void UpdateImages()
     {
         RefreshRecommendations();
         RefreshFavorites();

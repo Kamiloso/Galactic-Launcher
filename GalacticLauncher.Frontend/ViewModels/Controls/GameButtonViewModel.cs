@@ -7,7 +7,7 @@ using GalacticLauncher.Frontend.Services.Images;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-namespace GalacticLauncher.Frontend.ViewModels.Buttons;
+namespace GalacticLauncher.Frontend.ViewModels.Controls;
 
 internal partial class GameButtonViewModel(
     IImageProvider imageProvider,

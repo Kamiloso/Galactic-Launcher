@@ -37,7 +37,11 @@ internal class CacheProvider(
 
     public IEnumerable<Version> GetVersionsOf(long id)
     {
-        return [.. GetGameDataOf(id)?.Versions ?? []];
+        GameData? gameData = GetGameDataOf(id);
+        if (gameData == null) return [];
+
+        return [.. gameData.Versions
+            .OrderByDescending(v => v.ReleaseDate)];
     }
 
     public IEnumerable<Tag> GetAllTags()

@@ -3,7 +3,7 @@
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.HomeView"
 			 xmlns:vm="clr-namespace:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:HomeViewModel"
-			 xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.Buttons"
+			 xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.Controls"
 			 x:CompileBindings="True">
 
 

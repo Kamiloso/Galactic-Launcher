@@ -11,38 +11,34 @@ namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface ICacheRefresher
 {
+    bool Initialized { get; }
     bool IsRefreshing { get; }
 
-    event Action? OnRefreshAll;
+    event Action? OnInitialize;
     event Action<long>? OnRefreshGameData;
 
-    Task RefreshAll();
-    Task RefreshGameData(long id);
+    Task InitializeAsync();
+    Task RefreshGameDataAsync(long id);
 }
 
-internal class CacheRefresher : ICacheRefresher
+internal class CacheRefresher(
+    IBackendTalker backendTalker,
+    ICacheRepository cacheRepository) : ICacheRefresher
 {
+    public bool Initialized { get; private set; }
     public bool IsRefreshing => _refreshCount > 0;
 
-    public event Action? OnRefreshAll;
+    public event Action? OnInitialize;
     public event Action<long>? OnRefreshGameData;
 
+    private bool _initialized;
     private int _refreshCount;
 
-    private readonly IBackendTalker _backendTalker;
-    private readonly ICacheRepository _cacheRepository;
-
-    public CacheRefresher(
-        IBackendTalker backendTalker,
-        ICacheRepository cacheRepository)
+    public async Task InitializeAsync()
     {
-        _backendTalker = backendTalker;
-        _cacheRepository = cacheRepository;
+        if (_initialized) return;
+        _initialized = true;
 
-        _ = RefreshAll();
-    }
-
-    public async Task RefreshAll() =>
         await DuringRefresh(async () =>
         {
             IEnumerable<Game> games;
@@ -50,35 +46,33 @@ internal class CacheRefresher : ICacheRefresher
 
             try
             {
-                games = await _backendTalker.GetAllGames();
-                tags = await _backendTalker.GetAllTags();
+                games = await backendTalker.GetAllGames();
+                tags = await backendTalker.GetAllTags();
 
-                _cacheRepository.UpdateMoreGames(games);
-                _cacheRepository.OverwriteAllTags(tags);
+                cacheRepository.UpdateMoreGames(games, clearOther: true);
+                cacheRepository.OverwriteAllTags(tags);
             }
             catch (ApiException) { }
 
-            OnRefreshAll?.Invoke();
-        });
+            Initialized = true;
 
-    public async Task RefreshGameData(long id) =>
+            OnInitialize?.Invoke();
+        });
+    }
+
+    public async Task RefreshGameDataAsync(long id) =>
         await DuringRefresh(async () =>
         {
             GameData gameData;
 
             try
             {
-                gameData = (await _backendTalker.GetGameData(id))
+                gameData = (await backendTalker.GetGameData(id))
                     .RemoveIncompatiblePlatforms();
-                _cacheRepository.UpdateGame(gameData);
+
+                cacheRepository.UpdateGame(gameData);
             }
-            catch (ApiException ex)
-            {
-                if (ex.StatusCode == 404) // not found - game probably removed
-                {
-                    _cacheRepository.ForgetGameEntry(id);
-                }
-            }
+            catch (ApiException) { }
 
             OnRefreshGameData?.Invoke(id);
         });

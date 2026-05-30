@@ -1,24 +1,28 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
+using GalacticLauncher.Frontend.Infrastructure;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 public interface IThemeManager
 {
-    event Action<string>? ThemeErrorOccurred;
     void ToggleTheme();
+    void SetTheme(bool isGalaxyTheme);
 }
 
 internal class ThemeManager : IThemeManager
 {
-    public event Action<string>? ThemeErrorOccurred;
-    
     private bool _isGalaxyTheme = true;
 
     public void ToggleTheme()
     {
-        _isGalaxyTheme = !_isGalaxyTheme;
+        SetTheme(!_isGalaxyTheme);
+    }
+
+    public void SetTheme(bool isGalaxyTheme)
+    {
+        _isGalaxyTheme = isGalaxyTheme;
 
         string themeFile = _isGalaxyTheme
             ? "PinkThemeGradient.axaml"
@@ -27,7 +31,7 @@ internal class ThemeManager : IThemeManager
         ChangeColorTheme(themeFile);
     }
 
-    private void ChangeColorTheme(string themePath)
+    private static void ChangeColorTheme(string themePath)
     {
         if (Application.Current?.Resources is not { } resources)
             return;
@@ -56,7 +60,7 @@ internal class ThemeManager : IThemeManager
         }
         catch (Exception ex)
         {
-            ThemeErrorOccurred?.Invoke($"Nie udało się załadować motywu: {ex.Message}");
+            DebugBox.Show(ex.ToString(), "Theme Load Error");
         }
     }
 }

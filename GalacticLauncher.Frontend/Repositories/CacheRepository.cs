@@ -12,8 +12,7 @@ public interface ICacheRepository
     Game? GetGame(long id);
     IEnumerable<long> GetAllGames();
     void UpdateGame(Game game);
-    void UpdateMoreGames(IEnumerable<Game> games);
-    void ForgetGameEntry(long id);
+    void UpdateMoreGames(IEnumerable<Game> games, bool clearOther);
 
     Tag? GetTag(long id);
     IEnumerable<long> GetAllTags();
@@ -44,10 +43,10 @@ internal class CacheRepository : ICacheRepository
 
     public void UpdateGame(Game game)
     {
-        UpdateMoreGames([game]);
+        UpdateMoreGames([game], clearOther: false);
     }
 
-    public void UpdateMoreGames(IEnumerable<Game> games)
+    public void UpdateMoreGames(IEnumerable<Game> games, bool clearOther)
     {
         foreach (var game in games)
         {
@@ -58,17 +57,25 @@ internal class CacheRepository : ICacheRepository
             bool flatEquals = Game.FlatEquals(old, game);
 
             if (oldRobust && !newRobust && flatEquals)
+            {
                 continue; // unnecessary data loss, skip
+            }
 
             _gameCache[game.Id] = game;
         }
 
-        SaveToDisk();
-    }
+        if (clearOther)
+        {
+            List<long> existing = [.. _gameCache.Keys];
 
-    public void ForgetGameEntry(long id)
-    {
-        _gameCache.Remove(id);
+            foreach (long id in existing)
+            {
+                if (!games.Any(g => g.Id == id))
+                {
+                    _gameCache.Remove(id);
+                }
+            }
+        }
 
         SaveToDisk();
     }

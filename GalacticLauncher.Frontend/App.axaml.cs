@@ -80,10 +80,14 @@ public partial class App : Application
             services.AddSingleton<IGameListManager, GameListManager>();
             services.AddSingleton<ILastGameManager, LastGameManager>();
 
-
+            // Initialize App
             var serviceProvider = services.BuildServiceProvider();
 
-            desktop.MainWindow = serviceProvider.GetRequiredService<MainWindow>();
+            var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
+            var cacheRefresher = serviceProvider.GetRequiredService<ICacheRefresher>();
+
+            desktop.MainWindow = mainWindow;
+            _ = cacheRefresher.InitializeAsync();
         }
 
         base.OnFrameworkInitializationCompleted();

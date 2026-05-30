@@ -1,6 +1,6 @@
 ﻿using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Images;
-using GalacticLauncher.Frontend.ViewModels.Buttons;
+using GalacticLauncher.Frontend.ViewModels.Controls;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 

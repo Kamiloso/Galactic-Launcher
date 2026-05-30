@@ -6,11 +6,6 @@
 			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 HorizontalAlignment="Left">
 	
-	
-	<UserControl.Resources>
-		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
-	</UserControl.Resources>
-	
 	<!--Side Menu-->
 
 	<Border Background="{DynamicResource SideMenuGradient}"
@@ -73,9 +68,7 @@
 				<!--Home button-->
 				<Button Classes="menuItem"
 						Command="{Binding ShowHomeCommand}"
-						Classes.active="{Binding CurrentPage, 
-						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=HomeViewModel}">
+						Classes.active="{Binding IsHomePage}">
 					
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Data="{StaticResource IconHome}" />
@@ -88,9 +81,7 @@
 				<!--Library button-->
 				<Button Classes="menuItem"
 						Command="{Binding ShowLibraryCommand}"
-						Classes.active="{Binding CurrentPage, 
-						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=LibraryViewModel}">
+						Classes.active="{Binding IsLibraryPage}">
 					
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Data="{StaticResource IconGamepad}"/>
@@ -103,9 +94,7 @@
 				<!--Admin button-->
 				<Button Classes="menuItem"
 						Command="{Binding ShowAdminCommand}"
-						Classes.active="{Binding CurrentPage, 
-						Converter={StaticResource PageTypeToBoolConverter}, 
-						ConverterParameter=AdminViewModel}">
+						Classes.active="{Binding IsAdminPage}">
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Data="{StaticResource IconSecurity}"/>
 

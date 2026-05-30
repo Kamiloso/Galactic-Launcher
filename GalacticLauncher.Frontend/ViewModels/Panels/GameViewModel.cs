@@ -14,15 +14,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
 internal partial class GameViewModel : ObservableObject, INavigationAware
 {
-    public ObservableCollection<Version> AvailableVersions { get; } = [];
-
     [ObservableProperty]
     private string _title = "";
 
@@ -39,29 +36,32 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private double _downloadProgress;
 
     [ObservableProperty]
-    private string _gameDisplayDebugJson = string.Empty;
+    private string _gameDisplayDebugJson = "";
 
     [ObservableProperty]
-    private string _selectedVersionDebugJson = string.Empty;
+    private string _selectedVersionDebugJson = "";
 
-    [ObservableProperty]
-    private ViewModeEnum _viewMode = ViewModeEnum.Nothing;
+    public ObservableCollection<Version> AvailableVersions { get; } = [];
 
     public enum ViewModeEnum
     {
-        Nothing = 0,
-        Downloading = 1,
-        ReadyToPlay = 2,
+        Locked = 0,
+        NoInstance = 1,
+        Downloading = 2,
+        ReadyToPlay = 3,
     }
 
-    public string DownloadButtonText =>
-        ViewMode == ViewModeEnum.Downloading ? "Downloading..." : "Download";
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNoInstanceState))]
+    [NotifyPropertyChangedFor(nameof(IsDownloadingState))]
+    [NotifyPropertyChangedFor(nameof(IsReadyToPlayState))]
+    [NotifyPropertyChangedFor(nameof(DownloadButtonText))]
+    private ViewModeEnum _viewMode = ViewModeEnum.Locked;
 
-    public bool IsDownloadEnabled => ViewMode == ViewModeEnum.Nothing;
-    public bool IsCancelEnabled => ViewMode == ViewModeEnum.Downloading;
-    public bool IsPlayEnabled => ViewMode == ViewModeEnum.ReadyToPlay;
-    public bool IsDeleteEnabled => ViewMode == ViewModeEnum.ReadyToPlay;
-    public bool IsProgressVisible => ViewMode == ViewModeEnum.Downloading;
+    public bool IsNoInstanceState => ViewMode == ViewModeEnum.NoInstance;
+    public bool IsDownloadingState => ViewMode == ViewModeEnum.Downloading;
+    public bool IsReadyToPlayState => ViewMode == ViewModeEnum.ReadyToPlay;
+    public string DownloadButtonText => IsDownloadingState ? "Downloading..." : "Download";
 
     private bool _init = false;
     private long _id = 0;
@@ -87,8 +87,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _execManager = execManager;
         _terminator = terminator;
 
-        _cacheRefresher.OnRefreshAll +=
-            () => { if (_init) RefreshGameData(); };
+        _cacheRefresher.OnInitialize +=
+            () => { if (_init) RunGameDataRefresh(); };
 
         _cacheRefresher.OnRefreshGameData +=
             id => { if (_init && _id == id) UpdateView(); };
@@ -99,26 +99,25 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _init = true;
         _id = (long)args[0];
 
+        RunGameDataRefresh();
+
         ResetSelections();
-        RefreshGameData();
         UpdateView();
+    }
+
+    private void RunGameDataRefresh()
+    {
+        _ = _cacheRefresher.RefreshGameDataAsync(_id);
     }
 
     private void ResetSelections()
     {
         SelectedVersion = null;
-        ViewMode = ViewModeEnum.Nothing;
         DownloadProgress = 0;
 
         _downloading.Terminate();
-    }
 
-    private void RefreshGameData()
-    {
-        if (_cacheProvider.GetGameDataOf(_id) == null)
-        {
-            _ = _cacheRefresher.RefreshGameData(_id);
-        }
+        SetAdequateViewMode();
     }
 
     private void UpdateView()
@@ -131,19 +130,20 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
         GameDisplayDebugJson = JsonSerializer.Serialize(game);
 
+        Version? selectedVersion = SelectedVersion;
+
         List<Version> versions = [.. _cacheProvider.GetVersionsOf(_id)];
 
         AvailableVersions.Clear();
 
-        foreach (var version in versions
-            .OrderByDescending(v => v.ReleaseDate))
+        foreach (var version in versions)
         {
             AvailableVersions.Add(version);
         }
 
-        SelectedVersion = SelectedVersion == null
+        SelectedVersion = selectedVersion == null
             ? AvailableVersions.FirstOrDefault(v => v.IsPrimary)
-            : AvailableVersions.FirstOrDefault(v => v.Id == SelectedVersion.Id);
+            : AvailableVersions.FirstOrDefault(v => v.Id == selectedVersion.Id);
     }
 
     [RelayCommand]
@@ -161,34 +161,25 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             DownloadProgress = Math.Clamp(value, 0, 1);
         });
 
-        _downloading.Start(cancellationToken =>
-            _execManager.Download(execInfo, progress, cancellationToken));
-
-        ViewMode = ViewModeEnum.Downloading;
-
         try
         {
-            await _downloading.AwaitableTask();
+            Task task = _downloading.Start(cancellationToken =>
+                _execManager.DownloadAsync(execInfo, progress, cancellationToken));
 
-            ViewMode = ViewModeEnum.ReadyToPlay;
+            SetAdequateViewMode();
+
+            await task;
         }
-        catch (Exception ex)
+        catch (OperationCanceledException) { }
+        catch (DownloadException ex)
         {
-            ViewMode = ViewModeEnum.Nothing;
-
-            if (ex is not OperationCanceledException &&
-                ex is not DownloadException) throw;
-
-            if (ex is DownloadException dex)
-            {
-                DebugBox.Show(dex.Message, "Download Error");
-            }
+            DebugBox.Show(ex.Message, "Download Error");
         }
         finally
         {
             _downloading.Terminate();
 
-            UpdateViewModeFromSelectedVersion();
+            SetAdequateViewMode();
         }
     }
 
@@ -200,7 +191,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
         _downloading.Terminate();
 
-        ViewMode = ViewModeEnum.Nothing;
+        SetAdequateViewMode();
     }
 
     [RelayCommand]
@@ -214,7 +205,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (_execManager.Exists(execInfo))
             _execManager.Delete(execInfo);
 
-        ViewMode = ViewModeEnum.Nothing;
+        SetAdequateViewMode();
     }
 
     [RelayCommand]
@@ -240,6 +231,34 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         }
     }
 
+    partial void OnSelectedVersionChanged(Version? value)
+    {
+        SelectedVersionDebugJson = value == null
+            ? string.Empty
+            : JsonSerializer.Serialize(value);
+
+        SetAdequateViewMode();
+    }
+
+    private void SetAdequateViewMode()
+    {
+        if (SelectedVersion is null)
+        {
+            ViewMode = ViewModeEnum.Locked;
+            return;
+        }
+
+        if (_downloading.IsRunning)
+        {
+            ViewMode = ViewModeEnum.Downloading;
+            return;
+        }
+
+        ViewMode = MakeCurrentExecInfo() is { } execInfo && _execManager.Exists(execInfo)
+            ? ViewModeEnum.ReadyToPlay
+            : ViewModeEnum.NoInstance;
+    }
+
     private ExecInfo? MakeCurrentExecInfo()
     {
         if (SelectedVersion == null) return null;
@@ -248,35 +267,5 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (gameData == null) return null;
 
         return gameData.ToExecInfo(SelectedVersion);
-    }
-
-    private void UpdateViewModeFromSelectedVersion()
-    {
-        if (ViewMode == ViewModeEnum.Downloading)
-            return;
-
-        ExecInfo? execInfo = MakeCurrentExecInfo();
-        ViewMode = execInfo != null && _execManager.Exists(execInfo)
-            ? ViewModeEnum.ReadyToPlay
-            : ViewModeEnum.Nothing;
-    }
-
-    partial void OnSelectedVersionChanged(Version? value)
-    {
-        SelectedVersionDebugJson = value == null
-            ? string.Empty
-            : JsonSerializer.Serialize(value);
-
-        UpdateViewModeFromSelectedVersion();
-    }
-
-    partial void OnViewModeChanged(ViewModeEnum value)
-    {
-        OnPropertyChanged(nameof(DownloadButtonText));
-        OnPropertyChanged(nameof(IsDownloadEnabled));
-        OnPropertyChanged(nameof(IsCancelEnabled));
-        OnPropertyChanged(nameof(IsPlayEnabled));
-        OnPropertyChanged(nameof(IsDeleteEnabled));
-        OnPropertyChanged(nameof(IsProgressVisible));
     }
 }

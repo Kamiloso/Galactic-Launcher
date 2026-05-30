@@ -17,7 +17,7 @@ public interface IExecManager
 {
     bool Exists(ExecInfo execInfo);
     void Delete(ExecInfo execInfo);
-    Task Download(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default);
+    Task DownloadAsync(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default);
     bool IsDownloading(ExecInfo execInfo);
     Process Play(ExecInfo execInfo);
 }
@@ -75,7 +75,7 @@ internal class ExecManager(
             Directory.Delete(gamePath, true);
     }
 
-    public async Task Download(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default)
+    public async Task DownloadAsync(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default)
     {
         if (IsDownloading(execInfo))
             throw new InvalidOperationException("This exec is already being downloaded.");

@@ -56,9 +56,6 @@
 	  <ApplicationDefinition Include="AvaloniaResources\Assets\Logo\icon.png" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Include="ViewModels\Converters\PageTypeToBoolConverter.cs" />
-	</ItemGroup>
-	<ItemGroup>
 	  <AvaloniaResource Update="AvaloniaResources\ResourceDictionaries\fonts.axaml">
 	    <SubType>Designer</SubType>
 	  </AvaloniaResource>

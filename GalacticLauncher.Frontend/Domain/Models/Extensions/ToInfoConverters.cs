@@ -20,7 +20,7 @@ internal static class ToInfoConverters
         static string Normalize(string input)
         {
             return new string([.. input
-            .Select(c => char.IsLetterOrDigit(c) ? c : '_')]);
+                .Select(c => char.IsLetterOrDigit(c) ? c : '_')]);
         }
     }
 }
