@@ -4,6 +4,7 @@ using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Tools.Files;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -16,9 +17,9 @@ public interface IExecManager
 {
     bool Exists(ExecInfo execInfo);
     void Delete(ExecInfo execInfo);
-    Task Download(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default);
+    Task DownloadAsync(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default);
     bool IsDownloading(ExecInfo execInfo);
-    void Play(ExecInfo execInfo);
+    Process Play(ExecInfo execInfo);
 }
 
 internal class ExecManager(
@@ -74,7 +75,7 @@ internal class ExecManager(
             Directory.Delete(gamePath, true);
     }
 
-    public async Task Download(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default)
+    public async Task DownloadAsync(ExecInfo execInfo, IProgress<double> progress, CancellationToken cancellationToken = default)
     {
         if (IsDownloading(execInfo))
             throw new InvalidOperationException("This exec is already being downloaded.");
@@ -121,6 +122,7 @@ internal class ExecManager(
             string markerContents = DateTime.Now.ToString();
             File.WriteAllText(markerFilePath, markerContents); // mark as ready
         }
+        catch (OperationCanceledException) { throw; }
         catch (Exception ex)
         {
             try { Directory.Delete(execPath, true); } catch { } // cleanup
@@ -142,19 +144,22 @@ internal class ExecManager(
         return _downloadings.Contains(identity);
     }
 
-    public void Play(ExecInfo execInfo)
+    public Process Play(ExecInfo execInfo)
     {
         try
         {
             string execFilePath = execPathSystem.FindExecFilePath(execInfo)
                 ?? throw new FileNotFoundException("Executable file not found.");
 
-            execRunner.Run(execFilePath, execInfo.CliArgs);
+            return execRunner.RunProcess(execFilePath, execInfo.CliArgs)
+                ?? throw new FileNotFoundException("System couldn't start the executable.");
         }
         catch (Exception ex)
         {
             ExecutableRunException.WrapThrow(
                 "An error occurred while trying to run the executable.", ex);
+
+            throw new(); // unreachable
         }
     }
 }

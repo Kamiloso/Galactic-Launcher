@@ -28,7 +28,7 @@ internal static class ToDomainConverters
         };
     }
 
-    public static GameData ToDomain(this GameEntity game,
+    public static GameData ToDomain(this GameWithIconEntity game,
         IEnumerable<VersionEntity> versions,
         IEnumerable<ImageEntity> images,
         IEnumerable<TagEntity> tags)
@@ -39,6 +39,7 @@ internal static class ToDomainConverters
             Name = game.Name,
             Author = game.Author,
             Description = game.Description,
+            IconUrl = game.IconUrl,
             Versions = [.. versions.Select(ToDomain)],
             Images = [.. images.Select(ToDomain)],
             Tags = [..  tags.Select(ToDomain)],

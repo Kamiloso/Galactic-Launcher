@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels"
+			 x:DataType="vm:LoadingViewModel"
+			 x:Class="GalacticLauncher.Frontend.Views.MainWindowView.LoadingScreen">
+
+	<StackPanel VerticalAlignment="Stretch"
+				HorizontalAlignment="Stretch"
+				Orientation="Vertical">
+
+		<Image Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Assets/Logo/logo_color.png"
+			   HorizontalAlignment="Center"/>
+		<TextBlock Classes="TextBlock.searchHeader"
+				   HorizontalAlignment="Center"
+				   Text="LOADING {Binding LoadingText}"/>
+	</StackPanel>
+
+</UserControl>

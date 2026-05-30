@@ -17,37 +17,40 @@
 				<Panel Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
 
 					<Border BorderThickness="6"
-							BorderBrush="{DynamicResource GalaxyGradient}"
+                          BorderBrush="{DynamicResource GalaxyGradient}"
 							Background="Transparent"
 							CornerRadius="0"
+							ClipToBounds="True"
+							Padding="0"
 							HorizontalAlignment="Stretch"
 							VerticalAlignment="Stretch">
-						
-						<StackPanel Orientation="Vertical"
-									HorizontalAlignment="Center"
-									VerticalAlignment="Center">
-							
-							<TextBlock FontFamily="{DynamicResource Rajdhani}"
-								   FontStyle="Normal"
-								   Foreground="{StaticResource GreyBlue}"
-								   FontSize="16"
-								   Text="{TemplateBinding Tag}"
-								   TextAlignment="Center"
-								   TextWrapping="WrapWithOverflow"
-								   VerticalAlignment="Center"
-								   HorizontalAlignment="Center"
-								   Margin="15,0,15,10"/>
+							<Grid>
+								<StackPanel Orientation="Vertical"
+											HorizontalAlignment="Center"
+											VerticalAlignment="Center">
 
-							<PathIcon Data="{StaticResource IconSad}"/>
-							
-						</StackPanel>
+									<TextBlock FontFamily="{DynamicResource Rajdhani}"
+										   FontStyle="Normal"
+										   Foreground="{StaticResource GreyBlue}"
+										   FontSize="16"
+										   Text="{TemplateBinding Tag}"
+										   TextAlignment="Center"
+										   TextWrapping="WrapWithOverflow"
+										   VerticalAlignment="Center"
+										   HorizontalAlignment="Center"
+										   Margin="15,0,15,10"/>
+
+									<PathIcon Data="{StaticResource IconSad}"/>
+
+								</StackPanel>
+
+								<ContentPresenter Name="PART_ContentPresenter"
+											  Content="{TemplateBinding Content}"
+											  Margin="0"
+											  HorizontalContentAlignment="Stretch"
+											  VerticalContentAlignment="Stretch"/>
+							</Grid>
 					</Border>
-
-					<ContentPresenter Name="PART_ContentPresenter"
-									  Content="{TemplateBinding Content}"
-									  Margin="0"
-									  HorizontalContentAlignment="Stretch"
-									  VerticalContentAlignment="Stretch"/>
 				</Panel>
 			</ControlTemplate>
 		</Setter>
@@ -70,10 +73,12 @@
 		<Setter Property="Stretch" Value="UniformToFill"/>
 	</Style>
 
+	<Style Selector="Button.imageClickable:disabled /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Opacity" Value="1.0" />
+		<Setter Property="Background" Value="Transparent" />
+	</Style>
 
-	<!--
-	=========  BUTTON SECTION ==================================
-	-->
+
 
 	<!--ClickableImage-->
 	<Style Selector="Button.libraryImage">
@@ -127,10 +132,53 @@
 	</Style>
 
 
+	<!--Refresh button-->
+	<Style Selector="Button.refreshButton">
+		<Setter Property="Width" Value="50"/>
+		<Setter Property="Height" Value="50"/>
+		<Setter Property="CornerRadius" Value="85"/>
+		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="Padding" Value="0"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
 
-	<!--
-	========= BUTTONS SECTION ==================================
-	-->
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"
+						CornerRadius="{TemplateBinding CornerRadius}">
+					<ContentPresenter Name="PART_ContentPresenter"
+									  Content="{TemplateBinding Content}"
+									  HorizontalAlignment="Center"
+									  VerticalAlignment="Center"/>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+		
+	</Style>
+
+	<Style Selector="Button.refreshButton PathIcon">
+		<Setter Property="Width" Value="35"/>
+		<Setter Property="Height" Value="35"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="Foreground" Value="{Binding $parent[Button].Foreground}"/>
+
+	</Style>
+
+	<Style Selector="Button.refreshButton:pointerover">
+		<Setter Property="RenderTransform" Value="scale(1.05)"/>
+	</Style>
+	
+	<Style Selector="Button.refreshButton:pressed">
+		<Setter Property="RenderTransform" Value="scale(0.95)"/>
+	</Style>
+
+	<Style Selector="Button.refreshButton:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+
+	
 
 	<!--Menu button Appearance-->
 	<Style Selector="Button.menuItem">
@@ -201,8 +249,75 @@
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="Margin" Value="10,0,0,0"/>
 	</Style>
+
 	
-	
-	
+
+	<!--Search games-->
+	<Style Selector="Button.searchButton">
+		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="FontSize" Value="20"/>
+		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="CornerRadius" Value="40"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="1,1,1,1"/>
+	</Style>
+
+	<!--Menu button Hover-->
+	<Style Selector="Button.searchButton:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource TagBlue}"/>
+	</Style>
+
+	<Style Selector="Button.searchButton:pressed /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
+	</Style>
+
+	<Style Selector="Button.searchButton TextBlock">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="10,0,0,0"/>
+	</Style>
+
+
+	<!--Tag button-->
+
+	<Style Selector="Button.tagButton">
+
+		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
+		<Setter Property="FontSize" Value="15"/>
+		<Setter Property="Background" Value="{StaticResource TagDarkBlue}"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="CornerRadius" Value="40"/>
+		<Setter Property="Height" Value="25"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="1,1,1,11"/>
+	</Style>
+
+	<!--Menu button Hover-->
+	<Style Selector="Button.tagButton:pointerover /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource GalaxyOceanBlue}"/>
+	</Style>
+
+	<Style Selector="Button.tagButton:pressed /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource VibrantBlue}"/>
+	</Style>
+
+	<!--Acive-->
+	<Style Selector="Button.tagButton.active /template/ ContentPresenter">
+		<Setter Property="Background" Value="{DynamicResource TagBlue}"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+	</Style>
+
+	<Style Selector="Button.tagButton TextBlock">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="10,0,0,0"/>
+	</Style>
 	
 </Styles>

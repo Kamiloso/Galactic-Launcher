@@ -17,7 +17,7 @@ internal static class HttpProvider
             allowAutoRedirect: false,
             pinCertSHA256: Utils.CertThumbprint))
         {
-            Timeout = TimeSpan.FromSeconds(15.0)
+            Timeout = TimeSpan.FromSeconds(6.0)
         };
     }
 

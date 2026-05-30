@@ -6,7 +6,7 @@ namespace GalacticLauncher.Frontend.Services.Executables;
 
 public interface IExecPathSystem
 {
-    string PrepareGamePath(GameInfo execInfo, bool ensure);
+    string PrepareGamePath(ExecInfo execInfo, bool ensure);
     string PrepareExecPath(ExecInfo execInfo, bool ensure);
     string PrepareInstancePath(ExecInfo execInfo, bool ensure);
     string? FindExecFilePath(ExecInfo execInfo);
@@ -14,11 +14,11 @@ public interface IExecPathSystem
 
 internal class ExecPathSystem : IExecPathSystem
 {
-    public string PrepareGamePath(GameInfo gameInfo, bool ensure)
+    public string PrepareGamePath(ExecInfo execInfo, bool ensure)
     {
         return PreparePath(Path.Combine(
             Utils.RootPath,
-            gameInfo.GameUnique), ensure);
+            execInfo.GameUnique), ensure);
     }
 
     public string PrepareExecPath(ExecInfo execInfo, bool ensure)

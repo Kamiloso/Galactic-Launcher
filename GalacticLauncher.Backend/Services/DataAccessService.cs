@@ -30,7 +30,7 @@ internal class DataAccessService(
         var versionRepository = scope.GetService<IVersionRepository>();
         var tagRepository = scope.GetService<ITagRepository>();
 
-        GameEntity game = await gameRepository.GetGameById(id)
+        GameWithIconEntity game = await gameRepository.GetGameById(id)
             ?? throw ClientFaultException.NotFound404($"Game with id {id} not found.");
 
         return game.ToDomain(

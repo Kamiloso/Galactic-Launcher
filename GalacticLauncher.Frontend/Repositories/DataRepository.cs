@@ -1,8 +1,6 @@
 ﻿using GalacticLauncher.Core;
-using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Tools.Files;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 
@@ -19,8 +17,6 @@ public interface IDataRepository
 internal class DataRepository : IDataRepository
 {
     private const string DATA_FILENAME = "launcher_data.json";
-
-    //changed it to have data about the sequence in which each game has been added (for homeviewmodel)
 
     private readonly Dictionary<string, List<long>> _data = [];
 
@@ -44,9 +40,11 @@ internal class DataRepository : IDataRepository
         {
             _data[ckey] = list = [];
         }
+
         if (!list.Contains(id))
         {
             list.Add(id);
+
             SaveToDisk();
         }
     }
@@ -72,6 +70,13 @@ internal class DataRepository : IDataRepository
         }
     }
 
+    #region Disk Storage
+
+    private record DataStorage
+    {
+        public required Dictionary<string, long[]>? Dictionary { get; init; }
+    }
+
     private void LoadFromDisk()
     {
         string filePath = Path.Combine(Utils.RootPath, DATA_FILENAME);
@@ -81,12 +86,11 @@ internal class DataRepository : IDataRepository
         DataStorage? model;
         if ((model = _jsonFiles.Load<DataStorage>(filePath)) != null) // any errors = reset data
         {
-            var keys = model.Keys;
-            var values = model.Values;
+            _data.Clear();
 
-            foreach (var (key, value) in keys.Zip(values))
+            foreach (var (key, value) in model.Dictionary ?? [])
             {
-                _data[key] = [.. value];
+                _data[key] = [.. value ?? []];
             }
         }
     }
@@ -97,10 +101,13 @@ internal class DataRepository : IDataRepository
 
         DataStorage model = new()
         {
-            Keys = [.. _data.Keys],
-            Values = [.. _data.Values.Select(list => list.ToImmutableArray())],
+            Dictionary = _data.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.ToArray()),
         };
 
         _jsonFiles.Save(filePath, model);
     }
+
+    #endregion
 }

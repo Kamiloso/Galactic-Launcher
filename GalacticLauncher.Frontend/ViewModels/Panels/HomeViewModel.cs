@@ -1,84 +1,87 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using GalacticLauncher.Frontend.Domain.Models;
-using GalacticLauncher.Frontend.Services.Cache;
-using GalacticLauncher.Frontend.Services.Files;
-using GalacticLauncher.Frontend.ViewModels.Buttons;
+using GalacticLauncher.Frontend.Services.Data;
+using GalacticLauncher.Frontend.ViewModels.Controls;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal partial class HomeViewModel: ObservableObject
+internal partial class HomeViewModel : ObservableObject
 {
-    private readonly IGameSelectionService _gameSelectionService;
-    private readonly INavigator _navigator;
-    private readonly IImageService _imageService;
-    private readonly ICacheProvider _cacheProvider;
+    private const int LIB_CAPACITY = 4;
+    private const int FAV_CAPACITY = 3;
+
     private readonly ICacheRefresher _cacheRefresher;
+    private readonly IGameListManager _gameListManager;
+    private readonly ILastGameManager _lastGameManager;
+    private readonly IGameButtonFactory _gameButtonFactory;
 
     public ObservableCollection<GameButtonViewModel> Recommendations { get; } = [];
-    public ObservableCollection<GameButtonViewModel> Favourites { get; } = [];
-    public GameButtonViewModel? LastAdded { get; private set; }
+    public ObservableCollection<GameButtonViewModel> Library { get; } = [];
+
+    [ObservableProperty]
+    private GameButtonViewModel? _recent;
 
     public HomeViewModel(
-        IImageService imageService, 
-        INavigator navigator,
-        IGameSelectionService gameSelectionService,
-        ICacheProvider cacheProvider,
-        ICacheRefresher cacheRefresher
-        )
+        ICacheRefresher cacheRefresher,
+        IGameListManager gameListManager,
+        ILastGameManager lastGameManager,
+        IGameButtonFactory gameButtonFactory)
     {
-        _navigator = navigator;
-        _imageService = imageService;
-        _gameSelectionService = gameSelectionService;
-        _cacheProvider = cacheProvider;
         _cacheRefresher = cacheRefresher;
+        _gameListManager = gameListManager;
+        _lastGameManager = lastGameManager;
+        _gameButtonFactory = gameButtonFactory;
 
-
-        _cacheRefresher.OnRefreshAll += RefreshHome;
-        _ = InitializeAsync();
+        _cacheRefresher.OnInitialize += RefreshPage;
     }
 
-    private void Clear()
+    [RelayCommand]
+    public void RefreshPage()
+    {
+        RefreshRecommendations();
+        RefreshFavorites();
+        RefreshLastAdded();
+    }
+
+    private void RefreshRecommendations()
     {
         Recommendations.Clear();
-        Favourites.Clear();
-        LastAdded = null;
-    }
 
-    private async Task InitializeAsync()
-    {
-        Clear();
+        List<long> list = [.. _gameListManager
+            .ObtainNolibRecommendations(LIB_CAPACITY)];
 
-        var recIds = _gameSelectionService.GetRecommendedGames(4);
-        var loadTasks = new List<Task>();
-
-        foreach (var id in recIds)
+        for (int i = 0; i < LIB_CAPACITY; i++)
         {
-            var recc = new GameButtonViewModel(id, _imageService, _navigator);
-            Recommendations.Add(recc);
-
-            GameDisplay display = _cacheProvider.GetDisplayOf(id);
-            if (display.IconUrl != null)
-            {
-                loadTasks.Add(recc.LoadAsync(display.IconUrl));
-            }
+            Recommendations.Add(i < list.Count
+                ? _gameButtonFactory.CreateAndStartLoading(list[i])
+                : _gameButtonFactory.CreateEmpty());
         }
-        await Task.WhenAll(loadTasks);
     }
 
-    private async void RefreshHome()
+    private void RefreshFavorites()
     {
-        await InitializeAsync();
+        Library.Clear();
+
+        List<long> list = [.. _gameListManager
+            .ObtainLibraryRecommendations(FAV_CAPACITY)];
+
+        for (int i = 0; i < FAV_CAPACITY; i++)
+        {
+            Library.Add(i < list.Count
+                ? _gameButtonFactory.CreateAndStartLoading(list[i])
+                : _gameButtonFactory.CreateEmpty());
+        }
     }
 
+    private void RefreshLastAdded()
+    {
+        long? last = _lastGameManager.GetLastGame();
 
+        Recent = last != null
+            ? _gameButtonFactory.CreateAndStartLoading(last.Value)
+            : _gameButtonFactory.CreateEmpty();
+    }
 }
