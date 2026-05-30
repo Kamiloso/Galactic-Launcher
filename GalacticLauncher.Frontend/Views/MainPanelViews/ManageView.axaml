@@ -3,13 +3,7 @@
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.ManageView"
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:AdminViewModel"
-			 xmlns:conv="using:GalacticLauncher.Frontend.ViewModels.Converters"
 			 x:CompileBindings="True">
-
-
-	<UserControl.Resources>
-		<conv:PageTypeToBoolConverter x:Key="PageTypeToBoolConverter" />
-	</UserControl.Resources>
 
 	<!--Admin view-->
 	<Border Margin="30,20,30,20">
@@ -35,26 +29,20 @@
 							Content="TAGS"
 							Grid.Column="0"
 							Command="{Binding ShowTags}"
-							Classes.active="{Binding CurrentPage, 
-							Converter={StaticResource PageTypeToBoolConverter}, 
-							ConverterParameter=TagsViewModel}">
+							Classes.active="{Binding IsTagsPage}">
 					</Button>
 					
 					<Button Classes="favouriteAll"
 							Content="USERS"
 							Grid.Column="1"
 							Command="{Binding ShowUsers}"
-							Classes.active="{Binding CurrentPage, 
-							Converter={StaticResource PageTypeToBoolConverter}, 
-							ConverterParameter=UsersViewModel}">
+							Classes.active="{Binding IsUsersPage}">
 					</Button>
 					<Button Classes="favouriteAll"
 							Content="GAMES"
 							Grid.Column="2"
 							Command="{Binding ShowGames}"
-							Classes.active="{Binding CurrentPage, 
-							Converter={StaticResource PageTypeToBoolConverter}, 
-							ConverterParameter=AllGamesViewModel}">
+							Classes.active="{Binding IsGamesPage}">
 					</Button>
 				</Grid>
 			</Grid>

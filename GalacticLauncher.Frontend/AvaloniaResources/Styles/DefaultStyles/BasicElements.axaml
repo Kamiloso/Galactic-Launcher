@@ -60,4 +60,15 @@
 		<Setter Property="Margin" Value="0,0,0,2"/>
 	</Style>
 
+	<!-- Progress Bar-->
+	<Style Selector="ProgressBar">
+		<Setter Property="Background" Value="#202020"/>
+		<Setter Property="Foreground" Value="{DynamicResource GalaxyGradient}"/>
+	</Style>
+
+	<Style Selector="ProgressBar /template/ Border#PART_Indicator">
+		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="CornerRadius" Value="3"/>
+	</Style>
+
 </Styles>

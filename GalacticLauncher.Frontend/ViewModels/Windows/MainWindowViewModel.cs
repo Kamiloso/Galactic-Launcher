@@ -4,44 +4,28 @@ using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
-using System.Windows.Input;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
 internal partial class MainWindowViewModel : ObservableObject
 {
-    private const double NARROW_MENU = 84;
-    private const double EXPANDED_MENU = 200;
-
     [ObservableProperty]
-    private double _sideMenuWidth = NARROW_MENU;
-
-    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SideMenuWidth))]
     private bool _isExpanded = false;
 
-    [RelayCommand]
-    public void ToggleMenu()
-    {
-        SideMenuWidth = SideMenuWidth == NARROW_MENU
-            ? EXPANDED_MENU
-            : NARROW_MENU;
-        IsExpanded = !IsExpanded;
-    }
+    public double SideMenuWidth => IsExpanded ? 200 : 84;
 
-    public ICommand SwitchThemeCommand { get; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsHomePage))]
+    [NotifyPropertyChangedFor(nameof(IsLibraryPage))]
+    [NotifyPropertyChangedFor(nameof(IsAdminPage))]
+    [NotifyPropertyChangedFor(nameof(IsGamePage))]
+    public object? _currentPage;
 
-    private object? _currentPage;
-    public object? CurrentPage
-    {
-        get => _currentPage;
-        set
-        {
-            _currentPage = value;
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(CurrentActivePage));
-        }
-    }
-    public string CurrentActivePage => CurrentPage?.GetType().Name ?? "";
+    public bool IsHomePage => CurrentPage is HomeViewModel;
+    public bool IsLibraryPage => CurrentPage is LibraryViewModel;
+    public bool IsAdminPage => CurrentPage is AdminViewModel;
+    public bool IsGamePage => CurrentPage is GameViewModel;
 
     private readonly HomeViewModel _homeViewModel;
     private readonly GameViewModel _gameViewModel;
@@ -66,9 +50,6 @@ internal partial class MainWindowViewModel : ObservableObject
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
 
-        SwitchThemeCommand = new RelayCommand(() => _themeManager.ToggleTheme());
-        _themeManager.ThemeErrorOccurred += OnThemeErrorOccured;
-
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
 
@@ -80,7 +61,7 @@ internal partial class MainWindowViewModel : ObservableObject
                 _ when pageType == typeof(LibraryViewModel) => _libraryViewModel,
                 _ when pageType == typeof(AdminViewModel) => _adminViewModel,
                 _ when pageType == typeof(GameViewModel) => _gameViewModel,
-                _ => throw new ArgumentException($"Unknown page type: {pageType.FullName}")
+                _ => throw new NotSupportedException()
             };
 
             if (CurrentPage is INavigationAware nav)
@@ -91,19 +72,32 @@ internal partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void ShowHome() =>
-        _navigator.NavigateTo<HomeViewModel>();
-
-    [RelayCommand]
-    public void ShowLibrary() =>
-        _navigator.NavigateTo<LibraryViewModel>();
-
-    [RelayCommand]
-    public void ShowAdmin() =>
-        _navigator.NavigateTo<AdminViewModel>();
-
-    private void OnThemeErrorOccured(string message)
+    public void ToggleMenu()
     {
+        IsExpanded = !IsExpanded;
+    }
 
+    [RelayCommand]
+    public void SwitchTheme()
+    {
+        _themeManager.ToggleTheme();
+    }
+
+    [RelayCommand]
+    public void ShowHome()
+    {
+        _navigator.NavigateTo<HomeViewModel>();
+    }
+
+    [RelayCommand]
+    public void ShowLibrary()
+    {
+        _navigator.NavigateTo<LibraryViewModel>();
+    }
+
+    [RelayCommand]
+    public void ShowAdmin()
+    {
+        _navigator.NavigateTo<AdminViewModel>();
     }
 }

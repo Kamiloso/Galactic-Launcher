@@ -7,11 +7,11 @@ namespace GalacticLauncher.Frontend.Infrastructure;
 
 public static class DebugBox
 {
-    public static void Show(string opis, string tytul = "DEBUG ALERT")
+    public static void Show(string message, string title = "DEBUG ALERT")
     {
         var window = new Window
         {
-            Title = tytul,
+            Title = title,
             Width = 450,
             Height = 150,
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
@@ -23,7 +23,7 @@ public static class DebugBox
                 Padding = new Thickness(20),
                 Child = new TextBlock
                 {
-                    Text = opis,
+                    Text = message,
                     TextWrapping = TextWrapping.Wrap,
                     VerticalAlignment = VerticalAlignment.Center,
                     HorizontalAlignment = HorizontalAlignment.Center,

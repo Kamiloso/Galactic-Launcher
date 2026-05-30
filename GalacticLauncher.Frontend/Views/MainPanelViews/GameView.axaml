@@ -6,136 +6,138 @@
 
 	<!--Game view-->
 	<Grid>
-		<!-- Ramka z tłem teraz zawiera ScrollViewer w sobie, co zapobiega wylewaniu się -->
+		<!--only the galaxy border for looks-->
 		<Border Classes="galaxyBorder"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Margin="60,60,60,60"
-                ClipToBounds="True">
-			<!-- Kluczowa linijka zapobiegająca wychodzeniu elementów za ramkę -->
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
+				Margin="45,45,45,45">
+		</Border>
 
-			<ScrollViewer Classes="ScrollBar"
-                          HorizontalScrollBarVisibility="Disabled"
-                          VerticalScrollBarVisibility="Auto">
+		<ScrollViewer Classes="ScrollBar"
+					  HorizontalScrollBarVisibility="Disabled"
+					  VerticalScrollBarVisibility="Auto">
 
-				<!-- Margines zmniejszony do 20, ponieważ Border ma już swój margines 60 -->
-				<Border Margin="20,20,20,20"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch">
-					<Grid RowDefinitions="Auto, Auto, Auto, Auto">
-
-						<!-- 1. Banner + icon + title + author -->
+			<!--Game content-->
+			<Border Margin="50,50,50,50"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch">
+				<Grid>
+					<Grid RowDefinitions="Auto,Auto">
+						<!--Banner + icon + title-->
 						<Grid Grid.Row="0">
 							<Viewbox Stretch="Uniform"
-                                     Margin="10,10,10,20">
-								<Grid Width="1024"
-                                      Height="475">
+									 Margin="10,10,10,10">
+
+								<Grid HorizontalAlignment="Stretch"
+									  VerticalAlignment="Top">
+
 									<!--Banner-->
-									<Viewbox Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-										<Border Width="1024" Height="347" CornerRadius="20" ClipToBounds="True">
-											<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png" Stretch="UniformToFill" />
+									<Viewbox Stretch="Uniform"
+											 HorizontalAlignment="Stretch"
+											 VerticalAlignment="Top">
+
+										<Border Width="1024"
+												Height="247"
+												CornerRadius="20"
+												ClipToBounds="True">
+
+											<!--Banner image-->
+											<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png"
+												   Stretch="UniformToFill"/>
 										</Border>
 									</Viewbox>
+
 									<!--Icon -->
 									<Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*">
-										<Viewbox Grid.Row="1" Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left" Margin="60,0,0,0">
-											<Border Height="256" Width="256" CornerRadius="20" ClipToBounds="True">
-												<Image Source="/AvaloniaResources/Assets/Placeholders/temp3.jpg" Stretch="UniformToFill" />
+										<Viewbox Grid.Row="1" Grid.Column="0"
+												 Stretch="Uniform"
+												 HorizontalAlignment="Left"
+												 Margin="30,0,0,0">
+
+											<Border Height="196"
+													Width="196"
+													ClipToBounds="True"
+													CornerRadius="0"
+													BorderBrush="{DynamicResource GalaxyGradient}"
+													BorderThickness="3">
+
+												<!--Icon Image-->
+												<Image Source="/AvaloniaResources/Assets/Placeholders/temp3.jpg"
+													   Stretch="UniformToFill"/>
 											</Border>
 										</Viewbox>
 
-										<!--Title and Author-->
-										<StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="30,0,0,0" Spacing="10">
-											<TextBlock Text="{Binding Title, FallbackValue='Nazwa Gry'}" FontWeight="Bold" FontSize="42" TextWrapping="Wrap"/>
-											<TextBlock Classes="slogan" Text="Autor: Demonstracyjny Autor" FontSize="20" Foreground="LightGray"/>
-										</StackPanel>
+										<!--title-->
+										<Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*,*"
+											  HorizontalAlignment="Stretch">
+											<TextBlock Grid.Row="1"
+													   Classes="slogan"
+													   VerticalAlignment="Center"
+													   HorizontalAlignment="Stretch"
+													   Margin="20,0,0,0"
+													   TextTrimming="CharacterEllipsis"
+													   TextWrapping="Wrap"
+													   FontSize="30"
+													   Text="GAME TITLE LOOOOOOOOOOOOOOOOOOOONG LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG
+													   LOOOOOOOOOOOOOOOOOOOOOOOOOOONGggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg">
+											</TextBlock>
+											
+										</Grid>
 									</Grid>
 								</Grid>
-							</Viewbox>
-						</Grid>
-
-						<!-- 2. Opis Gry -->
-						<StackPanel Grid.Row="1" Margin="20,10,20,30" Spacing="10">
-							<TextBlock Text="O grze" FontWeight="Bold" FontSize="24"/>
-							<TextBlock Text="{Binding Description, FallbackValue='Opis gry z mechanikami i fabułą...'}"
-                                       TextWrapping="Wrap"
-                                       FontSize="16"
-                                       LineHeight="24"
-                                       Foreground="#DDDDDD"/>
-						</StackPanel>
-
-						<!-- 3. Wybór wersji, przycisk Zagraj i Changelog -->
-						<Grid Grid.Row="2" ColumnDefinitions="250, *" Margin="20,10,20,40">
-
-							<!-- Lewa kolumna: Combobox i przycisk -->
-							<StackPanel Grid.Column="0" Margin="0,0,30,0" Spacing="15">
-								<StackPanel Spacing="5">
-									<TextBlock Text="Wybierz wersję" FontWeight="Bold" FontSize="20"/>
-									<!-- Bindowanie listy i zaznaczonego elementu -->
-									<ComboBox HorizontalAlignment="Stretch"
-                                              ItemsSource="{Binding AvailableVersions}"
-                                              SelectedItem="{Binding SelectedVersion}">
-										<!-- Fallback używany tylko w designerze -->
-										<ComboBox.ItemTemplate>
-											<DataTemplate>
-												<TextBlock Text="{Binding Caption}"/>
-											</DataTemplate>
-										</ComboBox.ItemTemplate>
-									</ComboBox>
-								</StackPanel>
-
-								<!-- Przycisk zagraj (zbindowany do komendy w ViewModelu) -->
-								<Button Content="Zagraj"
-                                        Command="{Binding PlaySelectedVersionCommand}"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Center"
-                                        FontSize="20"
-                                        FontWeight="Bold"
-                                        Padding="10,15"/>
-							</StackPanel>
-
-							<!-- Prawa kolumna: Changelog powiązany z wybraną wersją -->
-							<StackPanel Grid.Column="1" Spacing="10">
-								<TextBlock Text="Opis aktualizacji (Changelog)" FontWeight="Bold" FontSize="20"/>
-								<Border Background="#1AFFFFFF" CornerRadius="10" Padding="15">
-									<!-- Text bindowany jest do właściwości Changelog z wybranej w ComboBox wersji -->
-									<TextBlock Text="{Binding SelectedVersion.Description, FallbackValue='Wybierz wersję, aby zobaczyć changelog.'}"
-                                               TextWrapping="Wrap"
-                                               FontSize="14"
-                                               LineHeight="22"/>
-								</Border>
-							</StackPanel>
-						</Grid>
-
-						<!-- 4. Galeria zrzutów ekranu (lista w dół, na całą szerokość) -->
-						<StackPanel Grid.Row="3" Margin="20,0,20,20" Spacing="25">
-							<TextBlock Text="Galeria" FontWeight="Bold" FontSize="24" Margin="0,0,0,5"/>
-
-							<!-- Screen 1 -->
-							<Border CornerRadius="12" ClipToBounds="True" HorizontalAlignment="Stretch">
-								<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png" Stretch="Uniform"/>
-							</Border>
-
-							<!-- Screen 2 -->
-							<Border CornerRadius="12" ClipToBounds="True" HorizontalAlignment="Stretch">
-								<Image Source="/AvaloniaResources/Assets/Placeholders/temp3.jpg" Stretch="Uniform"/>
-							</Border>
-
-							<!-- Screen 3 -->
-							<Border CornerRadius="12" ClipToBounds="True" HorizontalAlignment="Stretch">
-								<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png" Stretch="Uniform"/>
-							</Border>
-
-							<!-- Screen 4 -->
-							<Border CornerRadius="12" ClipToBounds="True" HorizontalAlignment="Stretch">
-								<Image Source="/AvaloniaResources/Assets/Placeholders/temp3.jpg" Stretch="Uniform"/>
-							</Border>
-
-						</StackPanel>
-
+                      </Viewbox>
 					</Grid>
-				</Border>
-			</ScrollViewer>
-		</Border>
+
+					<StackPanel Grid.Row="1" Margin="20,20,20,0" Spacing="10">
+						<ProgressBar Minimum="0"
+								 Maximum="1"
+								 Height="6"
+								 Value="{Binding DownloadProgress}"
+								 IsVisible="{Binding IsDownloadingState}" />
+
+						<StackPanel Orientation="Horizontal" Spacing="10">
+							<Button Content="{Binding DownloadButtonText}"
+									Command="{Binding DownloadSelectedVersionCommand}"
+									IsEnabled="{Binding IsNoInstanceState}" />
+							<Button Content="Cancel"
+									Command="{Binding CancelDownloadCommand}"
+									IsEnabled="{Binding IsDownloadingState}" />
+							<Button Content="Play"
+									Command="{Binding PlaySelectedVersionCommand}"
+									IsEnabled="{Binding IsReadyToPlayState}" />
+							<Button Content="Delete"
+									Command="{Binding DeleteSelectedVersionCommand}"
+									IsEnabled="{Binding IsReadyToPlayState}" />
+						</StackPanel>
+
+						<ComboBox ItemsSource="{Binding AvailableVersions}"
+									SelectedItem="{Binding SelectedVersion}"
+									PlaceholderText="Select version"
+									HorizontalAlignment="Left"
+									Width="260">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Caption}" />
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+
+						<TextBox Text="{Binding GameDisplayDebugJson}"
+									IsReadOnly="True"
+									AcceptsReturn="True"
+									TextWrapping="Wrap"
+									Height="160" />
+
+						<TextBox Text="{Binding SelectedVersionDebugJson}"
+									IsReadOnly="True"
+									AcceptsReturn="True"
+									TextWrapping="Wrap"
+									Height="160" />
+					</StackPanel>
+					</Grid>
+				</Grid>
+			</Border>
+
+		</ScrollViewer>
 	</Grid>
 </UserControl>
