@@ -5,30 +5,24 @@ using GalacticLauncher.Core.Models;
 
 namespace GalacticLauncher.Frontend.ViewModels.Tags;
 
-internal partial class TagViewModel : ObservableObject
+internal partial class TagViewModel(
+    Tag tag,
+    Action<TagViewModel> onToggle) : ObservableObject
 {
-    public long Id { get; }
+    [ObservableProperty]
+    private string _name = tag.Name;
 
     [ObservableProperty]
-    private string _name;
-
-    [ObservableProperty]
-    private string _description;
+    private string _description = tag.Description;
 
     [ObservableProperty]
     private bool _isActive;
 
-    private readonly Action<TagViewModel> _onToggle;
-
-    public TagViewModel(Tag tag, Action<TagViewModel> onToggle)
-    {
-        Id = tag.Id;
-        Name = tag.Name;
-        Description = tag.Description;
-        IsActive = false;
-        _onToggle = onToggle;
-    }
+    public long Id { get; } = tag.Id;
 
     [RelayCommand]
-    public void ToggleTag() => _onToggle(this);
+    public void ToggleTag()
+    {
+        onToggle.Invoke(this);
+    }
 }

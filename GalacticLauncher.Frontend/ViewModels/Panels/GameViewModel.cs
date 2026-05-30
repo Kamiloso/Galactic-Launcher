@@ -7,8 +7,10 @@ using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Executables;
+using GalacticLauncher.Frontend.Tools.Classes;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
@@ -64,8 +66,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private bool _init = false;
     private long _id = 0;
 
-    private Task? _downloading;
-    private CancellationTokenSource? _downloadingCancel;
+    private readonly TaskObserver _downloading = new();
 
     private readonly ICacheProvider _cacheProvider;
     private readonly ICacheRefresher _cacheRefresher;
@@ -87,9 +88,10 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _terminator = terminator;
 
         _cacheRefresher.OnRefreshAll +=
-            () => { if (_init) _ = _cacheRefresher.RefreshGame(_id); };
-        _cacheRefresher.OnRefreshGame +=
-            id => { if (id == _id) UpdateView(); };
+            () => { if (_init) RefreshGameData(); };
+
+        _cacheRefresher.OnRefreshGameData +=
+            id => { if (_init && _id == id) UpdateView(); };
     }
 
     public void OnActivate(object[] args)
@@ -98,9 +100,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _id = (long)args[0];
 
         ResetSelections();
+        RefreshGameData();
         UpdateView();
-
-        _ = _cacheRefresher.RefreshGame(_id);
     }
 
     private void ResetSelections()
@@ -109,9 +110,15 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ViewMode = ViewModeEnum.Nothing;
         DownloadProgress = 0;
 
-        _downloadingCancel?.Cancel();
-        _downloadingCancel = null;
-        _downloading = null;
+        _downloading.Terminate();
+    }
+
+    private void RefreshGameData()
+    {
+        if (_cacheProvider.GetGameDataOf(_id) == null)
+        {
+            _ = _cacheRefresher.RefreshGameData(_id);
+        }
     }
 
     private void UpdateView()
@@ -124,7 +131,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
         GameDisplayDebugJson = JsonSerializer.Serialize(game);
 
-        Version[] versions = _cacheProvider.GetVersionsOf(_id);
+        List<Version> versions = [.. _cacheProvider.GetVersionsOf(_id)];
 
         AvailableVersions.Clear();
 
@@ -150,30 +157,36 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
         DownloadProgress = 0;
         Progress<double> progress = new(value =>
-            DownloadProgress = Math.Clamp(value, 0, 1));
+        {
+            DownloadProgress = Math.Clamp(value, 0, 1);
+        });
 
-        var cts = new CancellationTokenSource();
-
-        _downloadingCancel = cts;
-        _downloading = _execManager.Download(execInfo, progress, cts.Token);
+        _downloading.Start(cancellationToken =>
+            _execManager.Download(execInfo, progress, cancellationToken));
 
         ViewMode = ViewModeEnum.Downloading;
 
         try
         {
-            await _downloading;
+            await _downloading.AwaitableTask();
 
             ViewMode = ViewModeEnum.ReadyToPlay;
         }
-        catch (OperationCanceledException)
+        catch (Exception ex)
         {
             ViewMode = ViewModeEnum.Nothing;
+
+            if (ex is not OperationCanceledException &&
+                ex is not DownloadException) throw;
+
+            if (ex is DownloadException dex)
+            {
+                DebugBox.Show(dex.Message, "Download Error");
+            }
         }
         finally
         {
-            _downloadingCancel?.Cancel();
-            _downloadingCancel = null;
-            _downloading = null;
+            _downloading.Terminate();
 
             UpdateViewModeFromSelectedVersion();
         }
@@ -185,9 +198,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ExecInfo? execInfo = MakeCurrentExecInfo();
         if (execInfo == null) return;
 
-        _downloadingCancel?.Cancel();
-        _downloadingCancel = null;
-        _downloading = null;
+        _downloading.Terminate();
 
         ViewMode = ViewModeEnum.Nothing;
     }
@@ -225,7 +236,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         }
         catch (ExecutableRunException ex)
         {
-            DebugBox.Show(ex.Message, "Error");
+            DebugBox.Show(ex.Message, "Run Error");
         }
     }
 

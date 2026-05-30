@@ -10,13 +10,14 @@ namespace GalacticLauncher.Frontend.Repositories;
 public interface ICacheRepository
 {
     Game? GetGame(long id);
-    GameData? GetGameData(long id);
-    IEnumerable<Game> GetAllGames();
-    IEnumerable<Tag> GetAllTags();
-    void SetAllGames(IEnumerable<Game> games);
-    void SetGameData(GameData gameData);
-    void SetAllTags(IEnumerable<Tag> tags);
+    IEnumerable<long> GetAllGames();
+    void UpdateGame(Game game);
+    void UpdateMoreGames(IEnumerable<Game> games);
     void ForgetGameEntry(long id);
+
+    Tag? GetTag(long id);
+    IEnumerable<long> GetAllTags();
+    void OverwriteAllTags(IEnumerable<Tag> tags);
 }
 
 internal class CacheRepository : ICacheRepository
@@ -24,7 +25,6 @@ internal class CacheRepository : ICacheRepository
     private const string CACHE_FILENAME = "launcher_cache.json";
 
     private readonly Dictionary<long, Game> _gameCache = [];
-    private readonly Dictionary<long, GameData> _gameDataCache = [];
     private readonly Dictionary<long, Tag> _tagsCache = [];
 
     private readonly IJsonFiles _jsonFiles;
@@ -36,64 +36,31 @@ internal class CacheRepository : ICacheRepository
         LoadFromDisk();
     }
 
-    public Game? GetGame(long id)
+    public Game? GetGame(long id) =>
+        _gameCache.TryGetValue(id, out var game) ? game : null;
+
+    public IEnumerable<long> GetAllGames() =>
+        [.. _gameCache.Keys];
+
+    public void UpdateGame(Game game)
     {
-        return _gameCache.TryGetValue(id, out var game) ? game : null;
+        UpdateMoreGames([game]);
     }
 
-    public GameData? GetGameData(long id)
+    public void UpdateMoreGames(IEnumerable<Game> games)
     {
-        return _gameDataCache.TryGetValue(id, out var data) ? data : null;
-    }
-
-    public IEnumerable<Game> GetAllGames()
-    {
-        return [.. _gameCache.Values];
-    }
-
-    public IEnumerable<Tag> GetAllTags()
-    {
-        return [.. _tagsCache.Values];
-    }
-
-    public void SetAllGames(IEnumerable<Game> games)
-    {
-        _gameCache.Clear();
-
         foreach (var game in games)
         {
+            Game? old = GetGame(game.Id);
+
+            bool oldRobust = old is GameData;
+            bool newRobust = game is GameData;
+            bool flatEquals = Game.FlatEquals(old, game);
+
+            if (oldRobust && !newRobust && flatEquals)
+                continue; // unnecessary data loss, skip
+
             _gameCache[game.Id] = game;
-        }
-
-        foreach (long id in _gameDataCache.Keys.ToList())
-        {
-            if (!_gameCache.ContainsKey(id))
-            {
-                _gameCache.Remove(id);
-                _gameDataCache.Remove(id);
-            }
-        }
-
-        SaveToDisk();
-    }
-
-    public void SetGameData(GameData gameData)
-    {
-        if (_gameCache.ContainsKey(gameData.Id))
-        {
-            _gameDataCache[gameData.Id] = gameData;
-
-            SaveToDisk();
-        }
-    }
-
-    public void SetAllTags(IEnumerable<Tag> tags)
-    {
-        _tagsCache.Clear();
-
-        foreach (var tag in tags)
-        {
-            _tagsCache[tag.Id] = tag;
         }
 
         SaveToDisk();
@@ -102,7 +69,24 @@ internal class CacheRepository : ICacheRepository
     public void ForgetGameEntry(long id)
     {
         _gameCache.Remove(id);
-        _gameDataCache.Remove(id);
+
+        SaveToDisk();
+    }
+
+    public Tag? GetTag(long id) =>
+        _tagsCache.TryGetValue(id, out var tag) ? tag : null;
+
+    public IEnumerable<long> GetAllTags() =>
+        [.. _tagsCache.Keys];
+
+    public void OverwriteAllTags(IEnumerable<Tag> tags)
+    {
+        _tagsCache.Clear();
+
+        foreach (var tag in tags)
+        {
+            _tagsCache[tag.Id] = tag;
+        }
 
         SaveToDisk();
     }
@@ -121,7 +105,7 @@ internal class CacheRepository : ICacheRepository
         string filePath = Path.Combine(Utils.RootPath, CACHE_FILENAME);
 
         _gameCache.Clear();
-        _gameDataCache.Clear();
+        _tagsCache.Clear();
 
         if (Utils.IsDevelopment && Utils.DevelopmentIgnoreCache)
             return; // skip loading cache if needed (only in development)
@@ -133,7 +117,7 @@ internal class CacheRepository : ICacheRepository
                 .ForEach(game => _gameCache[game.Id] = game);
 
             model.GameDataCache?.ToList()
-                .ForEach(gameData => _gameDataCache[gameData.Id] = gameData);
+                .ForEach(gameData => _gameCache[gameData.Id] = gameData);
 
             model.TagsCache?.ToList()
                 .ForEach(tag => _tagsCache[tag.Id] = tag);
@@ -146,8 +130,8 @@ internal class CacheRepository : ICacheRepository
 
         CacheStorage model = new()
         {
-            GameCache = [.. _gameCache.Values],
-            GameDataCache = [.. _gameDataCache.Values],
+            GameCache = [.. _gameCache.Values.Where(g => g is not GameData)],
+            GameDataCache = [.. _gameCache.Values.Where(g => g is GameData).Cast<GameData>()],
             TagsCache = [.. _tagsCache.Values]
         };
 

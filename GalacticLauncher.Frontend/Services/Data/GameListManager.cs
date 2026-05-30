@@ -9,13 +9,13 @@ namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface IGameListManager
 {
-    IEnumerable<long> GetAllGames();
     IEnumerable<long> GetLibraryGames();
     IEnumerable<long> GetFavoriteGames();
+    IEnumerable<long> GetNolibGames();
 
-    IEnumerable<long> ObtainAllRecommendations(int limit);
     IEnumerable<long> ObtainLibraryRecommendations(int limit);
     IEnumerable<long> ObtainFavoriteRecommendations(int limit);
+    IEnumerable<long> ObtainNolibRecommendations(int limit);
 
     // WARNING:
 
@@ -33,21 +33,15 @@ internal class GameListManager(
     IDataRepository dataRepository,
     ICacheProvider cacheProvider) : IGameListManager
 {
-    private List<long> _shuffledAll = [];
+    private List<long> _shuffledNolib = [];
     private List<long> _shuffledLibrary = [];
     private List<long> _shuffledFavorites = [];
 
     private readonly Random _rand = new();
 
-    public IEnumerable<long> GetAllGames()
-    {
-        return cacheProvider.GetAllGameIds()
-            .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
-    }
-
     public IEnumerable<long> GetLibraryGames()
     {
-        List<long> allGames = [.. cacheProvider.GetAllGameIds()];
+        List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
         List<long> libGames = [.. dataRepository.GetAll(Const.KEY_LIB)];
 
         foreach (long id in libGames.Except(allGames))
@@ -61,34 +55,48 @@ internal class GameListManager(
 
     public IEnumerable<long> GetFavoriteGames()
     {
-        List<long> allGames = [.. cacheProvider.GetAllGameIds()];
-        List<long> favGames = [.. dataRepository.GetAll(Const.KEY_LIB)];
+        List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
+        List<long> favGames = [.. dataRepository.GetAll(Const.KEY_FAV)];
 
         foreach (long id in favGames.Except(allGames))
         {
             RemoveFromFavorite(id);
         }
 
-        return dataRepository.GetAll(Const.KEY_LIB)
+        return dataRepository.GetAll(Const.KEY_FAV)
             .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
-    public IEnumerable<long> ObtainAllRecommendations(int limit)
+    public IEnumerable<long> GetNolibGames()
     {
-        return ObtainRecommendationsInternal(
-            limit, [.. GetAllGames()], ref _shuffledAll);
+        List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
+
+        List<long> libGames = [.. GetLibraryGames()];
+        List<long> nolibGames = [.. allGames.Except(libGames)];
+
+        return nolibGames
+            .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
     public IEnumerable<long> ObtainLibraryRecommendations(int limit)
     {
         return ObtainRecommendationsInternal(
-            limit, [.. GetLibraryGames()], ref _shuffledLibrary);
+            limit, [.. GetLibraryGames()],
+            ref _shuffledLibrary);
     }
 
     public IEnumerable<long> ObtainFavoriteRecommendations(int limit)
     {
         return ObtainRecommendationsInternal(
-            limit, [.. GetFavoriteGames()], ref _shuffledFavorites);
+            limit, [.. GetFavoriteGames()],
+            ref _shuffledFavorites);
+    }
+
+    public IEnumerable<long> ObtainNolibRecommendations(int limit)
+    {
+        return ObtainRecommendationsInternal(
+            limit, [.. GetNolibGames()],
+            ref _shuffledNolib);
     }
 
     private IEnumerable<long> ObtainRecommendationsInternal(int limit,

@@ -14,12 +14,10 @@ public interface ICacheRefresher
     bool IsRefreshing { get; }
 
     event Action? OnRefreshAll;
-    event Action<long>? OnRefreshGame;
-    event Action? OnRefreshTags;
+    event Action<long>? OnRefreshGameData;
 
     Task RefreshAll();
-    Task RefreshGame(long id);
-    Task RefreshTags();
+    Task RefreshGameData(long id);
 }
 
 internal class CacheRefresher : ICacheRefresher
@@ -27,8 +25,7 @@ internal class CacheRefresher : ICacheRefresher
     public bool IsRefreshing => _refreshCount > 0;
 
     public event Action? OnRefreshAll;
-    public event Action<long>? OnRefreshGame;
-    public event Action? OnRefreshTags;
+    public event Action<long>? OnRefreshGameData;
 
     private int _refreshCount;
 
@@ -49,18 +46,22 @@ internal class CacheRefresher : ICacheRefresher
         await DuringRefresh(async () =>
         {
             IEnumerable<Game> games;
+            IEnumerable<Tag> tags;
 
             try
             {
                 games = await _backendTalker.GetAllGames();
-                _cacheRepository.SetAllGames(games);
+                tags = await _backendTalker.GetAllTags();
+
+                _cacheRepository.UpdateMoreGames(games);
+                _cacheRepository.OverwriteAllTags(tags);
             }
             catch (ApiException) { }
 
             OnRefreshAll?.Invoke();
         });
 
-    public async Task RefreshGame(long id) =>
+    public async Task RefreshGameData(long id) =>
         await DuringRefresh(async () =>
         {
             GameData gameData;
@@ -69,7 +70,7 @@ internal class CacheRefresher : ICacheRefresher
             {
                 gameData = (await _backendTalker.GetGameData(id))
                     .RemoveIncompatiblePlatforms();
-                _cacheRepository.SetGameData(gameData);
+                _cacheRepository.UpdateGame(gameData);
             }
             catch (ApiException ex)
             {
@@ -79,21 +80,7 @@ internal class CacheRefresher : ICacheRefresher
                 }
             }
 
-            OnRefreshGame?.Invoke(id);
-        });
-
-    public async Task RefreshTags() =>
-        await DuringRefresh(async () =>
-        {
-            IEnumerable<Tag> tags;
-            try
-            {
-                tags = await _backendTalker.GetAllTags();
-                _cacheRepository.SetAllTags(tags);
-            }
-            catch (ApiException) { }
-
-            OnRefreshTags?.Invoke();
+            OnRefreshGameData?.Invoke(id);
         });
 
     private async Task DuringRefresh(Func<Task> task)

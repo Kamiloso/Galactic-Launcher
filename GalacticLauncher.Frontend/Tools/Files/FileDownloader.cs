@@ -65,6 +65,7 @@ internal class FileDownloader(HttpClient httpClient) : IFileDownloader
                 }
             }
         }
+        catch (OperationCanceledException) { throw; }
         catch (Exception ex)
         {
             int statusCode = (int)((ex as HttpRequestException)?.StatusCode ?? 0);

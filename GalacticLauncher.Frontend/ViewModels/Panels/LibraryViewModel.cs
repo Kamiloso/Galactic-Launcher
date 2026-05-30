@@ -69,7 +69,9 @@ internal partial class LibraryViewModel : ObservableObject
     [RelayCommand]
     public void RefreshPage()
     {
-        RefreshFoundGames(GetGamePoolIds());
+        List<long> displayIds = [.. GetGamePoolIds()];
+
+        RefreshVisibleList(displayIds);
         UpdateTags();
     }
 
@@ -133,12 +135,12 @@ internal partial class LibraryViewModel : ObservableObject
 
             filteredIds = filteredIds.Where(id =>
             {
-                var gameTags = _cacheProvider.GetGameTagIds(id);
+                var gameTags = _cacheProvider.GetGameTags(id).Select(t => t.Id);
                 return activeTagIds.All(tId => gameTags.Contains(tId));
             });
         }
 
-        RefreshFoundGames(filteredIds);
+        RefreshVisibleList(filteredIds);
     }
 
     private void ToggleTag(TagViewModel tvm)
@@ -206,14 +208,14 @@ internal partial class LibraryViewModel : ObservableObject
         {
             LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(),
             LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(),
-            LibraryViewMode.MoreGames => _gameListManager.GetAllGames(),
+            LibraryViewMode.MoreGames => _gameListManager.GetNolibGames(),
             _ => throw new NotSupportedException()
         };
 
         return collection.Where(id => predicate?.Invoke(id) ?? true);
     }
 
-    private void RefreshFoundGames(IEnumerable<long> gamePoolIds)
+    private void RefreshVisibleList(IEnumerable<long> gamePoolIds)
     {
         FoundGames.Clear();
 

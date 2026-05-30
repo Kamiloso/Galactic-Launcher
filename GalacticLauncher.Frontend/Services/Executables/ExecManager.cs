@@ -122,6 +122,7 @@ internal class ExecManager(
             string markerContents = DateTime.Now.ToString();
             File.WriteAllText(markerFilePath, markerContents); // mark as ready
         }
+        catch (OperationCanceledException) { throw; }
         catch (Exception ex)
         {
             try { Directory.Delete(execPath, true); } catch { } // cleanup

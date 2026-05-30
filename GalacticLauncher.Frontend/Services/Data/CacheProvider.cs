@@ -7,57 +7,50 @@ namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface ICacheProvider
 {
-    IEnumerable<long> GetAllGameIds();
-    IEnumerable<Tag> GetAllTags();
-    IEnumerable<long> GetGameTagIds(long id);
-
     Game? GetGameOf(long id);
     GameData? GetGameDataOf(long id);
-    Version[] GetVersionsOf(long id);
+
+    IEnumerable<Game> GetAllGames();
+    IEnumerable<Version> GetVersionsOf(long id);
+    IEnumerable<Tag> GetAllTags();
+    IEnumerable<Tag> GetGameTags(long id);
 }
 
 internal class CacheProvider(
     ICacheRepository cacheRepository) : ICacheProvider
 {
-    public IEnumerable<long> GetAllGameIds()
-    {
-        return [.. cacheRepository.GetAllGames()
-            .Select(game => game.Id)];
-    }
-
-    public IEnumerable<Tag> GetAllTags()
-    {
-        return cacheRepository.GetAllTags();
-    }
-
-    public IEnumerable<long> GetGameTagIds(long gameId)
-    {
-        GameData? gameData = cacheRepository.GetGameData(gameId);
-        if (gameData?.Tags == null) return [];
-
-        var allTagIds = cacheRepository.GetAllTags()
-            .Select(t => t.Id);
-
-        var gameTagIds = gameData.Tags
-            .Select(t => t.Id);
-
-        return gameTagIds.Intersect(allTagIds);
-    }
-
     public Game? GetGameOf(long id)
     {
-        return cacheRepository.GetGameData(id)
-            ?? cacheRepository.GetGame(id);
+        return cacheRepository.GetGame(id);
     }
 
     public GameData? GetGameDataOf(long id)
     {
-        return cacheRepository.GetGameData(id);
+        return cacheRepository.GetGame(id) as GameData;
     }
 
-    public Version[] GetVersionsOf(long id)
+    public IEnumerable<Game> GetAllGames()
     {
-        return cacheRepository.GetGameData(id)
-            ?.Versions.ToArray() ?? [];
+        return [.. cacheRepository.GetAllGames()
+            .Select(id => cacheRepository.GetGame(id)!)];
+    }
+
+    public IEnumerable<Version> GetVersionsOf(long id)
+    {
+        return [.. GetGameDataOf(id)?.Versions ?? []];
+    }
+
+    public IEnumerable<Tag> GetAllTags()
+    {
+        return [.. cacheRepository.GetAllTags()
+            .Select(id => cacheRepository.GetTag(id)!)];
+    }
+
+    public IEnumerable<Tag> GetGameTags(long id)
+    {
+        List<long> allTagIds = [.. cacheRepository.GetAllTags()];
+
+        return GetGameDataOf(id)?.Tags
+            .Where(t => allTagIds.Contains(t.Id)) ?? [];
     }
 }

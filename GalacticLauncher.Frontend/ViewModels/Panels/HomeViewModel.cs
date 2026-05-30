@@ -41,7 +41,7 @@ internal partial class HomeViewModel : ObservableObject
     [RelayCommand]
     public void RefreshPage()
     {
-        _ = _cacheRefresher.RefreshAll();
+        UpdateImages();
     }
 
     private void UpdateImages()
@@ -56,7 +56,7 @@ internal partial class HomeViewModel : ObservableObject
         Recommendations.Clear();
 
         List<long> list = [.. _gameListManager
-            .ObtainAllRecommendations(LIB_CAPACITY)];
+            .ObtainNolibRecommendations(LIB_CAPACITY)];
 
         for (int i = 0; i < LIB_CAPACITY; i++)
         {
