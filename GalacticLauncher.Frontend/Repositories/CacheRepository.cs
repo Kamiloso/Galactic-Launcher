@@ -52,9 +52,16 @@ internal class CacheRepository : ICacheRepository
         {
             Game? oldGame = GetGame(game.Id);
 
-            _gameCache[game.Id] = oldGame is GameData oldGameData
-                ? oldGameData.Inject(game)
-                : game;
+            if (game is GameData)
+            {
+                _gameCache[game.Id] = game;
+            }
+            else
+            {
+                _gameCache[game.Id] = oldGame is GameData oldGameData
+                    ? oldGameData.Inject(game)
+                    : game;
+            }
         }
 
         if (clearOther)
