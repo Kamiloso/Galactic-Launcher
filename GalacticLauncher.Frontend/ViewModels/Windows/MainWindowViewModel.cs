@@ -21,11 +21,16 @@ internal partial class MainWindowViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsAdminPage))]
     [NotifyPropertyChangedFor(nameof(IsGamePage))]
     public object? _currentPage;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsDialogVisible))]
+    private object? _currentDialog;
 
     public bool IsHomePage => CurrentPage is HomeViewModel;
     public bool IsLibraryPage => CurrentPage is LibraryViewModel;
     public bool IsAdminPage => CurrentPage is AdminViewModel;
     public bool IsGamePage => CurrentPage is GameViewModel;
+    public bool IsDialogVisible => CurrentDialog != null;
 
     private readonly HomeViewModel _homeViewModel;
     private readonly GameViewModel _gameViewModel;
@@ -33,6 +38,7 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly AdminViewModel _adminViewModel;
     private readonly INavigator _navigator;
     private readonly IThemeManager _themeManager;
+    private readonly IDialog _dialog;
 
     public MainWindowViewModel(
         HomeViewModel homeViewModel,
@@ -40,7 +46,8 @@ internal partial class MainWindowViewModel : ObservableObject
         LibraryViewModel libraryViewModel,
         AdminViewModel adminViewModel,
         INavigator navigator,
-        IThemeManager themeManager
+        IThemeManager themeManager,
+        IDialog dialog
         )
     {
         _navigator = navigator;
@@ -49,10 +56,12 @@ internal partial class MainWindowViewModel : ObservableObject
         _libraryViewModel = libraryViewModel;
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
+        _dialog = dialog;
+        
+        _dialog.OnDialogRequested += dialogViewModel => CurrentDialog = dialogViewModel;
 
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
-
         void InnerNavigate(Type pageType, object[] args)
         {
             CurrentPage = pageType switch

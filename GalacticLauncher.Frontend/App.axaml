@@ -5,6 +5,9 @@
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 xmlns:vma="using:GalacticLauncher.Frontend.ViewModels.AdminPanels"
              xmlns:views="using:GalacticLauncher.Frontend.Views.MainPanelViews"
+             
+             xmlns:dialogVms="using:GalacticLauncher.Frontend.ViewModels.Dialogs"
+             xmlns:dialogViews="using:GalacticLauncher.Frontend.Views.DialogViews"
 			 
              RequestedThemeVariant="Default">
 	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
@@ -24,6 +27,10 @@
 
 		<DataTemplate DataType="{x:Type vm:GameViewModel}">
 			<views:GameView />
+		</DataTemplate>
+		
+		<DataTemplate DataType="{x:Type dialogVms:ConfirmationDialogViewModel}">
+			<dialogViews:ConfirmationDialog />
 		</DataTemplate>
 	</Application.DataTemplates>
 	

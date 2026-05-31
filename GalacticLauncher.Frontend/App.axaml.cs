@@ -57,6 +57,7 @@ public partial class App : Application
             services.AddSingleton<IGameButtonFactory, GameButtonFactory>();
             services.AddSingleton<INavigator, Navigator>();
             services.AddSingleton<ITerminator, Terminator>();
+            services.AddSingleton<IDialog, Dialog>();
 
             // Tools
             services.AddSingleton<IFileDownloader, FileDownloader>(_ => new(HttpProvider.DownloadClient));

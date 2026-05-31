@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using GalacticLauncher.Frontend.ViewModels.Dialogs;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
@@ -73,19 +74,22 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private readonly ILastGameManager _lastGameManager;
     private readonly IExecManager _execManager;
     private readonly ITerminator _terminator;
+    private readonly IDialog _dialog;
 
     public GameViewModel(
         ICacheProvider cacheProvider,
         ICacheRefresher cacheRefresher,
         ILastGameManager lastGameManager,
         IExecManager execManager,
-        ITerminator terminator)
+        ITerminator terminator,
+        IDialog dialog)
     {
         _cacheProvider = cacheProvider;
         _cacheRefresher = cacheRefresher;
         _lastGameManager = lastGameManager;
         _execManager = execManager;
         _terminator = terminator;
+        _dialog = dialog;
 
         _cacheRefresher.OnInitialize +=
             () => { if (_init) RunGameDataRefresh(); };
@@ -195,17 +199,25 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     }
 
     [RelayCommand]
-    private void DeleteSelectedVersion()
+    private async Task DeleteSelectedVersion()
     {
         ExecInfo? execInfo = MakeCurrentExecInfo();
         if (execInfo == null) return;
 
-        // TODO: Add confirmation dialog
+        var dialog = new ConfirmationDialogViewModel(
+            "Delete Game",
+            "Are you sure you want to delete this game?"
+        );
 
-        if (_execManager.Exists(execInfo))
-            _execManager.Delete(execInfo);
+        bool isConfirmed = await _dialog.ShowDialogAsync(dialog);
 
-        SetAdequateViewMode();
+        if (isConfirmed)
+        {
+            if (_execManager.Exists(execInfo))
+                _execManager.Delete(execInfo);
+
+            ViewMode = ViewModeEnum.NoInstance;
+        }
     }
 
     [RelayCommand]
