@@ -5,7 +5,7 @@ using Avalonia.Media;
 
 namespace GalacticLauncher.Frontend.Views.Controls;
 
-public class MovableBorder : Border
+internal class MovableBorder : Border
 {
     private bool _isPressed; 
     private Point _positionInBlock;

@@ -4,11 +4,12 @@ using GalacticLauncher.Frontend.ViewModels.Dialogs;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-public interface IDialog
+internal interface IDialog
 {
     event Action<object?>? OnDialogRequested;
     
     Task<TResult> ShowDialogAsync<TResult>(DialogViewModel<TResult> dialogVm);
+    void ShowDialogAndForget<TResult>(DialogViewModel<TResult> dialogVm);
 }
 
 internal class Dialog : IDialog

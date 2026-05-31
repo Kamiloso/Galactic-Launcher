@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace GalacticLauncher.Frontend.ViewModels.Dialogs;
 
-public partial class ConfirmationDialogViewModel(string title, string message) : DialogViewModel<bool>
+internal partial class ConfirmationDialogViewModel(string title, string message) : DialogViewModel<bool>
 {
     [ObservableProperty]
     private string _title = title;

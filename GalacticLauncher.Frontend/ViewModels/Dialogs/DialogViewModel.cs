@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace GalacticLauncher.Frontend.ViewModels.Dialogs;
 
-public abstract class DialogViewModel<TResult> : ObservableObject
+internal abstract class DialogViewModel<TResult> : ObservableObject
 {
     private readonly TaskCompletionSource<TResult> _tcs = new();
     
