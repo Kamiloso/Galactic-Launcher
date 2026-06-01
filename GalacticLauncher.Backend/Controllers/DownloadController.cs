@@ -1,5 +1,4 @@
-﻿using GalacticLauncher.Backend.Domain.Exceptions;
-using GalacticLauncher.Backend.Infrastructure;
+﻿using GalacticLauncher.Backend.Infrastructure;
 using GalacticLauncher.Backend.Services;
 using GalacticLauncher.Core.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +10,15 @@ namespace GalacticLauncher.Backend.Controllers;
 [Route("download")]
 public class DownloadController(
     ILogger<DownloadController> logger,
-    IDataAccessService dataAccessService) : ControllerBack(logger)
+    IHistoryService historyService,
+    IDataAccessService dataAccessService) : ControllerBack(logger, historyService)
 {
     [HttpGet("all-games")]
     [EnableRateLimiting("MediumCost")]
     [EndpointDescription("Returns a list of all games.")]
     public async Task<ActionResult<IEnumerable<Game>>> AllGames()
     {
-        LogCallToConsole();
+        LogAuto();
 
         return await HandleEndpointAsync(
             () => dataAccessService.GetAllGames());
@@ -30,7 +30,7 @@ public class DownloadController(
     public async Task<ActionResult<GameData>> GameData(
         [FromQuery] long id)
     {
-        LogCallToConsole(new { id });
+        LogAuto(new { Id = id });
 
         return await HandleEndpointAsync(
             () => dataAccessService.GetGameDataById(id));
@@ -41,26 +41,9 @@ public class DownloadController(
     [EndpointDescription("Returns a list of all currently existing tags.")]
     public async Task<ActionResult<IEnumerable<Tag>>> AllTags()
     {
-        LogCallToConsole();
+        LogAuto();
 
         return await HandleEndpointAsync(
             () => dataAccessService.GetAllTags());
-    }
-
-    [HttpPost("games-by-tags")]
-    [EnableRateLimiting("MediumCost")]
-    [EndpointDescription("Returns a list of all games that contain all of the provided tags.")]
-    public async Task<ActionResult<IEnumerable<Game>>> GamesByTags(
-        [FromBody] IEnumerable<long> tagIds)
-    {
-        LogCallToConsole(new { tagIds });
-
-        return await HandleEndpointAsync(() =>
-        {
-            if (tagIds.Count() > 16)
-                throw ClientFaultException.BadRequest400("Too many tags provided. Max 16 allowed.");
-
-            return dataAccessService.GetGamesByTagIds(tagIds);
-        });
     }
 }

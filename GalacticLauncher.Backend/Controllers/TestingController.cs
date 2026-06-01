@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using GalacticLauncher.Backend.Infrastructure;
 using GalacticLauncher.Core.Models;
+using GalacticLauncher.Backend.Infrastructure;
+using GalacticLauncher.Backend.Services;
 
 namespace GalacticLauncher.Backend.Controllers;
 
 [ApiController]
 [Route("testing")]
 public class TestingController(
-    ILogger<TestingController> logger) : ControllerBack(logger)
+    ILogger<DownloadController> logger,
+    IHistoryService historyService) : ControllerBack(logger, historyService)
 {
     [HttpPost("game-echo")]
     [EnableRateLimiting("LowCost")]
@@ -16,9 +18,8 @@ public class TestingController(
     public ActionResult<Game> GameEcho(
         [FromBody] Game game)
     {
-        LogCallToConsole();
+        LogAuto(game);
 
-        return HandleEndpoint(
-            () => game);
+        return HandleEndpoint(() => game);
     }
 }

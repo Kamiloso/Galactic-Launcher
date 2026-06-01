@@ -2,7 +2,7 @@
 using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Domain.Models.Extensions;
 using GalacticLauncher.Backend.Infrastructure.DbScopes;
-using GalacticLauncher.Backend.Repositories;
+using GalacticLauncher.Backend.Repositories.Readers;
 using GalacticLauncher.Core.Models;
 using System.Data;
 
@@ -13,7 +13,6 @@ public interface IDataAccessService
     Task<GameData> GetGameDataById(long id);
     Task<IEnumerable<Game>> GetAllGames();
     Task<IEnumerable<Tag>> GetAllTags();
-    Task<IEnumerable<Game>> GetGamesByTagIds(IEnumerable<long> tagIds);
 }
 
 internal class DataAccessService(
@@ -24,18 +23,18 @@ internal class DataAccessService(
         await using var scope =
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
 
-        var gameRepository = scope.GetService<IGameRepository>();
-        var imageRepository = scope.GetService<IImageRepository>();
-        var versionRepository = scope.GetService<IVersionRepository>();
-        var tagRepository = scope.GetService<ITagRepository>();
+        var gameReader = scope.GetService<IGameReader>();
+        var versionReader = scope.GetService<IVersionReader>();
+        var imageReader = scope.GetService<IImageReader>();
+        var tagReader = scope.GetService<ITagReader>();
 
-        GameWithIconEntity game = await gameRepository.GetGameById(id)
+        GameWithIconEntity game = await gameReader.GetGameById(id)
             ?? throw ClientFaultException.NotFound404($"Game with id {id} not found.");
 
         return game.ToDomain(
-            await versionRepository.GetVersionsByGameId(id),
-            await imageRepository.GetImagesByGameId(id),
-            await tagRepository.GetTagsByGameId(id)
+            await versionReader.GetVersionsByGameId(id),
+            await imageReader.GetImagesByGameId(id),
+            await tagReader.GetTagsByGameId(id)
             );
     }
 
@@ -44,10 +43,10 @@ internal class DataAccessService(
         await using var scope =
             await scopeFactory.CreateScopeAsync(isolation: null);
 
-        var gameRepository = scope.GetService<IGameRepository>();
+        var gameReader = scope.GetService<IGameReader>();
 
         IEnumerable<Game> games =
-            (await gameRepository.GetAllGames())
+            (await gameReader.GetAllGames())
             .Select(g => g.ToDomain());
 
         return games;
@@ -58,26 +57,12 @@ internal class DataAccessService(
         await using var scope =
             await scopeFactory.CreateScopeAsync(isolation: null);
 
-        var tagRepository = scope.GetService<ITagRepository>();
+        var tagReader = scope.GetService<ITagReader>();
 
         IEnumerable<Tag> tags =
-            (await tagRepository.GetAllTags())
+            (await tagReader.GetAllTags())
             .Select(t => t.ToDomain());
 
         return tags;
-    }
-
-    public async Task<IEnumerable<Game>> GetGamesByTagIds(IEnumerable<long> tagIds)
-    {
-        await using var scope =
-            await scopeFactory.CreateScopeAsync(isolation: null);
-
-        var gameRepository = scope.GetService<IGameRepository>();
-
-        IEnumerable<Game> games =
-            (await gameRepository.GetAllGamesWithTagContraints(tagIds))
-            .Select(g => g.ToDomain());
-
-        return games;
     }
 }
