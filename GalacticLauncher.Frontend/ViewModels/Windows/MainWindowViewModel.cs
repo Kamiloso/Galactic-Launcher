@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
+using GalacticLauncher.Frontend.Services.Data;
 using System;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
@@ -39,6 +40,7 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly INavigator _navigator;
     private readonly IThemeManager _themeManager;
     private readonly IDialog _dialog;
+    private readonly ICacheRefresher _cacheRefresher;
 
     public MainWindowViewModel(
         HomeViewModel homeViewModel,
@@ -47,7 +49,9 @@ internal partial class MainWindowViewModel : ObservableObject
         AdminViewModel adminViewModel,
         INavigator navigator,
         IThemeManager themeManager,
-        IDialog dialog
+        IDialog dialog,
+        ICacheRefresher cacheRefresher,
+        INotifications notifications
         )
     {
         _navigator = navigator;
@@ -57,8 +61,11 @@ internal partial class MainWindowViewModel : ObservableObject
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
         _dialog = dialog;
+        _cacheRefresher = cacheRefresher;
         
         _dialog.OnDialogRequested += dialogViewModel => CurrentDialog = dialogViewModel;
+        
+        _cacheRefresher.OnError += (title, message) => notifications.ShowError(title, message);
 
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();

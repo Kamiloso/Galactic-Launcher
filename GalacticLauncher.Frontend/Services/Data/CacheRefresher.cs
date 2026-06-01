@@ -1,11 +1,11 @@
 ﻿using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Domain.Exceptions;
-using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
-using GalacticLauncher.Frontend.Tools.Networking;
 using GalacticLauncher.Frontend.Repositories;
+using GalacticLauncher.Frontend.Tools.Networking;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.Services.Data;
 
@@ -16,6 +16,7 @@ public interface ICacheRefresher
 
     event Action? OnInitialize;
     event Action<long>? OnRefreshGameData;
+    event Action<string, string>? OnError;
 
     Task InitializeAsync();
     Task RefreshGameDataAsync(long id);
@@ -30,6 +31,7 @@ internal class CacheRefresher(
 
     public event Action? OnInitialize;
     public event Action<long>? OnRefreshGameData;
+    public event Action<string, string>? OnError;
 
     private bool _initialized;
     private int _refreshCount;
@@ -52,7 +54,22 @@ internal class CacheRefresher(
                 cacheRepository.UpdateMoreGames(games, clearOther: true);
                 cacheRepository.OverwriteAllTags(tags);
             }
-            catch (ApiException) { }
+            catch (ApiException ex)
+            {
+                var(title, message) = ex.StatusCode switch
+                {
+                    0 or 408 => ("Offline Mode", "Could not reach the server. Loading local library."),
+                    401 or 403 => (null, null),
+                    404 => ("API Error", "Could not find the library endpoint. Make sure your launcher is up to date."),
+                    >= 500 => ("Server Issues", "The Galactic Launcher servers are currently down. Playing offline."),
+                    _ => ("Sync Warning", $"Could not update library (Code: {ex.StatusCode}).")
+                };
+
+                if (title != null && message != null)
+                {
+                    OnError?.Invoke(title, message);
+                }
+            }
 
             Initialized = true;
 
@@ -72,7 +89,21 @@ internal class CacheRefresher(
 
                 cacheRepository.UpdateGame(gameData);
             }
-            catch (ApiException) { }
+            catch (ApiException ex)
+            {
+                var (title, message) = ex.StatusCode switch
+                {
+                    0 or 204 or 404 or 408 or 401 or 403 => (null, null),
+                    429 => ("Too Many Requests", "You are refreshing too fast. Please wait a moment."),
+                    >= 500 => ("Server Error", "Our servers are having trouble right now. Try again later."),
+                    _ => ("Sync Error", $"An unexpected error occurred (Code: {ex.StatusCode}).")
+                };
+
+                if (title != null && message != null)
+                {
+                    OnError?.Invoke(title, message);
+                }
+            }
 
             OnRefreshGameData?.Invoke(id);
         });
