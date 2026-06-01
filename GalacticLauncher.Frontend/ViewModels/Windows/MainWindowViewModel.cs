@@ -5,6 +5,7 @@ using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Frontend.Services.Data;
 using System;
+using GalacticLauncher.Frontend.ViewModels.Dialogs;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
@@ -67,6 +68,8 @@ internal partial class MainWindowViewModel : ObservableObject
         
         _cacheRefresher.OnError += (title, message) => notifications.ShowError(title, message);
 
+        HandleStartupLoading();
+
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
         void InnerNavigate(Type pageType, object[] args)
@@ -115,5 +118,19 @@ internal partial class MainWindowViewModel : ObservableObject
     public void ShowAdmin()
     {
         _navigator.NavigateTo<AdminViewModel>();
+    }
+    
+    private void HandleStartupLoading()
+    {
+        var startupDialog = new LoadingDialogViewModel("Starting Launcher", "Fetching data...");
+        _dialog.ShowDialogAndForget(startupDialog);
+
+        void OnCacheInitialized()
+        {
+            _ = startupDialog.Finish();
+            _cacheRefresher.OnInitialize -= OnCacheInitialized; 
+        }
+
+        _cacheRefresher.OnInitialize += OnCacheInitialized;
     }
 }

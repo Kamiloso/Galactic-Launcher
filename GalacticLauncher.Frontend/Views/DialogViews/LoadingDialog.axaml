@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dialogs="clr-namespace:GalacticLauncher.Frontend.ViewModels.Dialogs"
+             xmlns:controls="clr-namespace:GalacticLauncher.Frontend.Views.Controls"
+             x:Class="GalacticLauncher.Frontend.Views.DialogViews.LoadingDialog"
+             x:DataType="dialogs:LoadingDialogViewModel">
+
+    <controls:MovableBorder Background="#2D2D30"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            CornerRadius="8"
+                            Padding="32"
+                            MinWidth="300"
+                            BoxShadow="0 8 32 0 #66000000">
+        
+        <StackPanel Spacing="16" HorizontalAlignment="Center">
+            
+            <TextBlock Text="{Binding Title}"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="White"/>
+            
+            <ProgressBar IsIndeterminate="True" 
+                         Margin="0,8"
+                         Height="4"
+                         Foreground="#007ACC"/>
+            
+            <TextBlock Text="{Binding Message}"
+                       FontSize="14"
+                       HorizontalAlignment="Center"
+                       Foreground="#CCCCCC"/>
+            
+        </StackPanel>
+    </controls:MovableBorder>
+</UserControl>
