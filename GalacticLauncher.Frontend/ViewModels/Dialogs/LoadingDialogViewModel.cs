@@ -43,8 +43,6 @@ internal partial class LoadingDialogViewModel : DialogViewModel<bool>
 
         ProgressValue = 100;
 
-        await Task.Delay(50); 
-
         Close(true);
     }
 }

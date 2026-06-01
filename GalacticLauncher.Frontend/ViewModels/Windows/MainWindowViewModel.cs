@@ -64,14 +64,26 @@ internal partial class MainWindowViewModel : ObservableObject
         _dialog = dialog;
         _cacheRefresher = cacheRefresher;
         
-        _dialog.OnDialogRequested += dialogViewModel => CurrentDialog = dialogViewModel;
-        
-        _cacheRefresher.OnError += (title, message) => notifications.ShowError(title, message);
+        _dialog.OnDialogRequested += dvm => CurrentDialog = dvm;
+        _cacheRefresher.OnError += notifications.ShowError;
 
         HandleStartupLoading();
 
+        void HandleStartupLoading()
+        {
+            LoadingDialogViewModel startupDialog = new(
+                "Starting Launcher",
+                "Fetching data...");
+
+            _dialog.ShowDialogAndForget(startupDialog);
+
+            _cacheRefresher.OnInitialize +=
+                () => _ = startupDialog.Finish();
+        }
+
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
+
         void InnerNavigate(Type pageType, object[] args)
         {
             CurrentPage = pageType switch
@@ -118,19 +130,5 @@ internal partial class MainWindowViewModel : ObservableObject
     public void ShowAdmin()
     {
         _navigator.NavigateTo<AdminViewModel>();
-    }
-    
-    private void HandleStartupLoading()
-    {
-        var startupDialog = new LoadingDialogViewModel("Starting Launcher", "Fetching data...");
-        _dialog.ShowDialogAndForget(startupDialog);
-
-        void OnCacheInitialized()
-        {
-            _ = startupDialog.Finish();
-            _cacheRefresher.OnInitialize -= OnCacheInitialized; 
-        }
-
-        _cacheRefresher.OnInitialize += OnCacheInitialized;
     }
 }
