@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using GalacticLauncher.Core;
 using GalacticLauncher.Core.Extensions;
+using GalacticLauncher.Core.Models;
 
 namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface IGameListManager
 {
-    IEnumerable<long> GetLibraryGames();
-    IEnumerable<long> GetFavoriteGames();
-    IEnumerable<long> GetNolibGames();
+    IEnumerable<long> GetLibraryGames(string? searchName = null);
+    IEnumerable<long> GetFavoriteGames(string? searchName = null);
+    IEnumerable<long> GetNolibGames(string? searchName = null);
 
     IEnumerable<long> ObtainLibraryRecommendations(int limit);
     IEnumerable<long> ObtainFavoriteRecommendations(int limit);
@@ -35,7 +36,7 @@ internal class GameListManager(
 {
     private readonly Random _rand = new();
 
-    public IEnumerable<long> GetLibraryGames()
+    public IEnumerable<long> GetLibraryGames(string? searchName = null)
     {
         List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
         List<long> libGames = [.. dataRepository.GetAll(Const.KEY_LIB)];
@@ -46,10 +47,11 @@ internal class GameListManager(
         }
 
         return dataRepository.GetAll(Const.KEY_LIB)
+            .Where(id => FilterGame(id, searchName))
             .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
-    public IEnumerable<long> GetFavoriteGames()
+    public IEnumerable<long> GetFavoriteGames(string? searchName = null)
     {
         List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
         List<long> favGames = [.. dataRepository.GetAll(Const.KEY_FAV)];
@@ -60,10 +62,11 @@ internal class GameListManager(
         }
 
         return dataRepository.GetAll(Const.KEY_FAV)
+            .Where(id => FilterGame(id, searchName))
             .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
-    public IEnumerable<long> GetNolibGames()
+    public IEnumerable<long> GetNolibGames(string? searchName = null)
     {
         List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
 
@@ -71,7 +74,20 @@ internal class GameListManager(
         List<long> nolibGames = [.. allGames.Except(libGames)];
 
         return nolibGames
+            .Where(id => FilterGame(id, searchName))
             .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
+    }
+
+    private bool FilterGame(long id, string? searchName)
+    {
+        Game? game = cacheProvider.GetGameOf(id);
+        if (game == null) return false;
+
+        if (!string.IsNullOrWhiteSpace(searchName))
+        {
+            return game.Name?.Contains(searchName, StringComparison.OrdinalIgnoreCase) ?? false;
+        }
+        return true;
     }
 
     public IEnumerable<long> ObtainLibraryRecommendations(int limit)

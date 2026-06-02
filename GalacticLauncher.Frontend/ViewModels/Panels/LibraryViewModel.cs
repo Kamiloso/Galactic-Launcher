@@ -69,13 +69,16 @@ internal partial class LibraryViewModel : ObservableObject
         LoadGamesForMode(value);
     }
 
-    private void LoadGamesForMode(LibraryViewMode mode)
+    partial void OnSearchGamesChanged(string? value) => LoadGamesForMode(CurrentMode, value);
+    private void LoadGamesForMode(LibraryViewMode mode, string? searchFilter = null)
     {
+        string? currentSearch = searchFilter ?? SearchGames;
+
         List<long> gameIdPool = [.. mode switch
         {
-            LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(),
-            LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(),
-            LibraryViewMode.MoreGames => _gameListManager.GetNolibGames(),
+            LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(currentSearch),
+            LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(currentSearch),
+            LibraryViewMode.MoreGames => _gameListManager.GetNolibGames(currentSearch),
             _ => throw new NotSupportedException()
         }];
 

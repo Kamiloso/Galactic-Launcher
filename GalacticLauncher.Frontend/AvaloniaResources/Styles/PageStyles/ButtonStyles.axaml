@@ -357,5 +357,117 @@
 		<Setter Property="RenderTransform" Value="scale(0.95)"/>
 	</Style>
 
+	<!--Library button-->
+	<Style Selector="Button.libraryGmaeButton">
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="BorderThickness" Value="2"/>
+		<Setter Property="Padding" Value="10,10,10,10"/>
+		<Setter Property="VerticalAlignment" Value="Stretch"/>
+		<Setter Property="Height" Value="200"/>
+		
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						Padding="{TemplateBinding Padding}"
+						CornerRadius="{TemplateBinding CornerRadius}"
+						Height="{TemplateBinding Height}"
+						VerticalAlignment="{TemplateBinding VerticalAlignment}">
+					
+					<StackPanel Orientation="Horizontal" Spacing="10">
 
+						<Image Source="{Binding GameIcon}"
+							   Width="180"
+							   Height="180"
+							   Stretch="UniformToFill"
+							   Margin="10,0,0,0"/>
+
+						<Grid RowDefinitions="Auto,Auto,*,Auto"
+							  Margin="0,0,10,0">
+
+							<Grid ColumnDefinitions="*,Auto"
+								  Grid.Row="0">
+
+								<TextBlock Classes="slogan"
+										   Text="{Binding GameTitle}"
+										   FontSize="20"
+										   TextWrapping="Wrap"
+										   Grid.Column="0"/>
+
+								<StackPanel Orientation="Horizontal"
+											Grid.Column="1"
+											Spacing="5">
+
+									<Button Command="{Binding ToggleFavoriteCommand}"
+											Background="Transparent"
+											BorderBrush="Transparent"
+											BorderThickness="0"
+											Padding="5"
+											Cursor="Hand">
+										<Button.Styles>
+											<Style Selector="Button:pointerover /template/ ContentPresenter">
+												<Setter Property="Background" Value="Transparent"/>
+											</Style>
+										</Button.Styles>
+										
+										<PathIcon Data="{Binding IconFav}"
+											  Foreground="{DynamicResource GalaxyGradient}"
+											  Height="18"
+											  Width="18"
+											  Margin="0,0,0,2"/>
+									</Button>
+
+									<Button Command="{Binding ToggleLibraryCommand}"
+											Background="Transparent"
+											BorderBrush="Transparent"
+											BorderThickness="0"
+											Padding="5"
+											Cursor="Hand">
+										<Button.Styles>
+											<Style Selector="Button:pointerover /template/ ContentPresenter">
+												<Setter Property="Background" Value="Transparent"/>
+											</Style>
+										</Button.Styles>
+
+										<PathIcon Data="{Binding IconLib}"
+											  Foreground="{DynamicResource GalaxyGradient}"
+											  Height="18"
+											  Width="18"
+											  Margin="0,0,0,2"/>
+									</Button>
+								</StackPanel>
+							</Grid>
+							<TextBlock Classes="searchHeader"
+										   Text="AUTHOR: GRZEGORZ BRZĘCZYSZCZYKIEWICZ"
+										   FontSize="13"
+										   Foreground="{StaticResource GreyBlue}"
+										   TextWrapping="Wrap"
+										   Grid.Row="1"/>
+							
+							<TextBlock Classes="searchHeader"
+										   Text="{Binding GameDescription}"
+										   FontSize="12"
+										   Foreground="{StaticResource GreyBlue}"
+										   TextWrapping="NoWrap"
+										   TextTrimming="CharacterEllipsis"
+										   Grid.Row="3"/>
+						</Grid>
+
+					</StackPanel>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+
+		<Style Selector="^:pointerover /template/ Border">
+			<Setter Property="RenderTransform" Value="scale(1.05)"/>
+		</Style>
+
+		<Style Selector="Button.play:pressed">
+			<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+			<Setter Property="RenderTransform" Value="scale(0.95)"/>
+		</Style>
+	</Style>
+	
 </Styles>
