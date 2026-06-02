@@ -358,7 +358,7 @@
 	</Style>
 
 	<!--Library button-->
-	<Style Selector="Button.libraryGmaeButton">
+	<Style Selector="Button.libraryGameButton">
 		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
 		<Setter Property="BorderThickness" Value="2"/>
@@ -367,7 +367,7 @@
 		<Setter Property="Height" Value="200"/>
 		
 		<Setter Property="Template">
-			<ControlTemplate>
+			<ControlTemplate x:CompileBindings="False">
 				<Border Background="{TemplateBinding Background}"
 						BorderBrush="{TemplateBinding BorderBrush}"
 						BorderThickness="{TemplateBinding BorderThickness}"
@@ -464,7 +464,7 @@
 			<Setter Property="RenderTransform" Value="scale(1.05)"/>
 		</Style>
 
-		<Style Selector="Button.play:pressed">
+		<Style Selector="^:pressed">
 			<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 			<Setter Property="RenderTransform" Value="scale(0.95)"/>
 		</Style>
