@@ -107,7 +107,8 @@
 			<!--Color theme -->
 			<Button Classes="changeTheme"
 					Command="{Binding SwitchThemeCommand}"
-					Grid.Row="3">
+					VerticalAlignment="Bottom"
+					Grid.Row="4">
 
 				<StackPanel Orientation="Horizontal">
 
@@ -118,37 +119,6 @@
 							   IsVisible="{Binding IsExpanded}"/>
 				</StackPanel>
 			</Button>
-
-
-			<Grid Grid.Row="4"
-				  RowDefinitions="1*"
-				  ColumnDefinitions="Auto,2*"
-				  Background="{StaticResource DarkestNight}">
-
-				<Image Grid.Row="0" Grid.Column="0"
-					   Source="/AvaloniaResources/Assets/Icons/account.png"
-					   RenderOptions.BitmapInterpolationMode="HighQuality"
-					   Width="40"
-					   Height="40"
-					   Stretch="Uniform"
-					   VerticalAlignment="Center"
-					   Margin="25,0,0,0"/>
-
-				<StackPanel Grid.Row="0" Grid.Column="1"
-							Orientation="Vertical"
-							VerticalAlignment="Center"
-							HorizontalAlignment="Left"
-							Margin="10,0,0,0">
-
-					<TextBlock Classes="accountName" Text="UNKNOWN"
-							   IsVisible="{Binding IsExpanded}"/>
-
-					<TextBlock Classes="sign" Text="Sign in"
-							   FontSize="13"
-							   HorizontalAlignment="Left"
-							   IsVisible="{Binding IsExpanded}"/>
-				</StackPanel>
-			</Grid>
 		</Grid>
 		
 	</Border>
