@@ -69,6 +69,7 @@ internal static class ToDomainConverters
     {
         return new Image
         {
+            Id = image.Id,
             DownloadUrl = image.DownloadUrl,
             Type = image.Type,
             SortIndex = image.SortIndex,
@@ -82,6 +83,17 @@ internal static class ToDomainConverters
             Id = tag.Id,
             Name = tag.Name,
             Description = tag.Description,
+        };
+    }
+
+    public static History ToDomain(this HistoryEntity history)
+    {
+        return new History
+        {
+            Id = history.Id,
+            Info = history.Info,
+            Timestamp = history.Timestamp,
+            IdGame = history.IdGame,
         };
     }
 }

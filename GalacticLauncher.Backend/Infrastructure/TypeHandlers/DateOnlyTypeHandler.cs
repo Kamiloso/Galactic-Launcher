@@ -16,6 +16,6 @@ public class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly>
         if (value is DateTime dt)
             return DateOnly.FromDateTime(dt);
 
-        throw new InvalidCastException($"Cannot cast {value.GetType()} to DateOnly");
+        return DateOnly.MinValue;
     }
 }

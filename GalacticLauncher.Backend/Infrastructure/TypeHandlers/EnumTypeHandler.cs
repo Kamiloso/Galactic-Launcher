@@ -7,20 +7,21 @@ internal class EnumTypeHandler<T> : SqlMapper.TypeHandler<T> where T : struct, E
 {
     public override void SetValue(IDbDataParameter parameter, T value)
     {
+        if (!Enum.IsDefined(typeof(T), value))
+            value = default;
+
         parameter.DbType = DbType.String;
         parameter.Value = value.ToString().ToLowerInvariant();
     }
 
     public override T Parse(object value)
     {
-        if (value is string stringValue)
+        if (value is string str &&
+            Enum.TryParse(str, true, out T result))
         {
-            if (Enum.TryParse<T>(stringValue, true, out var result))
-            {
-                return result;
-            }
+            return result;
         }
 
-        throw new ArgumentException($"Cannot parse '{value}' to enum {typeof(T).Name}");
+        return default;
     }
 }

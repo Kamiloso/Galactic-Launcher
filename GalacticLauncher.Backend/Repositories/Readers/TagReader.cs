@@ -3,16 +3,16 @@ using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Infrastructure;
 using MySqlConnector;
 
-namespace GalacticLauncher.Backend.Repositories;
+namespace GalacticLauncher.Backend.Repositories.Readers;
 
-public interface ITagRepository
+public interface ITagReader
 {
     Task<TagEntity?> GetTagById(int id);
     Task<IEnumerable<TagEntity>> GetAllTags();
     Task<IEnumerable<TagEntity>> GetTagsByGameId(long idGame);
 }
 
-internal class TagRepository(DbSession session) : ITagRepository
+internal class TagReader(DbSession session) : ITagReader
 {
     private readonly MySqlConnection _db = session.Connection;
 

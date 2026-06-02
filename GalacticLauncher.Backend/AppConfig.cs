@@ -6,6 +6,7 @@ public record AppConfig
     public required ListenerSection Listener { get; init; }
     public required DatabaseSection Database { get; init; }
     public required RateLimitingSection Limiter { get; init; }
+    public required HistorySection History { get; init; }
 
     public record AdminSection
     {
@@ -40,6 +41,7 @@ public record AppConfig
         public required RateLimitRule LowCost { get; init; }
         public required RateLimitRule MediumCost { get; init; }
         public required RateLimitRule HighCost { get; init; }
+        public required RateLimitRule TelemetryCost { get; init; }
         public required RateLimitRule ReqCost { get; init; }
 
         public record RateLimitRule
@@ -47,5 +49,12 @@ public record AppConfig
             public required int Seconds { get; init; }
             public required int Limit { get; init; }
         }
+    }
+
+    public record HistorySection
+    {
+        public required int MaxEntries { get; init; }
+        public required int CleanupIntervalSeconds { get; init; }
+        public required int PageSize { get; init; }
     }
 }

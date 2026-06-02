@@ -4,8 +4,6 @@ using System.Data.Common;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.RateLimiting;
-using MySqlConnector;
-using GalacticLauncher.Backend.Infrastructure;
 
 namespace GalacticLauncher.Backend.Infrastructure.Startup;
 
@@ -99,6 +97,7 @@ public static class ServiceExtensions
             options.AddPolicy("LowCost", context => GetRateLimitPartition(context, config, config.Limiter.LowCost));
             options.AddPolicy("MediumCost", context => GetRateLimitPartition(context, config, config.Limiter.MediumCost));
             options.AddPolicy("HighCost", context => GetRateLimitPartition(context, config, config.Limiter.HighCost));
+            options.AddPolicy("TelemetryCost", context => GetRateLimitPartition(context, config, config.Limiter.TelemetryCost));
             options.AddPolicy("ReqCost", context => GetRateLimitPartition(context, config, config.Limiter.ReqCost));
         });
     }

@@ -24,7 +24,7 @@ CREATE TABLE versions (
     caption VARCHAR(255) not null,
     type enum('alpha', 'beta', 'release', 'snapshot') not null,
     description text not null,
-    cli_args VARCHAR(1023) default null,
+    cli_args VARCHAR(1023) not null default "",
     is_primary boolean not null,
     release_date date not null default (current_date), 
     platform enum('windows', 'linux', 'macsilicon', 'macintel') not null,
@@ -47,7 +47,7 @@ CREATE TABLE images (
 
 CREATE TABLE tags (
     id bigint primary key auto_increment not null,
-    name VARCHAR(255) not null unique,
+    name VARCHAR(255) not null,
     description text not null
     );
 

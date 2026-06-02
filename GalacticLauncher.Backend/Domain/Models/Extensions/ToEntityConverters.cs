@@ -9,24 +9,29 @@ public static class ToEntityConverters
         IEnumerable<VersionEntity> Versions,
         IEnumerable<ImageEntity> Images,
         IEnumerable<TagEntity> Tags
-        ) ToEntity(GameData game)
+        ) ToEntity(this GameData game)
     {
         return (
-            Game: new GameEntity()
-            {
-                Name = game.Name,
-                Description = game.Description,
-                Author = game.Author,
-            },
+            Game: ((Game)game).ToEntity(),
             Versions: [.. game.Versions.Select(v => v.ToEntity(game.Id))],
             Images: [.. game.Images.Select(i => i.ToEntity(game.Id))],
-            Tags: [.. game.Tags.Select(t => t.ToEntity())]
-            );
+            Tags: [.. game.Tags.Select(t => t.ToEntity())]);
+    }
+
+    public static GameEntity ToEntity(this Game game)
+    {
+        return new GameEntity
+        {
+            Id = game.Id,
+            Name = game.Name,
+            Description = game.Description,
+            Author = game.Author,
+        };
     }
 
     public static VersionEntity ToEntity(this Version version, long idGame)
     {
-        return new VersionEntity()
+        return new VersionEntity
         {
             Id = version.Id,
             Caption = version.Caption,
@@ -46,8 +51,9 @@ public static class ToEntityConverters
 
     public static ImageEntity ToEntity(this Image image, long idGame)
     {
-        return new ImageEntity()
+        return new ImageEntity
         {
+            Id = image.Id,
             DownloadUrl = image.DownloadUrl,
             Type = image.Type,
             SortIndex = image.SortIndex,
@@ -57,10 +63,22 @@ public static class ToEntityConverters
 
     public static TagEntity ToEntity(this Tag tag)
     {
-        return new TagEntity()
+        return new TagEntity
         {
+            Id = tag.Id,
             Name = tag.Name,
             Description = tag.Description,
+        };
+    }
+
+    public static HistoryEntity ToEntity(this History history)
+    {
+        return new HistoryEntity
+        {
+            Id = history.Id,
+            Info = history.Info,
+            Timestamp = history.Timestamp,
+            IdGame = history.IdGame,
         };
     }
 }

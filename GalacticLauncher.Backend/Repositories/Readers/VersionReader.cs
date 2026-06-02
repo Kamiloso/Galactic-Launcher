@@ -3,15 +3,15 @@ using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Infrastructure;
 using MySqlConnector;
 
-namespace GalacticLauncher.Backend.Repositories;
+namespace GalacticLauncher.Backend.Repositories.Readers;
 
-public interface IVersionRepository
+public interface IVersionReader
 {
     Task<VersionEntity?> GetVersionById(long id);
     Task<IEnumerable<VersionEntity>> GetVersionsByGameId(long idGame);
 }
 
-internal class VersionRepository(DbSession session) : IVersionRepository
+internal class VersionReader(DbSession session) : IVersionReader
 {
     private readonly MySqlConnection _db = session.Connection;
 

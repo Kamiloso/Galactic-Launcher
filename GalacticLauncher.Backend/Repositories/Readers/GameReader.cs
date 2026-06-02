@@ -3,16 +3,15 @@ using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Infrastructure;
 using MySqlConnector;
 
-namespace GalacticLauncher.Backend.Repositories;
+namespace GalacticLauncher.Backend.Repositories.Readers;
 
-public interface IGameRepository
+public interface IGameReader
 {
     Task<GameWithIconEntity?> GetGameById(long id);
     Task<IEnumerable<GameWithIconEntity>> GetAllGames();
-    Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithTagContraints(IEnumerable<long> tagIds);
 }
 
-internal class GameRepository(DbSession session) : IGameRepository
+internal class GameReader(DbSession session) : IGameReader
 {
     private readonly MySqlConnection _db = session.Connection;
 
@@ -33,25 +32,6 @@ internal class GameRepository(DbSession session) : IGameRepository
     {
         return await _db.QueryAsync<GameWithIconEntity>(
             $"{ICON_SEARCH("games")}",
-            transaction: session.Transaction);
-    }
-
-    public async Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithTagContraints(IEnumerable<long> tagIds)
-    {
-        if (!tagIds.Any())
-            return await GetAllGames();
-
-        return await _db.QueryAsync<GameWithIconEntity>($"""
-            WITH temp AS (
-                SELECT games.* FROM games
-                    JOIN games_tags ON games.id = games_tags.id_game
-                    WHERE games_tags.id_tag IN @p1
-                    GROUP BY games.id
-                    HAVING COUNT(*) = @p2
-            )
-            {ICON_SEARCH("temp")}
-            """,
-            new { p1 = tagIds, p2 = tagIds.Count() },
             transaction: session.Transaction);
     }
 

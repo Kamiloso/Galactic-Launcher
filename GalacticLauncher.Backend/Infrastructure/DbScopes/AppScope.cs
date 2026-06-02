@@ -62,13 +62,11 @@ internal class AppScope(IServiceScope scope, DbSession session) : IAppScope
             {
                 await Transaction.RollbackAsync();
             }
-            catch { /* ignore rollback errors */ }
-            finally
-            {
-                await Transaction.DisposeAsync();
+            catch { }
 
-                Transaction = null;
-            }
+            await Transaction.DisposeAsync();
+
+            Transaction = null;
         }
 
         // Will also dispose the session,
