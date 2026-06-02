@@ -52,12 +52,14 @@
 
 	<Application.Styles>
 		<FluentTheme/>
+		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
 
 		<!--Page styles include-->
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/ButtonStyles.axaml"/>
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/TextBoxStyles.axaml"/>
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/TextBlockStyles.axaml"/>
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/BorderStyles.axaml"/>
+		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/PageStyles/DataGrid.axaml"/>
 
 		<!--Default styles include-->
 		<StyleInclude Source="avares://GalacticLauncher.Frontend/AvaloniaResources/Styles/DefaultStyles/ScrollBar.axaml"/>

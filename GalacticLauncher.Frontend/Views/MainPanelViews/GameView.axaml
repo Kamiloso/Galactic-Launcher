@@ -5,139 +5,349 @@
              x:DataType="vm:GameViewModel">
 
 	<!--Game view-->
+	<ScrollViewer Classes="ScrollBar"
+			  HorizontalScrollBarVisibility="Disabled"
+			  VerticalScrollBarVisibility="Auto">
 	<Grid>
 		<!--only the galaxy border for looks-->
 		<Border Classes="galaxyBorder"
 				HorizontalAlignment="Stretch"
 				VerticalAlignment="Stretch"
-				Margin="45,45,45,45">
-		</Border>
+				Margin="35,35,35,35"
+				ClipToBounds="True"
+				Padding="30,30,30,30">
 
-		<ScrollViewer Classes="ScrollBar"
-					  HorizontalScrollBarVisibility="Disabled"
-					  VerticalScrollBarVisibility="Auto">
+			<StackPanel Orientation="Vertical">
 
-			<!--Game content-->
-			<Border Margin="50,50,50,50"
-					HorizontalAlignment="Stretch"
-					VerticalAlignment="Stretch">
-				<Grid>
-					<Grid RowDefinitions="Auto,Auto">
-						<!--Banner + icon + title-->
-						<Grid Grid.Row="0">
-							<Viewbox Stretch="Uniform"
-									 Margin="10,10,10,10">
+				<!--Banner-->
+				<Viewbox Stretch="Uniform"
+						 HorizontalAlignment="Stretch"
+						 VerticalAlignment="Top"
+						 Grid.Row="0"
+						 Margin="0,0,0,10">
 
-								<Grid HorizontalAlignment="Stretch"
-									  VerticalAlignment="Top">
+					<Border Width="1024"
+							Height="300"
+							CornerRadius="0"
+							ClipToBounds="True"
+							BorderBrush="{DynamicResource GalaxyGradient}"
+							BorderThickness="4">
 
-									<!--Banner-->
-									<Viewbox Stretch="Uniform"
-											 HorizontalAlignment="Stretch"
-											 VerticalAlignment="Top">
+						<!--Banner image-->
+						<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png"
+							   Stretch="UniformToFill"/>
+					</Border>
+				</Viewbox>
 
-										<Border Width="1024"
-												Height="247"
-												CornerRadius="20"
-												ClipToBounds="True">
 
-											<!--Banner image-->
-											<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png"
-												   Stretch="UniformToFill"/>
-										</Border>
-									</Viewbox>
+				 <StackPanel Orientation="Vertical">
 
-									<!--Icon -->
-									<Grid RowDefinitions="*,*" ColumnDefinitions="Auto,*">
-										<Viewbox Grid.Row="1" Grid.Column="0"
-												 Stretch="Uniform"
-												 HorizontalAlignment="Left"
-												 Margin="30,0,0,0">
 
-											<Border Height="196"
-													Width="196"
-													ClipToBounds="True"
-													CornerRadius="0"
-													BorderBrush="{DynamicResource GalaxyGradient}"
-													BorderThickness="3">
+					 <!--Progress bar-->
+					 <ProgressBar Minimum="0"
+								  Maximum="1"
+								  Height="6"
+								  Value="{Binding DownloadProgress}"
+								  IsVisible="{Binding IsDownloadingState}"/>
 
-												<!--Icon Image-->
-												<Image Source="/AvaloniaResources/Assets/Placeholders/temp3.jpg"
-													   Stretch="UniformToFill"/>
-											</Border>
-										</Viewbox>
 
-										<!--title-->
-										<Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*,*"
-											  HorizontalAlignment="Stretch">
-											<TextBlock Grid.Row="1"
-													   Classes="slogan"
-													   VerticalAlignment="Center"
-													   HorizontalAlignment="Stretch"
-													   Margin="20,0,0,0"
-													   TextTrimming="CharacterEllipsis"
-													   TextWrapping="Wrap"
-													   FontSize="30"
-													   Text="GAME TITLE LOOOOOOOOOOOOOOOOOOOONG LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG
-													   LOOOOOOOOOOOOOOOOOOOOOOOOOOONGggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg">
-											</TextBlock>
-											
-										</Grid>
-									</Grid>
-								</Grid>
-                      </Viewbox>
+					 <Grid ColumnDefinitions="*,Auto"
+						   VerticalAlignment="Center">
+
+
+						 
+							 
+						 <Grid RowDefinitions="Auto,Auto"
+							   Grid.Column="0"
+							   VerticalAlignment="Center"
+							   Margin="0,20,0,0">
+
+							<!--Title-->
+							<TextBlock Classes="slogan"
+									   VerticalAlignment="Center"
+									   HorizontalAlignment="Stretch"
+									   TextTrimming="CharacterEllipsis"
+									   TextWrapping="Wrap"
+									   FontSize="38"
+									   Text="{Binding Title}"
+									   Grid.Row="0"
+									   Margin="0,0,0,0">
+							</TextBlock>
+
+							 <!--Author-->
+							 <TextBlock Classes="searchHeader"
+										VerticalAlignment="Top"
+										HorizontalAlignment="Stretch"
+										TextTrimming="CharacterEllipsis"
+										TextWrapping="Wrap"
+										FontSize="15"
+										Foreground="{StaticResource GreyBlue}"
+										Text="AUTHOR: GRZEGORZ BRZĘCZYSZCZYKIEWICZ"
+										Grid.Row="1"
+										Margin="0,0,0,0">
+							 </TextBlock>
+						</Grid>
+
+						 <Grid RowDefinitions="*,Auto"
+							   Grid.Column="1"
+							   VerticalAlignment="Center"
+							   Margin="0,20,0,0">
+
+							 <StackPanel Orientation="Horizontal"
+										 Spacing="10"
+										 Grid.Row="0"
+										 HorizontalAlignment="Right"
+										 VerticalAlignment="Center">
+
+								 <!--Download button-->
+								 <Button Classes="play"
+										 VerticalAlignment="Center"
+										 Content="{Binding DownloadButtonText}"
+										 Command="{Binding DownloadSelectedVersionCommand}"
+										 IsEnabled="{Binding IsNoInstanceState}"
+										 IsVisible="{Binding IsNoInstanceState}"/>
+
+								 <!--Cancel button-->
+								 <Button Classes="play"
+										 Content="CANCEL"
+										 VerticalAlignment="Center"
+										 Command="{Binding CancelDownloadCommand}"
+										 IsEnabled="{Binding IsDownloadingState}"
+										 IsVisible="{Binding IsDownloadingState}"
+										 Background="{StaticResource TagBlue}"/>
+
+								 <!--Play button-->
+								 <Button Classes="play"
+										 Content="PLAY"
+										 VerticalAlignment="Center"
+										 Command="{Binding PlaySelectedVersionCommand}"
+										 IsEnabled="{Binding IsReadyToPlayState}"
+										 IsVisible="{Binding IsReadyToPlayState}"/>
+
+								 <!--Uninstall button-->
+								 <Button Classes="play"
+										 Content="UNINSTALL"
+										 VerticalAlignment="Center"
+										 Command="{Binding DeleteSelectedVersionCommand}"
+										 IsEnabled="{Binding IsReadyToPlayState}"
+										 IsVisible="{Binding IsReadyToPlayState}"
+										 Background="{StaticResource TagBlue}"/>
+							 </StackPanel>
+
+							 <TextBlock Classes="searchHeader"
+										HorizontalAlignment="Right"
+										VerticalAlignment="Center"
+										FontSize="15"
+										Text="{Binding SelectedVersion.Caption, StringFormat='VERSION: {0}'}"
+										Grid.Row="1"
+										Foreground="{StaticResource GreyBlue}"
+										Margin="0,10,0,0"/>
+						 </Grid>
+
 					</Grid>
 
-					<StackPanel Grid.Row="1" Margin="20,20,20,0" Spacing="10">
-						<ProgressBar Minimum="0"
-								 Maximum="1"
-								 Height="6"
-								 Value="{Binding DownloadProgress}"
-								 IsVisible="{Binding IsDownloadingState}" />
 
-						<StackPanel Orientation="Horizontal" Spacing="10">
-							<Button Content="{Binding DownloadButtonText}"
-									Command="{Binding DownloadSelectedVersionCommand}"
-									IsEnabled="{Binding IsNoInstanceState}" />
-							<Button Content="Cancel"
-									Command="{Binding CancelDownloadCommand}"
-									IsEnabled="{Binding IsDownloadingState}" />
-							<Button Content="Play"
-									Command="{Binding PlaySelectedVersionCommand}"
-									IsEnabled="{Binding IsReadyToPlayState}" />
-							<Button Content="Delete"
-									Command="{Binding DeleteSelectedVersionCommand}"
-									IsEnabled="{Binding IsReadyToPlayState}" />
-						</StackPanel>
+					
 
-						<ComboBox ItemsSource="{Binding AvailableVersions}"
-									SelectedItem="{Binding SelectedVersion}"
-									PlaceholderText="Select version"
-									HorizontalAlignment="Left"
-									Width="260">
-							<ComboBox.ItemTemplate>
-								<DataTemplate>
-									<TextBlock Text="{Binding Caption}" />
+
+					<!--Tags-->
+					<!--
+					<ItemsControl Background="Transparent">
+						
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel Orientation="Horizontal"
+										   HorizontalAlignment="Left"
+										   VerticalAlignment="Center"
+										   ItemWidth="Auto"
+										   ItemHeight="Auto"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Button Classes="tagButton"
+									    IsEnabled="false"
+									    Tag="ROMANCE"
+									    Margin="0,0,10,10">
+									</Button>
 								</DataTemplate>
-							</ComboBox.ItemTemplate>
-						</ComboBox>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+					-->
 
-						<TextBox Text="{Binding GameDisplayDebugJson}"
-									IsReadOnly="True"
-									AcceptsReturn="True"
-									TextWrapping="Wrap"
-									Height="160" />
+					 <Border Classes="gameViewBorder" Margin="0,30,0,0">
+						 <StackPanel Orientation="Vertical">
+							 <TextBlock Classes="gameTitle"
+							   VerticalAlignment="Center"
+							   HorizontalAlignment="Stretch"
+							   TextTrimming="CharacterEllipsis"
+							   TextWrapping="Wrap"
+							   FontSize="20"
+							   Margin="0,0,0,10"
+							   Text="DESCRIPTION">
+							 </TextBlock>
 
-						<TextBox Text="{Binding SelectedVersionDebugJson}"
-									IsReadOnly="True"
-									AcceptsReturn="True"
-									TextWrapping="Wrap"
-									Height="160" />
+							 <!--Description-->
+							 <TextBlock Classes="searchHeader"
+										VerticalAlignment="Center"
+										HorizontalAlignment="Stretch"
+										TextTrimming="CharacterEllipsis"
+										TextWrapping="Wrap"
+										FontSize="15"
+										Text="{Binding Description}"
+										Grid.Column="0"
+										Foreground="{StaticResource GreyBlue}">
+							 </TextBlock>
+						 </StackPanel>
+					 </Border>
+
+
+					 <Border Classes="gameViewBorder" Margin="0,30,0,0">
+						 <StackPanel Orientation="Vertical">
+							 <!--Versions-->
+							 <TextBlock Classes="gameTitle"
+										VerticalAlignment="Center"
+										HorizontalAlignment="Stretch"
+										TextTrimming="CharacterEllipsis"
+										TextWrapping="Wrap"
+										FontSize="20"
+										Text="Versions"
+										Margin="0,0,0,5">
+							 </TextBlock>
+
+							 <Border Classes="gameViewBorder"
+									 Background="{StaticResource GridColor}"
+									 CornerRadius="0"
+									 Padding="2,2,2,2">
+								 
+								 <DataGrid ItemsSource="{Binding AvailableVersions}"
+									   SelectedItem="{Binding SelectedVersion}"
+									   AutoGenerateColumns="False"
+									   IsReadOnly="True"
+									   BorderThickness="0"
+									   GridLinesVisibility="None"
+									   SelectionMode="Single"
+									   Background="{StaticResource AmostBlack}">
+
+									 <DataGrid.Styles>
+										 <Style Selector="DataGrid /template/ DataGridRowsPresenter">
+											 <Setter Property="Focusable" Value="False"/>
+										 </Style>
+									 </DataGrid.Styles>
+
+									 <DataGrid.Columns>
+										 <DataGridTemplateColumn Header="VERSION" Width="*">
+											 <DataTemplate>
+												 <TextBlock VerticalAlignment="Center" Margin="5,0">
+													 <TextBlock.Text>
+														 <MultiBinding StringFormat="{}{0} ({1})">
+															 <Binding Path="Caption"/>
+															 <Binding Path="Type"/>
+														 </MultiBinding>
+													 </TextBlock.Text>
+												 </TextBlock>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+
+										 <DataGridTemplateColumn Header="PLATFORM" Width="Auto">
+											 <DataTemplate>
+												 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
+
+													 <PathIcon Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0">
+														 <PathIcon.Styles>
+															 <Style Selector="PathIcon[Tag=windows]">
+																 <Setter Property="Data" Value="{StaticResource IconWindows}"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=linux]">
+																 <Setter Property="Data" Value="{StaticResource IconLinux}"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=macsilicon]">
+																 <Setter Property="Data" Value="{StaticResource IconMac}"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=macintel]">
+																 <Setter Property="Data" Value="{StaticResource IconMac}"/>
+															 </Style>
+														 </PathIcon.Styles>
+														 <PathIcon.Tag>
+															 <Binding Path="Platform"/>
+														 </PathIcon.Tag>
+													 </PathIcon>
+
+													 <TextBlock Text="{Binding Platform}" VerticalAlignment="Center"/>
+												 </StackPanel>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+
+										 <DataGridTemplateColumn Header="DESCRIPTION" Width="200">
+											 <DataTemplate>
+												 <TextBlock Text="{Binding Description}"
+															TextWrapping="Wrap"
+															VerticalAlignment="Center"
+															Margin="5,0"/>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+
+										 <DataGridTemplateColumn Header="PRIMARY" Width="Auto">
+											 <DataTemplate>
+												 <TextBlock Text="{Binding IsPrimary}" VerticalAlignment="Center" Margin="5,0"/>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+
+										 <DataGridTemplateColumn Header="ALERT" Width="200">
+											 <DataTemplate>
+												 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
+
+													 <PathIcon Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0">
+														 <PathIcon.Styles>
+															 <Style Selector="PathIcon[Tag=stable]">
+																 <Setter Property="Data" Value="{StaticResource IconShield}"/>
+																 <Setter Property="Foreground" Value="LightGreen"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=alert]">
+																 <Setter Property="Data" Value="{StaticResource IconAlert}"/>
+																 <Setter Property="Foreground" Value="Orange"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=danger]">
+																 <Setter Property="Data" Value="{StaticResource IconDanger}"/>
+																 <Setter Property="Foreground" Value="Crimson"/>
+															 </Style>
+														 </PathIcon.Styles>
+														 <PathIcon.Tag>
+															 <Binding Path="Alert"/>
+														 </PathIcon.Tag>
+													 </PathIcon>
+
+													 <TextBlock Text="{Binding Alert}" VerticalAlignment="Center"/>
+												 </StackPanel>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+
+									 </DataGrid.Columns>
+								 </DataGrid>
+							 </Border>
+						 </StackPanel>
+					 </Border>
+
+
+					 <Border Classes="gameViewBorder" Margin="0,30,0,10">
+						 <StackPanel Orientation="Vertical">
+							 <!--ScreenShots-->
+							 <TextBlock Classes="gameTitle"
+										VerticalAlignment="Center"
+										HorizontalAlignment="Stretch"
+										TextTrimming="CharacterEllipsis"
+										TextWrapping="Wrap"
+										FontSize="20"
+										Text="SCREENSHOTS"
+										Margin="0,0,0,10">
+							 </TextBlock>
+						 </StackPanel>
+					 </Border>
+					
 					</StackPanel>
-					</Grid>
-				</Grid>
+				</StackPanel>
 			</Border>
-
-		</ScrollViewer>
-	</Grid>
+		</Grid>
+	</ScrollViewer>
 </UserControl>

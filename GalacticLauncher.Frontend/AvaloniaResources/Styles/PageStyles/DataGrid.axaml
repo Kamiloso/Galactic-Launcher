@@ -1,0 +1,59 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Style Selector="DataGrid">
+		<Setter Property="GridLinesVisibility" Value="None"/>
+		<Setter Property="HorizontalGridLinesBrush" Value="Transparent"/>
+		<Setter Property="VerticalGridLinesBrush" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="IsReadOnly" Value="True"/>
+
+	</Style>
+
+	<Style Selector="DataGridColumnHeader">
+		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
+		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="BorderThickness" Value="0"/>
+	</Style>
+
+
+	<Style Selector="DataGridCell">
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="Focusable" Value="False"/>
+		<Setter Property="MinHeight" Value="60"/>
+		<Setter Property="VerticalAlignment" Value="Stretch"/>
+		<Setter Property="BorderThickness" Value="0"/>
+	</Style>
+
+	<Style Selector="DataGridRow:selected">
+		<Setter Property="Background" Value="{StaticResource TagBlue}"/>
+	</Style>
+
+	<Style Selector="DataGridRow:selected DataGridCell">
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+
+	<Style Selector="DataGridRow:selected DataGridCell TextBlock">
+		<Setter Property="Foreground" Value="White"/>
+	</Style>
+
+	<Style Selector="DataGridCell:selected">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+	</Style>
+
+	<Style Selector="DataGridCell:focus">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+	</Style>
+
+	<Style Selector="DataGridCell:focus-visible">
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="Transparent"/>
+	</Style>
+
+</Styles>

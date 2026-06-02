@@ -68,10 +68,6 @@
 	</Style>
 
 
-	<!--
-	========= FONTS SECTION ==================================
-	-->
-
 	<!--Search text-->
 	<Style Selector="TextBlock.searchHeader">
 		<Setter Property="FontFamily" Value="{DynamicResource Roboto}"/>
@@ -87,4 +83,15 @@
 		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
 		<Setter Property="FontSize" Value="20"/>
 	</Style>
+	
+	
+	<!--Game title-->
+	<Style Selector="TextBlock.gameTitle">
+		<Setter Property="FontFamily" Value="{DynamicResource Poppins}"/>
+		<Setter Property="FontWeight" Value="Bold"/>
+		<Setter Property="FontStyle" Value="Normal"/>
+		<Setter Property="Foreground" Value="{StaticResource GalaxyOceanBlue}"/>
+		<Setter Property="FontSize" Value="40"/>
+	</Style>
+	
 </Styles>

@@ -319,5 +319,43 @@
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="Margin" Value="10,0,0,0"/>
 	</Style>
-	
+
+
+
+	<!--Play button-->
+	<Style Selector="Button.play">
+		<Setter Property="CornerRadius" Value="20"/>
+		<Setter Property="Background" Value="{DynamicResource GalaxyGradient}"/>
+		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
+		<Setter Property="Padding" Value="10,10,10,10"/>
+		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="border"
+						Background="{TemplateBinding Background}"
+						CornerRadius="{TemplateBinding CornerRadius}">
+					<ContentPresenter Content="{TemplateBinding Content}"
+									  Padding="{TemplateBinding Padding}"
+									  FontSize="{TemplateBinding FontSize}"
+									  Foreground="{TemplateBinding Foreground}"
+									  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+				</Border>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+
+	<Style Selector="Button.play:pointerover">
+		<Setter Property="RenderTransform" Value="scale(1.05)"/>
+	</Style>
+
+	<Style Selector="Button.play:pressed">
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+		<Setter Property="RenderTransform" Value="scale(0.95)"/>
+	</Style>
+
+
 </Styles>
