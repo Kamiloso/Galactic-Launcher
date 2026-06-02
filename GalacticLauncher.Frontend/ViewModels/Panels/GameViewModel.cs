@@ -75,6 +75,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private readonly IExecManager _execManager;
     private readonly ITerminator _terminator;
     private readonly IDialog _dialog;
+    private readonly INotifications _notifications;
 
     public GameViewModel(
         ICacheProvider cacheProvider,
@@ -82,7 +83,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ILastGameManager lastGameManager,
         IExecManager execManager,
         ITerminator terminator,
-        IDialog dialog)
+        IDialog dialog,
+        INotifications notifications)
     {
         _cacheProvider = cacheProvider;
         _cacheRefresher = cacheRefresher;
@@ -90,6 +92,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _execManager = execManager;
         _terminator = terminator;
         _dialog = dialog;
+        _notifications = notifications;
 
         _cacheRefresher.OnInitialize +=
             () => { if (_init) RunGameDataRefresh(); };
@@ -173,11 +176,13 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             SetAdequateViewMode();
 
             await task;
+            
+            _notifications.ShowSuccess("Download Complete", $"{Title} is ready to play.");
         }
         catch (OperationCanceledException) { }
-        catch (DownloadException ex)
+        catch (DownloadException )
         {
-            DebugBox.Show(ex.Message, "Download Error");
+            _notifications.ShowError("Download Error", $"{Title} failed to download.");
         }
         finally
         {
@@ -196,6 +201,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _downloading.Terminate();
 
         SetAdequateViewMode();
+        
+        _notifications.ShowInfo("Download Cancelled", $"Download for {Title} was stopped.");
     }
 
     [RelayCommand]
@@ -214,8 +221,11 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (isConfirmed)
         {
             if (_execManager.Exists(execInfo))
+            {
                 _execManager.Delete(execInfo);
-
+                _notifications.ShowInfo("Game Deleted", $"{Title} has been deleted.");
+            }
+            
             ViewMode = ViewModeEnum.NoInstance;
         }
     }
@@ -230,6 +240,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
         try
         {
+            _notifications.ShowSuccess("Launching", $"Starting {Title}...");
+            
             _execManager.Play(execInfo);
 
             long? lastGameId = _cacheProvider.GetGameOf(_id)?.Id;
@@ -239,7 +251,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         }
         catch (ExecutableRunException ex)
         {
-            DebugBox.Show(ex.Message, "Run Error");
+            _notifications.ShowError("Run Error", ex.Message);
         }
     }
 
