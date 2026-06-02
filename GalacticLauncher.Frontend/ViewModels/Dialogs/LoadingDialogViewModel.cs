@@ -26,6 +26,8 @@ internal partial class LoadingDialogViewModel : DialogViewModel<bool>
 
     private async Task StartFakeProgressAsync()
     {
+        await Task.Delay(100);
+        
         while (!_isFinished && ProgressValue < 95)
         {
             await Task.Delay(30); 
@@ -42,6 +44,8 @@ internal partial class LoadingDialogViewModel : DialogViewModel<bool>
         _isFinished = true;
 
         ProgressValue = 100;
+
+        await Task.Delay(30);
 
         Close(true);
     }
