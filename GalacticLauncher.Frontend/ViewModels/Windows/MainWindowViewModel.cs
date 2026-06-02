@@ -13,7 +13,7 @@ internal partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SideMenuWidth))]
-    private bool _isExpanded = false;
+    private bool _isExpanded = true;
 
     public double SideMenuWidth => IsExpanded ? 200 : 84;
 
