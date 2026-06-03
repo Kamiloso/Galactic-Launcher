@@ -2,8 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.LibraryView"
              xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
-             x:DataType="vm:LibraryViewModel"
              xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.Controls"
+             x:DataType="vm:LibraryViewModel"
              x:CompileBindings="True">
 	<Grid>
 		<Grid RowDefinitions="Auto,Auto"
@@ -100,41 +100,41 @@
                 Margin="30,120,270,30"
                 Padding="20,20,20,20">
 
-			<ScrollViewer Classes="ScrollBar"
-                          HorizontalScrollBarVisibility="Disabled"
-                          VerticalScrollBarVisibility="Auto"
-                          Margin="0,0,10,0">
-				<WrapPanel HorizontalAlignment="Center"
-                           VerticalAlignment="Top"
-                           ItemSpacing="15"
-                           LineSpacing="15">
-					<ItemsControl ItemsSource="{Binding GameControls}"
-                                  Background="Transparent">
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<UniformGrid Columns="3" ColumnSpacing="20" RowSpacing="20" HorizontalAlignment="Center"/>
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
-						<ItemsControl.ItemTemplate>
-							<DataTemplate x:DataType="btn:GameButtonViewModel">
-								<Button Classes="imageClickable"
-                                        Command="{Binding ShowGameCommand}"
-                                        IsEnabled="{Binding IsGameValid}"
-                                        Tag="{Binding StatusMessage}"
-                                        Background="{DynamicResource MainPanelGradient}">
-									<Image Source="{Binding Icon}"
-                                           IsVisible="{Binding IsGameValid}"/>
-								</Button>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
+				<ScrollViewer Classes="ScrollBar"
+							  HorizontalScrollBarVisibility="Disabled"
+							  VerticalScrollBarVisibility="Auto"
+							  ClipToBounds="False">
 
-					<ContentControl Classes="noFound"
-                                    Tag="GAMES NOT FOUND"
-                                    IsVisible="{Binding !GameControls.Count}"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"/>
-				</WrapPanel>
+					<Panel>
+
+						<ItemsControl ItemsSource="{Binding GameControls}"
+									  Background="Transparent"
+									  Margin="0,0,25,0">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<StackPanel Orientation="Vertical"
+												Spacing="20"/>
+								</ItemsPanelTemplate>
+							</ItemsControl.ItemsPanel>
+
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									
+									<Viewbox>
+										<Button Classes="libraryGameButton"
+												Command="{Binding ShowGameCommand}"
+												HorizontalAlignment="Stretch"/>
+									</Viewbox>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+
+						<ContentControl Classes="noFound"
+										Tag="GAMES NOT FOUND"
+										IsVisible="{Binding !GameControls.Count}"
+										VerticalAlignment="Center"
+										HorizontalAlignment="Center"/>
+				</Panel>
 			</ScrollViewer>
 		</Border>
 	</Grid>
