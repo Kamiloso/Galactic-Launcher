@@ -55,9 +55,11 @@ internal partial class HomeViewModel : ObservableObject
 
         for (int i = 0; i < LIB_CAPACITY; i++)
         {
-            Recommendations.Add(i < list.Count
-                ? _gameButtonFactory.CreateAndStartLoading(list[i])
-                : _gameButtonFactory.CreateEmpty());
+            if (i < list.Count)
+            {
+                Recommendations.Add(
+                    _gameButtonFactory.CreateAndStartLoading(list[i]));
+            }
         }
     }
 
@@ -70,9 +72,11 @@ internal partial class HomeViewModel : ObservableObject
 
         for (int i = 0; i < FAV_CAPACITY; i++)
         {
-            Library.Add(i < list.Count
-                ? _gameButtonFactory.CreateAndStartLoading(list[i])
-                : _gameButtonFactory.CreateEmpty());
+            if (i < list.Count)
+            {
+                Library.Add(
+                    _gameButtonFactory.CreateAndStartLoading(list[i]));
+            }
         }
     }
 
@@ -82,6 +86,6 @@ internal partial class HomeViewModel : ObservableObject
 
         Recent = last != null
             ? _gameButtonFactory.CreateAndStartLoading(last.Value)
-            : _gameButtonFactory.CreateEmpty();
+            : null;
     }
 }

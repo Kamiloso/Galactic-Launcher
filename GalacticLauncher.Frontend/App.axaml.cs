@@ -55,6 +55,7 @@ public partial class App : Application
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<INotifications, Notifications>();
             services.AddSingleton<IGameButtonFactory, GameButtonFactory>();
+            services.AddSingleton<ILibraryGameButtonFactory, LibraryGameButtonFactory>();
             services.AddSingleton<INavigator, Navigator>();
             services.AddSingleton<ITerminator, Terminator>();
             services.AddSingleton<IDialog, Dialog>();

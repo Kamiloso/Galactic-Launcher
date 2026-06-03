@@ -87,5 +87,11 @@
 	</Style>
 
 
-
+	<!--Border game view-->
+	<Style Selector="Border.gameViewBorder">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Background" Value="{StaticResource GameViewBorder}"/>
+		<Setter Property="Padding" Value="20,20,20,20"/>
+		<Setter Property="Margin" Value="0,10,0,10"/>
+	</Style>
 </Styles>

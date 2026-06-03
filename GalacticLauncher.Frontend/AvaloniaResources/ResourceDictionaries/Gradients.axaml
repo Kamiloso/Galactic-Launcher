@@ -9,6 +9,8 @@
 	<Color x:Key="TagBlue">#2a37b1</Color>
 	<Color x:Key="TagDarkBlue">#00082f</Color>
 	<Color x:Key="GreyBlue">#b6bbe2</Color>
+	<Color x:Key="GameViewBorder">#030b33</Color>
+	<Color x:Key="GridColor">#63699b</Color>
 
 	<Color x:Key="GalaxyOceanBlue">#669eff</Color>
 	<Color x:Key="GalaxyDeepOcean">#2857ff</Color>

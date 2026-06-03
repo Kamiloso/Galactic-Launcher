@@ -62,7 +62,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     public bool IsNoInstanceState => ViewMode == ViewModeEnum.NoInstance;
     public bool IsDownloadingState => ViewMode == ViewModeEnum.Downloading;
     public bool IsReadyToPlayState => ViewMode == ViewModeEnum.ReadyToPlay;
-    public string DownloadButtonText => IsDownloadingState ? "Downloading..." : "Download";
+    public string DownloadButtonText => IsDownloadingState ? "DOWNLOADING..." : "DOWNLOAD";
 
     private bool _init = false;
     private long _id = 0;
@@ -131,7 +131,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     {
         Game? game = _cacheProvider.GetGameOf(_id);
 
-        Title = game?.Name ?? "Unknown";
+        Title = game?.Name.ToUpper() ?? "UNKNOWN";
         Description = game?.Description ?? "";
         IconUrl = game?.IconUrl;
 

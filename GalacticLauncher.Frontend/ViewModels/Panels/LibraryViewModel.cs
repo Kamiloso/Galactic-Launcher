@@ -17,7 +17,7 @@ internal partial class LibraryViewModel : ObservableObject
     [ObservableProperty]
     private string? _searchTags;
 
-    public ObservableCollection<GameButtonViewModel> GameControls { get; } = [];
+    public ObservableCollection<LibraryGameButtonViewModel> GameControls { get; } = [];
 
     public enum LibraryViewMode
     {
@@ -38,16 +38,16 @@ internal partial class LibraryViewModel : ObservableObject
 
     private readonly ICacheRefresher _cacheRefresher;
     private readonly IGameListManager _gameListManager;
-    private readonly IGameButtonFactory _gameButtonFactory;
+    private readonly ILibraryGameButtonFactory _libraryGameButtonFactory;
 
     public LibraryViewModel(
         ICacheRefresher cacheRefresher,
         IGameListManager gameListManager,
-        IGameButtonFactory gameButtonFactory)
+        ILibraryGameButtonFactory libraryGameButtonFactory)
     {
         _cacheRefresher = cacheRefresher;
         _gameListManager = gameListManager;
-        _gameButtonFactory = gameButtonFactory;
+        _libraryGameButtonFactory = libraryGameButtonFactory;
 
         _cacheRefresher.OnInitialize += RefreshPage;
     }
@@ -69,13 +69,16 @@ internal partial class LibraryViewModel : ObservableObject
         LoadGamesForMode(value);
     }
 
-    private void LoadGamesForMode(LibraryViewMode mode)
+    partial void OnSearchGamesChanged(string? value) => LoadGamesForMode(CurrentMode, value);
+    private void LoadGamesForMode(LibraryViewMode mode, string? searchFilter = null)
     {
+        string? currentSearch = searchFilter ?? SearchGames;
+
         List<long> gameIdPool = [.. mode switch
         {
-            LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(),
-            LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(),
-            LibraryViewMode.MoreGames => _gameListManager.GetNolibGames(),
+            LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(currentSearch),
+            LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(currentSearch),
+            LibraryViewMode.MoreGames => _gameListManager.GetNolibGames(currentSearch),
             _ => throw new NotSupportedException()
         }];
 
@@ -83,7 +86,7 @@ internal partial class LibraryViewModel : ObservableObject
 
         foreach (long id in gameIdPool)
         {
-            var gbvm = _gameButtonFactory.CreateAndStartLoading(id);
+            var gbvm = _libraryGameButtonFactory.CreateAndStartLoading(id);
             GameControls.Add(gbvm);
         }
     }
