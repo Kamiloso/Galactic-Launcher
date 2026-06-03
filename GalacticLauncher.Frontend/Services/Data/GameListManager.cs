@@ -38,42 +38,37 @@ internal class GameListManager(
 
     public IEnumerable<long> GetLibraryGames(string? searchName = null)
     {
-        List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
-        List<long> libGames = [.. dataRepository.GetAll(Const.KEY_LIB)];
-
-        foreach (long id in libGames.Except(allGames))
-        {
-            RemoveFromLibrary(id);
-        }
-
-        return dataRepository.GetAll(Const.KEY_LIB)
-            .Where(id => FilterGame(id, searchName))
-            .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
+        return GetFilteredGames(Const.KEY_LIB, RemoveFromLibrary, searchName);
     }
 
     public IEnumerable<long> GetFavoriteGames(string? searchName = null)
     {
-        List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
-        List<long> favGames = [.. dataRepository.GetAll(Const.KEY_FAV)];
-
-        foreach (long id in favGames.Except(allGames))
-        {
-            RemoveFromFavorite(id);
-        }
-
-        return dataRepository.GetAll(Const.KEY_FAV)
-            .Where(id => FilterGame(id, searchName))
-            .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
+        return GetFilteredGames(Const.KEY_FAV, RemoveFromFavorite, searchName);
     }
 
     public IEnumerable<long> GetNolibGames(string? searchName = null)
     {
         List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
 
-        List<long> libGames = [.. GetLibraryGames()];
-        List<long> nolibGames = [.. allGames.Except(libGames)];
+        return ProcessGames(allGames.Except(GetLibraryGames()), searchName);
+    }
 
-        return nolibGames
+    private IEnumerable<long> GetFilteredGames(string key, Action<long> removeAction, string? searchName)
+    {
+        List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
+        List<long> storedGames = [.. dataRepository.GetAll(key)];
+
+        foreach (long id in storedGames.Except(allGames))
+        {
+            removeAction(id);
+        }
+
+        return ProcessGames(dataRepository.GetAll(key), searchName);
+    }
+
+    private IEnumerable<long> ProcessGames(IEnumerable<long> games, string? searchName)
+    {
+        return games
             .Where(id => FilterGame(id, searchName))
             .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
@@ -83,11 +78,7 @@ internal class GameListManager(
         Game? game = cacheProvider.GetGameOf(id);
         if (game == null) return false;
 
-        if (!string.IsNullOrWhiteSpace(searchName))
-        {
-            return game.Name?.Contains(searchName, StringComparison.OrdinalIgnoreCase) ?? false;
-        }
-        return true;
+        return game.Name.Contains(searchName ?? "", StringComparison.OrdinalIgnoreCase);
     }
 
     public IEnumerable<long> ObtainLibraryRecommendations(int limit)

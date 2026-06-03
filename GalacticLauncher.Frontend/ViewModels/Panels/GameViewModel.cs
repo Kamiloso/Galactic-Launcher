@@ -131,7 +131,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     {
         Game? game = _cacheProvider.GetGameOf(_id);
 
-        Title = game?.Name.ToUpper() ?? "UNKNOWN";
+        Title = game?.Name ?? "Unknown";
         Description = game?.Description ?? "";
         IconUrl = game?.IconUrl;
 
@@ -240,8 +240,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
         try
         {
-            _notifications.ShowSuccess("Launching", $"Starting {Title}...");
-            
             _execManager.Play(execInfo);
 
             long? lastGameId = _cacheProvider.GetGameOf(_id)?.Id;

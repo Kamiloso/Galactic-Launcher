@@ -150,10 +150,10 @@ public class AdminController(
         });
     }
 
-    [HttpPost("obtain-history")]
+    [HttpPost("get-history-page")]
     [EnableRateLimiting("MediumCost")]
-    [EndpointDescription("Deletes a tag from the database.")]
-    public async Task<ActionResult<IEnumerable<History>>> ObtainHistory(
+    [EndpointDescription("Returns the history page.")]
+    public async Task<ActionResult<IEnumerable<History>>> GetHistoryPage(
         [FromBody] AdminBox adminBox,
         [FromQuery] int page)
     {

@@ -1,6 +1,5 @@
 ﻿using GalacticLauncher.Core.Dto;
 using GalacticLauncher.Core.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -18,7 +17,12 @@ public interface IBackendTalker
 
     // EP: admin
     Task<LoginResult> GetAdminToken(LoginRequest loginRequest);
-    Task PostGameData(string token, GameData gameData);
+    Task PostGameTree(string token, GameTree gameTree);
+    Task CreateGame(string token, Game game);
+    Task DeleteGame(string token, long id);
+    Task CreateTag(string token, Tag tag);
+    Task DeleteTag(string token, long id);
+    Task<IEnumerable<History>> GetHistoryPage(string token, int page);
 }
 
 internal class BackendTalker(IHttpPoster httpPoster) : IBackendTalker
@@ -41,6 +45,27 @@ internal class BackendTalker(IHttpPoster httpPoster) : IBackendTalker
     public async Task<LoginResult> GetAdminToken(LoginRequest loginRequest) =>
         await httpPoster.PostAsync<LoginRequest, LoginResult>("admin/req-admin", loginRequest);
 
-    public async Task PostGameData(string token, GameData gameData) =>
-        throw new NotImplementedException("Not implemented yet");
+    public async Task PostGameTree(string token, GameTree gameTree) =>
+        await httpPoster.PostAsync("admin/post-game-tree",
+            new AdminBox<GameTree>() { Token = token, Body = gameTree });
+
+    public async Task CreateGame(string token, Game game) =>
+        await httpPoster.PostAsync("admin/create-game",
+            new AdminBox<Game>() { Token = token, Body = game });
+
+    public async Task DeleteGame(string token, long id) =>
+        await httpPoster.PostAsync("admin/delete-game",
+            new AdminBox<long>() { Token = token, Body = id });
+
+    public async Task CreateTag(string token, Tag tag) =>
+        await httpPoster.PostAsync("admin/create-tag",
+            new AdminBox<Tag>() { Token = token, Body = tag });
+
+    public async Task DeleteTag(string token, long id) =>
+        await httpPoster.PostAsync("admin/delete-tag",
+            new AdminBox<long>() { Token = token, Body = id });
+
+    public async Task<IEnumerable<History>> GetHistoryPage(string token, int page) =>
+        await httpPoster.PostAsync<AdminBox, IEnumerable<History>>($"admin/get-history-page?page={page}",
+            new AdminBox() { Token = token });
 }
