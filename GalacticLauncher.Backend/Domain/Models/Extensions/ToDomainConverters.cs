@@ -1,29 +1,18 @@
-﻿using GalacticLauncher.Core.Models;
+﻿using GalacticLauncher.Core;
+using GalacticLauncher.Core.Models;
 
 namespace GalacticLauncher.Backend.Domain.Models.Extensions;
 
 internal static class ToDomainConverters
 {
-    public static Game ToDomain(this GameEntity game, ImageEntity? image)
-    {
-        return new Game
-        {
-            Id = game.Id,
-            Name = game.Name,
-            Author = game.Author,
-            Description = game.Description,
-            IconUrl = image?.DownloadUrl,
-        };
-    }
-
     public static Game ToDomain(this GameWithIconEntity game)
     {
         return new Game
         {
             Id = game.Id,
             Name = game.Name,
-            Description = game.Description,
             Author = game.Author,
+            Description = game.Description,
             IconUrl = game.IconUrl,
         };
     }
@@ -52,16 +41,16 @@ internal static class ToDomainConverters
         {
             Id = version.Id,
             Caption = version.Caption,
-            Type = version.Type,
+            Type = StringToEnum<VersionType>(version.Type),
             Description = version.Description,
             CliArgs = version.CliArgs,
             IsPrimary = version.IsPrimary,
             ReleaseDate = version.ReleaseDate,
-            Platform = version.Platform,
+            Platform = StringToEnum<Platform>(version.Platform),
             DownloadUrl = version.DownloadUrl,
             ExecLocation = version.ExecLocation,
             Sha256Hash = version.Sha256Hash,
-            Alert = version.Alert,
+            Alert = StringToEnum<AlertLevel>(version.Alert),
         };
     }
 
@@ -71,7 +60,7 @@ internal static class ToDomainConverters
         {
             Id = image.Id,
             DownloadUrl = image.DownloadUrl,
-            Type = image.Type,
+            Type = StringToEnum<ImageType>(image.Type),
             SortIndex = image.SortIndex,
         };
     }
@@ -95,5 +84,12 @@ internal static class ToDomainConverters
             Timestamp = history.Timestamp,
             IdGame = history.IdGame,
         };
+    }
+
+    private static T StringToEnum<T>(string str) where T : struct, Enum
+    {
+        return Enum.TryParse(str, ignoreCase: true, out T result)
+            ? result
+            : default;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Domain.Models.Extensions;
-using GalacticLauncher.Backend.Infrastructure;
 using GalacticLauncher.Backend.Infrastructure.DbScopes;
 using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Core.Models;
@@ -16,7 +15,6 @@ public interface IHistoryService
 }
 
 internal class HistoryService(
-    ILogger<HistoryService> logger,
     IAppScopeFactory scopeFactory,
     AppConfig config) : IHistoryService
 {
@@ -41,14 +39,14 @@ internal class HistoryService(
 
     public async Task LogToHistory(History history)
     {
-        FireCleaningOperation();
-
-        HistoryEntity historyEntity = history.ToEntity();
-
         await using var scope = await scopeFactory.CreateScopeAsync(
             IsolationLevel.RepeatableRead);
 
+        HistoryEntity historyEntity = history.ToEntity();
+
         var historyRepository = scope.GetService<IHistoryRepository>();
+
+        await CheckAndCleanOld(scope);
 
         await historyRepository.AddLog(historyEntity);
         await scope.CommitAsync();
@@ -56,46 +54,36 @@ internal class HistoryService(
 
     public async Task<IEnumerable<History>> GetHistoryEntries(int page)
     {
-        FireCleaningOperation();
-
         await using var scope = await scopeFactory.CreateScopeAsync(
             IsolationLevel.RepeatableRead);
 
         var historyRepository = scope.GetService<IHistoryRepository>();
 
+        await CheckAndCleanOld(scope);
+
         return [.. (await historyRepository.GetHistoryEntries(page, PAGE_SIZE))
             .Select(h => h.ToDomain())];
     }
 
-    public void FireCleaningOperation()
+    private async Task CheckAndCleanOld(IAppScope scope)
     {
-        _ = CustomThreading.LogTaskErrors(Task.Run(CheckAndCleanOld),
-            "Error running the history cleaning operation",
-            logger);
+        DateTime nowTime = DateTime.Now;
 
-        async Task CheckAndCleanOld()
+        long currentCycle = Interlocked.Read(ref _cleanCycle);
+
+        long cleanTimeTicks = _startDate.Ticks + (_interval.Ticks * currentCycle);
+        long cyclesPassed = (nowTime.Ticks - cleanTimeTicks) / _interval.Ticks;
+
+        if (cyclesPassed > 0)
         {
-            DateTime nowTime = DateTime.Now;
+            long targetCycle = currentCycle + cyclesPassed;
 
-            long currentCycle = Interlocked.Read(ref _cleanCycle);
-
-            long cleanTimeTicks = _startDate.Ticks + (_interval.Ticks * currentCycle);
-            long cyclesPassed = (nowTime.Ticks - cleanTimeTicks) / _interval.Ticks;
-
-            if (cyclesPassed > 0)
+            if (Interlocked.CompareExchange(ref _cleanCycle, targetCycle, currentCycle) == currentCycle)
             {
-                long targetCycle = currentCycle + cyclesPassed;
+                var historyRepository = scope.GetService<IHistoryRepository>();
 
-                if (Interlocked.CompareExchange(ref _cleanCycle, targetCycle, currentCycle) == currentCycle)
-                {
-                    await using var scope = await scopeFactory.CreateScopeAsync(
-                        IsolationLevel.RepeatableRead);
-
-                    var historyRepository = scope.GetService<IHistoryRepository>();
-
-                    await historyRepository.ReduceHistoryTo(MAX_ENTRIES);
-                    await scope.CommitAsync();
-                }
+                await historyRepository.ReduceHistoryTo(MAX_ENTRIES);
+                await scope.CommitAsync();
             }
         }
     }

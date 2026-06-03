@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.RateLimiting;
 using GalacticLauncher.Core.Models;
 using GalacticLauncher.Backend.Infrastructure;
 using GalacticLauncher.Backend.Services;
+using GalacticLauncher.Core;
+using GalacticLauncher.Backend.Domain.Exceptions;
 
 namespace GalacticLauncher.Backend.Controllers;
 
@@ -21,5 +23,21 @@ public class TestingController(
         LogAuto(game);
 
         return HandleEndpoint(() => game);
+    }
+
+    [HttpGet("get-error")]
+    [EnableRateLimiting("MediumCost")]
+    [EndpointDescription("It throws an exception to test error handling.")]
+    public ActionResult GetError()
+    {
+        LogAuto();
+
+        return HandleEndpoint(
+            () =>
+            {
+                throw Utils.IsProduction
+                    ? ClientFaultException.BadRequest400("This endpoint is only available in development environment.")
+                    : new Exception("This is a simulated server error.");
+            });
     }
 }

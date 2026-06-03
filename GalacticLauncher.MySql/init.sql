@@ -22,16 +22,16 @@ CREATE TABLE games (
 CREATE TABLE versions (
     id bigint primary key auto_increment not null,
     caption VARCHAR(255) not null,
-    type enum('alpha', 'beta', 'release', 'snapshot') not null,
+    type enum('unknown', 'alpha', 'beta', 'release', 'snapshot') not null,
     description text not null,
     cli_args VARCHAR(1023) not null default "",
     is_primary boolean not null,
     release_date date not null default (current_date), 
-    platform enum('windows', 'linux', 'macsilicon', 'macintel') not null,
+    platform enum('unknown', 'windows', 'linux', 'macsilicon', 'macintel') not null,
     download_url text not null,
     exec_location text not null,
     sha256_hash VARCHAR(255) default null,
-    alert enum('stable', 'alert', 'danger') not null,
+    alert enum('unknown', 'stable', 'alert', 'danger') not null,
     id_game bigint not null,
     foreign key(id_game) references games(id) on delete cascade
     );
@@ -39,7 +39,7 @@ CREATE TABLE versions (
 CREATE TABLE images (
     id bigint primary key auto_increment not null,
     download_url text not null,
-    type enum('icon', 'screenshot', 'banner') not null,
+    type enum('unknown', 'icon', 'screenshot', 'banner') not null,
     sort_index int not null default 0,
     id_game bigint not null,
     foreign key(id_game) references games(id) on delete cascade

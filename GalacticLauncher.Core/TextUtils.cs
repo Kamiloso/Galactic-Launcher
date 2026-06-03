@@ -8,7 +8,7 @@ public static partial class TextUtils
     [GeneratedRegex(@"\{.*?\}")]
     private static partial Regex FormatPlaceholderRegex();
 
-    public static string FormatString(string message, object?[] args)
+    public static string FormatString(string message, params object?[] args)
     {
         int put = 0;
         return FormatPlaceholderRegex()

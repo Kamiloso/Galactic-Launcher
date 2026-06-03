@@ -6,8 +6,6 @@ using GalacticLauncher.Backend.Infrastructure.DbScopes;
 using GalacticLauncher.Backend.Infrastructure.TypeHandlers;
 using GalacticLauncher.Backend.Infrastructure.Startup;
 using GalacticLauncher.Backend;
-using GalacticLauncher.Backend.Repositories.Writers;
-using GalacticLauncher.Backend.Repositories.Readers;
 using GalacticLauncher.Backend.Repositories;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
@@ -19,11 +17,6 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 DefaultTypeMap.MatchNamesWithUnderscores = true; // snake_case!
 
 SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
-
-SqlMapper.AddTypeHandler(new EnumTypeHandler<VersionType>());
-SqlMapper.AddTypeHandler(new EnumTypeHandler<Platform>());
-SqlMapper.AddTypeHandler(new EnumTypeHandler<AlertLevel>());
-SqlMapper.AddTypeHandler(new EnumTypeHandler<ImageType>());
 
 var services = builder.Services;
 
@@ -39,16 +32,12 @@ services.AddDatabase(config);
 services.AddSingleton<IAppScopeFactory, AppScopeFactory>();
 
 // Repositories
-services.AddScoped<IGameReader, GameReader>();
-services.AddScoped<IImageReader, ImageReader>();
-services.AddScoped<IVersionReader, VersionReader>();
-services.AddScoped<ITagReader, TagReader>();
-
-services.AddScoped<IGameDataWriter, GameDataWriter>();
-services.AddScoped<IGameWriter, GameWriter>();
-services.AddScoped<ITagWriter, TagWriter>();
-
+services.AddScoped<IGameRepository, GameRepository>();
+services.AddScoped<IImageRpository, ImageRepository>();
+services.AddScoped<IVersionRepository, VersionRepository>();
+services.AddScoped<ITagRepository, TagRepository>();
 services.AddScoped<IHistoryRepository, HistoryRepository>();
+services.AddScoped<IGameTreeWriter, GameTreeWriter>();
 
 // Services
 services.AddSingleton<IDataAccessService, DataAccessService>();

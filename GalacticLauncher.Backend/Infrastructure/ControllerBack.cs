@@ -8,5 +8,8 @@ public abstract partial class ControllerBack(
     IHistoryService historyService) : ControllerBase
 {
     protected string IP =>
-        HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+        HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+
+    protected string Endpoint =>
+        Request.Path.Value ?? "";
 }

@@ -1,48 +1,50 @@
 ﻿using Dapper;
 using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Infrastructure;
-using GalacticLauncher.Backend.Domain.Exceptions;
 using MySqlConnector;
 
-namespace GalacticLauncher.Backend.Repositories.Writers;
+namespace GalacticLauncher.Backend.Repositories;
 
-public interface IGameDataWriter
+public interface IGameTreeWriter
 {
-    Task ReplaceGameData(
+    Task<bool> ReplaceGameData(
         GameEntity game,
         IEnumerable<VersionEntity> versions,
         IEnumerable<ImageEntity> images,
-        IEnumerable<TagEntity> tags);
+        IEnumerable<long> tagIds);
 }
 
-internal class GameDataWriter(DbSession session) : IGameDataWriter
+internal class GameTreeWriter(DbSession session) : IGameTreeWriter
 {
-    private const int ERR_FOREIGN_KEY_VIOLATION = 1452;
-
     private readonly MySqlConnection _db = session.Connection;
 
-    /// <exception cref="DataIntegrityException"></exception>
-    public async Task ReplaceGameData(
+    public async Task<bool> ReplaceGameData(
         GameEntity game,
         IEnumerable<VersionEntity> versions,
         IEnumerable<ImageEntity> images,
-        IEnumerable<TagEntity> tags)
+        IEnumerable<long> tagIds)
     {
         long idGame = game.Id;
 
         if (!await TryAcquireXLockOnExistingGame(idGame))
-            throw new DataIntegrityException($"Game with id {idGame} does not exist.");
+        {
+            return false;
+        }
 
         await SyncGame(idGame, game);
         await SyncVersions(idGame, versions);
         await SyncImages(idGame, images);
-        await SyncTags(idGame, tags);
+        await SyncTags(idGame, tagIds);
+
+        return true;
     }
 
     private async Task<bool> TryAcquireXLockOnExistingGame(long idGame)
     {
-        long? lockId = await _db.QueryFirstOrDefaultAsync<long?>(
-            "SELECT id FROM games WHERE id = @p1 FOR UPDATE",
+        long? lockId = await _db.QueryFirstOrDefaultAsync<long?>("""
+            SELECT id FROM games
+                WHERE id = @p1 FOR UPDATE
+            """,
             new { p1 = idGame },
             transaction: session.Transaction);
 
@@ -77,8 +79,10 @@ internal class GameDataWriter(DbSession session) : IGameDataWriter
         // Obtain existing versions
 
         List<long> allIds = [..
-            await _db.QueryAsync<long>(
-                "SELECT id FROM versions WHERE id_game = @p1",
+            await _db.QueryAsync<long>("""
+                SELECT id FROM versions
+                    WHERE id_game = @p1
+                """,
                 new { p1 = idGame },
                 transaction: session.Transaction)
             ];
@@ -136,8 +140,10 @@ internal class GameDataWriter(DbSession session) : IGameDataWriter
 
         if (toDeleteIds.Count > 0)
         {
-            await _db.ExecuteAsync(
-                "DELETE FROM versions WHERE id = @Id",
+            await _db.ExecuteAsync("""
+                DELETE FROM versions
+                    WHERE id = @Id
+                """,
                 toDeleteIds,
                 transaction: session.Transaction);
         }
@@ -150,8 +156,10 @@ internal class GameDataWriter(DbSession session) : IGameDataWriter
         // Obtain existing images
 
         List<long> allIds = [..
-            await _db.QueryAsync<long>(
-                "SELECT id FROM images WHERE id_game = @p1",
+            await _db.QueryAsync<long>("""
+                SELECT id FROM images
+                    WHERE id_game = @p1
+                """,
                 new { p1 = idGame },
                 transaction: session.Transaction)
             ];
@@ -199,61 +207,56 @@ internal class GameDataWriter(DbSession session) : IGameDataWriter
 
         if (toDeleteIds.Count > 0)
         {
-            await _db.ExecuteAsync(
-                "DELETE FROM images WHERE id = @Id",
+            await _db.ExecuteAsync("""
+                DELETE FROM images
+                    WHERE id = @Id
+                """,
                 toDeleteIds,
                 transaction: session.Transaction);
         }
     }
 
-    private async Task SyncTags(long idGame, IEnumerable<TagEntity> tags)
+    private async Task SyncTags(long idGame, IEnumerable<long> tagIds)
     {
-        List<long> targetIds = [.. tags
-            .Select(t => t.Id)];
-
         List<long> existingIds = [..
-            await _db.QueryAsync<long>(
-                "SELECT id_tag FROM games_tags WHERE id_game = @p1",
+            await _db.QueryAsync<long>("""
+                SELECT id_tag FROM games_tags
+                    WHERE id_game = @p1
+                """,
                 new { p1 = idGame },
                 transaction: session.Transaction)
             ];
 
-        try
+        // Delete old tags
+
+        List<long> toDeleteIds = [.. existingIds
+            .Where(id => !tagIds.Contains(id))];
+
+        if (toDeleteIds.Count > 0)
         {
-            // Delete old tags
-
-            List<long> toDeleteIds = [.. existingIds
-                .Where(id => !targetIds.Contains(id))];
-
-            if (toDeleteIds.Count > 0)
-            {
-                await _db.ExecuteAsync("""
-                    DELETE FROM games_tags
-                    WHERE id_game = @IdGame AND id_tag IN @ToDeleteIds
-                    """,
-                    new { IdGame = idGame, ToDeleteIds = toDeleteIds },
-                    transaction: session.Transaction);
-            }
-
-            // Add new tags
-
-            List<object> toAdd = [.. targetIds
-                .Where(id => !existingIds.Contains(id))
-                .Select(id => new { IdGame = idGame, IdTag = id })];
-
-            if (toAdd.Count > 0)
-            {
-                await _db.ExecuteAsync("""
-                    INSERT INTO games_tags (id_game, id_tag)
-                    VALUES (@IdGame, @IdTag)
-                    """,
-                    toAdd,
-                    transaction: session.Transaction);
-            }
+            await _db.ExecuteAsync("""
+                DELETE FROM games_tags
+                    WHERE id_game = @IdGame
+                    AND id_tag IN @ToDeleteIds
+                """,
+                new { IdGame = idGame, ToDeleteIds = toDeleteIds },
+                transaction: session.Transaction);
         }
-        catch (MySqlException ex) when (ex.Number == ERR_FOREIGN_KEY_VIOLATION)
+
+        // Add new tags
+
+        List<long> toAddIds = [.. tagIds
+            .Where(id => !existingIds.Contains(id))];
+
+        if (toAddIds.Count > 0)
         {
-            throw new DataIntegrityException("One or more tags do not exist.", ex);
+            await _db.ExecuteAsync("""
+                INSERT IGNORE INTO games_tags
+                    (id_game, id_tag) VALUES
+                    (@IdGame, @IdTag)
+                """,
+                toAddIds.Select(id => new { IdGame = idGame, IdTag = id }),
+                transaction: session.Transaction);
         }
     }
 }

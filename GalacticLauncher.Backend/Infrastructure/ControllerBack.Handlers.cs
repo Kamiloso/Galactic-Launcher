@@ -14,13 +14,9 @@ public partial class ControllerBack
         }
         catch (ClientFaultException ex)
         {
-            try
-            {
-                LogAuto(ex.FaultInfo,
-                    verb: "faulted during",
-                    importance: LogLevel.Warning);
-            }
-            catch { }
+            LogAuto(ex.FaultInfo,
+                verb: "faulted on",
+                importance: LogLevel.Warning);
 
             return Problem(
                 detail: ex.Message,
@@ -28,14 +24,11 @@ public partial class ControllerBack
         }
         catch (Exception ex)
         {
-            try
-            {
-                LogAuto(ex.ToString(),
-                    verb: "crashed the query during",
-                    importance: LogLevel.Error,
-                    suppressConsole: true); // it is logged anyway
-            }
-            catch { }
+            LogAuto(ex.ToString(),
+                verb: "crashed the query on",
+                toHistory: true,
+                importance: LogLevel.Error,
+                suppressConsole: true); // logged by framework
 
             throw;
         }

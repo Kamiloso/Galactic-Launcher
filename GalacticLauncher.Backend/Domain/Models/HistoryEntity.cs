@@ -5,6 +5,6 @@ public record HistoryEntity
 {
     public required long Id { get; init; }
     public required string Info { get; init; }
-    public DateTime Timestamp { get; init; } = DateTime.Now;
-    public long? IdGame { get; init; } = null; 
+    public required DateTime Timestamp { get; init; }
+    public required long? IdGame { get; init; }
 }

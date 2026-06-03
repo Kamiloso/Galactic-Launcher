@@ -2,7 +2,7 @@
 using GalacticLauncher.Backend.Domain.Models;
 using GalacticLauncher.Backend.Domain.Models.Extensions;
 using GalacticLauncher.Backend.Infrastructure.DbScopes;
-using GalacticLauncher.Backend.Repositories.Writers;
+using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Core.Models;
 using System.Data;
 
@@ -10,7 +10,7 @@ namespace GalacticLauncher.Backend.Services;
 
 public interface IDataUpdateService
 {
-    Task UpdateGameData(GameData gameData);
+    Task UpdateGameTree(GameTree gameData);
     Task<long> CreateGame(Game game);
     Task DeleteGameById(long idGame);
     Task<long> CreateTag(Tag tag);
@@ -20,28 +20,20 @@ public interface IDataUpdateService
 internal class DataUpdateService(
     IAppScopeFactory scopeFactory) : IDataUpdateService
 {
-    public async Task UpdateGameData(GameData gameData)
+    public async Task UpdateGameTree(GameTree gameData)
     {
         await using var scope =
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
         
-        var gameDataWriter = scope.GetService<IGameDataWriter>();
+        var gameTreeWriter = scope.GetService<IGameTreeWriter>();
 
-        try
+        var (gameEntity, versionEntities, imageEntities, tagIdEntities) =
+            gameData.ToEntityDeconstruct();
+
+        if (!await gameTreeWriter.ReplaceGameData(
+            gameEntity, versionEntities, imageEntities, tagIdEntities))
         {
-            var tuple = gameData.ToEntity();
-
-            GameEntity gameEntity = tuple.Game;
-            IEnumerable<VersionEntity> versionEntities = tuple.Versions;
-            IEnumerable<ImageEntity> imageEntities = tuple.Images;
-            IEnumerable<TagEntity> tagEntities = tuple.Tags;
-
-            await gameDataWriter.ReplaceGameData(
-                gameEntity, versionEntities, imageEntities, tagEntities);
-        }
-        catch (DataIntegrityException ex)
-        {
-            throw ClientFaultException.BadRequest400(ex.Message);
+            throw ClientFaultException.BadRequest400("Failed to update game information.");
         }
 
         await scope.CommitAsync();
@@ -52,11 +44,11 @@ internal class DataUpdateService(
         await using var scope =
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
 
-        var gameWriter = scope.GetService<IGameWriter>();
+        var gameRepository = scope.GetService<IGameRepository>();
 
         GameEntity gameEntity = game.ToEntity();
 
-        long id = await gameWriter.CreateGame(gameEntity);
+        long id = await gameRepository.CreateGame(gameEntity);
         await scope.CommitAsync();
 
         return id;
@@ -67,9 +59,9 @@ internal class DataUpdateService(
         await using var scope =
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
 
-        var gameWriter = scope.GetService<IGameWriter>();
+        var gameRepository = scope.GetService<IGameRepository>();
 
-        await gameWriter.DeleteGameById(idGame);
+        await gameRepository.DeleteGameById(idGame);
         await scope.CommitAsync();
     }
 
@@ -78,11 +70,11 @@ internal class DataUpdateService(
         await using var scope =
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
 
-        var tagWriter = scope.GetService<ITagWriter>();
+        var tagRepository = scope.GetService<ITagRepository>();
 
         TagEntity tagEntity = tag.ToEntity();
 
-        long id = await tagWriter.CreateTag(tagEntity);
+        long id = await tagRepository.CreateTag(tagEntity);
         await scope.CommitAsync();
 
         return id;
@@ -93,9 +85,9 @@ internal class DataUpdateService(
         await using var scope =
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
 
-        var tagWriter = scope.GetService<ITagWriter>();
+        var tagRepository = scope.GetService<ITagRepository>();
 
-        await tagWriter.DeleteTagById(idTag);
+        await tagRepository.DeleteTagById(idTag);
         await scope.CommitAsync();
     }
 }

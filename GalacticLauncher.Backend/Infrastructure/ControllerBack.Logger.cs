@@ -1,4 +1,4 @@
-﻿#pragma warning disable CA2254
+﻿#pragma warning disable CA2254 // for simplicity
 using GalacticLauncher.Core;
 
 namespace GalacticLauncher.Backend.Infrastructure;
@@ -16,11 +16,9 @@ public partial class ControllerBack
             ? $"Address {{IP}} {verb} {{Endpoint}}"
             : $"Address {{IP}} {verb} {{Endpoint}} with {{Source}}";
 
-        string endpoint = Request.Path.Value ?? "";
-
         object?[] args = source is null
-            ? [IP, endpoint]
-            : [IP, endpoint, source];
+            ? [IP, Endpoint]
+            : [IP, Endpoint, source];
 
         LogManual(message, args,
             importance: importance,
@@ -35,13 +33,15 @@ public partial class ControllerBack
         bool toHistory = false,
         long? idGame = null)
     {
+        string info = TextUtils.FormatString(message, args);
+
         if (!suppressConsole)
-            logger.Log(importance, message, args);
+        {
+            logger.Log(importance, info);
+        }
 
         if (toHistory)
         {
-            string info = TextUtils.FormatString(message, args);
-
             _ = CustomThreading.LogTaskErrors(
                 historyService.LogToHistory(info, idGame),
                 "Error logging history to database",

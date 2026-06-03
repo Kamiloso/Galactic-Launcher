@@ -13,9 +13,9 @@ public class DateOnlyTypeHandler : SqlMapper.TypeHandler<DateOnly>
 
     public override DateOnly Parse(object value)
     {
-        if (value is DateTime dt)
-            return DateOnly.FromDateTime(dt);
+        if (value is not DateTime dt)
+            throw new ArgumentException($"Invalid conversion to: {typeof(DateTime).Name}");
 
-        return DateOnly.MinValue;
+        return DateOnly.FromDateTime(dt);
     }
 }

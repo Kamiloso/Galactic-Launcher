@@ -49,11 +49,11 @@ public class AdminController(
             throw ClientFaultException.Unauthorized401("Invalid or expired admin token.");
     }
 
-    [HttpPost("update-game-data")]
+    [HttpPost("update-game-tree")]
     [EnableRateLimiting("HighCost")]
-    [EndpointDescription("Updates the whole game data in the database.")]
+    [EndpointDescription("Updates the whole game tree in the database.")]
     public async Task<ActionResult> UpdateGameData(
-        [FromBody] AdminBox<GameData> adminBox)
+        [FromBody] AdminBox<GameTree> adminBox)
     {
         return await HandleEndpointAsync(() =>
         {
@@ -63,7 +63,7 @@ public class AdminController(
                 toHistory: true,
                 idGame: adminBox.Body.Id);
 
-            return dataUpdateService.UpdateGameData(adminBox.Body);
+            return dataUpdateService.UpdateGameTree(adminBox.Body);
         });
     }
 
@@ -77,14 +77,22 @@ public class AdminController(
         {
             EnsureValidToken(adminBox.Token, out string username);
 
-            // database should decide about the new idGame
-            long idGame = await dataUpdateService.CreateGame(adminBox.Body);
+            long? idGame = null;
 
-            LogAuto(new { Username = username, Game = adminBox.Body },
-                toHistory: true,
-                idGame: idGame);
+            try
+            {
+                // id is needed for logging -> logging after creation
+                // try-finally to ensure we log even if creation fails
 
-            return idGame;
+                idGame = await dataUpdateService.CreateGame(adminBox.Body);
+                return idGame.Value;
+            }
+            finally
+            {
+                LogAuto(new { Username = username, Game = adminBox.Body },
+                    toHistory: true,
+                    idGame: idGame);
+            }
         });
     }
 
