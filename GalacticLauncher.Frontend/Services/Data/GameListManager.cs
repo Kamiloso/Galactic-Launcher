@@ -33,10 +33,6 @@ internal class GameListManager(
     IDataRepository dataRepository,
     ICacheProvider cacheProvider) : IGameListManager
 {
-    private List<long> _shuffledNolib = [];
-    private List<long> _shuffledLibrary = [];
-    private List<long> _shuffledFavorites = [];
-
     private readonly Random _rand = new();
 
     public IEnumerable<long> GetLibraryGames()
@@ -81,32 +77,26 @@ internal class GameListManager(
     public IEnumerable<long> ObtainLibraryRecommendations(int limit)
     {
         return ObtainRecommendationsInternal(
-            limit, [.. GetLibraryGames()],
-            ref _shuffledLibrary);
+            limit, [.. GetLibraryGames()]);
     }
 
     public IEnumerable<long> ObtainFavoriteRecommendations(int limit)
     {
         return ObtainRecommendationsInternal(
-            limit, [.. GetFavoriteGames()],
-            ref _shuffledFavorites);
+            limit, [.. GetFavoriteGames()]);
     }
 
     public IEnumerable<long> ObtainNolibRecommendations(int limit)
     {
         return ObtainRecommendationsInternal(
-            limit, [.. GetNolibGames()],
-            ref _shuffledNolib);
+            limit, [.. GetNolibGames()]);
     }
 
-    private IEnumerable<long> ObtainRecommendationsInternal(int limit,
-        List<long> current, ref List<long> refShuffled)
+    private IEnumerable<long> ObtainRecommendationsInternal(int limit, List<long> current)
     {
-        refShuffled = [.. current
+        return [.. current
             .Shuffle(_rand)
             .Limit(limit)];
-
-        return [.. refShuffled];
     }
 
     public void AddToLibrary(long id)

@@ -1,7 +1,6 @@
-namespace GalacticLauncher.Backend.Domain.Models;
+﻿namespace GalacticLauncher.Core.Models;
 
-// Represents the 'history' table
-public record HistoryEntity
+public record History
 {
     public required long Id { get; init; }
     public required string Info { get; init; }

@@ -9,7 +9,8 @@ public interface IGameRepository
 {
     Task<GameWithIconEntity?> GetGameById(long id);
     Task<IEnumerable<GameWithIconEntity>> GetAllGames();
-    Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithTagContraints(IEnumerable<long> tagIds);
+    Task<long> CreateGame(GameEntity game);
+    Task DeleteGameById(long idGame);
 }
 
 internal class GameRepository(DbSession session) : IGameRepository
@@ -36,22 +37,23 @@ internal class GameRepository(DbSession session) : IGameRepository
             transaction: session.Transaction);
     }
 
-    public async Task<IEnumerable<GameWithIconEntity>> GetAllGamesWithTagContraints(IEnumerable<long> tagIds)
+    public async Task<long> CreateGame(GameEntity game)
     {
-        if (!tagIds.Any())
-            return await GetAllGames();
-
-        return await _db.QueryAsync<GameWithIconEntity>($"""
-            WITH temp AS (
-                SELECT games.* FROM games
-                    JOIN games_tags ON games.id = games_tags.id_game
-                    WHERE games_tags.id_tag IN @p1
-                    GROUP BY games.id
-                    HAVING COUNT(*) = @p2
-            )
-            {ICON_SEARCH("temp")}
+        return await _db.QueryFirstAsync<long>("""
+            INSERT INTO games
+                (name, author, description) VALUES
+                (@Name, @Author, @Description);
+            SELECT LAST_INSERT_ID();
             """,
-            new { p1 = tagIds, p2 = tagIds.Count() },
+            game,
+            transaction: session.Transaction);
+    }
+
+    public async Task DeleteGameById(long idGame)
+    {
+        await _db.ExecuteAsync(
+            "DELETE FROM games WHERE id = @p1",
+            new { p1 = idGame },
             transaction: session.Transaction);
     }
 

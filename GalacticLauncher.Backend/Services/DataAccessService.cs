@@ -13,12 +13,10 @@ public interface IDataAccessService
     Task<GameData> GetGameDataById(long id);
     Task<IEnumerable<Game>> GetAllGames();
     Task<IEnumerable<Tag>> GetAllTags();
-    Task<IEnumerable<Game>> GetGamesByTagIds(IEnumerable<long> tagIds);
 }
 
 internal class DataAccessService(
-    IAppScopeFactory scopeFactory
-    ) : IDataAccessService
+    IAppScopeFactory scopeFactory) : IDataAccessService
 {
     public async Task<GameData> GetGameDataById(long id)
     {
@@ -26,8 +24,8 @@ internal class DataAccessService(
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
 
         var gameRepository = scope.GetService<IGameRepository>();
-        var imageRepository = scope.GetService<IImageRepository>();
         var versionRepository = scope.GetService<IVersionRepository>();
+        var imageRepository = scope.GetService<IImageRpository>();
         var tagRepository = scope.GetService<ITagRepository>();
 
         GameWithIconEntity game = await gameRepository.GetGameById(id)
@@ -66,19 +64,5 @@ internal class DataAccessService(
             .Select(t => t.ToDomain());
 
         return tags;
-    }
-
-    public async Task<IEnumerable<Game>> GetGamesByTagIds(IEnumerable<long> tagIds)
-    {
-        await using var scope =
-            await scopeFactory.CreateScopeAsync(isolation: null);
-
-        var gameRepository = scope.GetService<IGameRepository>();
-
-        IEnumerable<Game> games =
-            (await gameRepository.GetAllGamesWithTagContraints(tagIds))
-            .Select(g => g.ToDomain());
-
-        return games;
     }
 }

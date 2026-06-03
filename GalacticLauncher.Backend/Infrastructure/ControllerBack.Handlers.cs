@@ -1,0 +1,70 @@
+﻿using GalacticLauncher.Backend.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GalacticLauncher.Backend.Infrastructure;
+
+public partial class ControllerBack
+{
+    protected async Task<ActionResult<T>> HandleEndpointAsync<T>(Func<Task<T>> execute)
+    {
+        try
+        {
+            T result = await execute.Invoke();
+            return Ok(result);
+        }
+        catch (ClientFaultException ex)
+        {
+            LogAuto(ex.FaultInfo,
+                verb: "faulted on",
+                importance: LogLevel.Warning);
+
+            return Problem(
+                detail: ex.Message,
+                statusCode: ex.StatusCode);
+        }
+        catch (Exception ex)
+        {
+            LogAuto(ex.ToString(),
+                verb: "crashed the query on",
+                toHistory: true,
+                importance: LogLevel.Error,
+                suppressConsole: true); // logged by framework
+
+            throw;
+        }
+    }
+
+    protected ActionResult<T> HandleEndpoint<T>(Func<T> execute)
+    {
+        return HandleEndpointAsync(
+            () => Task.FromResult(execute())).Result;
+    }
+
+    protected async Task<ActionResult> HandleEndpointAsync(Func<Task> execute)
+    {
+        ActionResult<int> response = await HandleEndpointAsync(
+            async () =>
+            {
+                await execute.Invoke();
+                return 0;
+            });
+
+        return response.Result is OkObjectResult
+            ? Ok()
+            : response.Result!;
+    }
+
+    protected ActionResult HandleEndpoint(Action execute)
+    {
+        ActionResult<int> response = HandleEndpoint(
+            () =>
+            {
+                execute.Invoke();
+                return 0;
+            });
+
+        return response.Result is OkObjectResult
+            ? Ok()
+            : response.Result!;
+    }
+}

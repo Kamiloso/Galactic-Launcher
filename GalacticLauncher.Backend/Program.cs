@@ -1,12 +1,12 @@
 global using Version = GalacticLauncher.Core.Models.Version;
 using Dapper;
-using GalacticLauncher.Backend.Repositories;
 using GalacticLauncher.Core;
 using GalacticLauncher.Backend.Services;
 using GalacticLauncher.Backend.Infrastructure.DbScopes;
 using GalacticLauncher.Backend.Infrastructure.TypeHandlers;
 using GalacticLauncher.Backend.Infrastructure.Startup;
 using GalacticLauncher.Backend;
+using GalacticLauncher.Backend.Repositories;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -18,11 +18,6 @@ DefaultTypeMap.MatchNamesWithUnderscores = true; // snake_case!
 
 SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
 
-SqlMapper.AddTypeHandler(new EnumTypeHandler<VersionType>());
-SqlMapper.AddTypeHandler(new EnumTypeHandler<Platform>());
-SqlMapper.AddTypeHandler(new EnumTypeHandler<AlertLevel>());
-SqlMapper.AddTypeHandler(new EnumTypeHandler<ImageType>());
-
 var services = builder.Services;
 
 AppConfig config = services.ConfigureAppConfig(builder.Configuration);
@@ -33,16 +28,22 @@ services.ConfigureForwardedFor(config);
 services.ConfigureRateLimiters(config);
 services.AddDatabase(config);
 
+// Infrastructure
+services.AddSingleton<IAppScopeFactory, AppScopeFactory>();
+
 // Repositories
 services.AddScoped<IGameRepository, GameRepository>();
-services.AddScoped<IImageRepository, ImageRepository>();
+services.AddScoped<IImageRpository, ImageRepository>();
 services.AddScoped<IVersionRepository, VersionRepository>();
 services.AddScoped<ITagRepository, TagRepository>();
+services.AddScoped<IHistoryRepository, HistoryRepository>();
+services.AddScoped<IGameTreeWriter, GameTreeWriter>();
 
 // Services
-services.AddSingleton<IAppScopeFactory, AppScopeFactory>();
 services.AddSingleton<IDataAccessService, DataAccessService>();
+services.AddSingleton<IDataUpdateService, DataUpdateService>();
 services.AddSingleton<IAdminService, AdminService>();
+services.AddSingleton<IHistoryService, HistoryService>();
 
 // Controllers
 services.AddControllers();

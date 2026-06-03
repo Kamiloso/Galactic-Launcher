@@ -10,6 +10,8 @@ public interface ITagRepository
     Task<TagEntity?> GetTagById(int id);
     Task<IEnumerable<TagEntity>> GetAllTags();
     Task<IEnumerable<TagEntity>> GetTagsByGameId(long idGame);
+    Task<long> CreateTag(TagEntity tag);
+    Task DeleteTagById(long idTag);
 }
 
 internal class TagRepository(DbSession session) : ITagRepository
@@ -39,6 +41,26 @@ internal class TagRepository(DbSession session) : ITagRepository
                 WHERE games_tags.id_game = @p1
             """,
             new { p1 = idGame },
+            transaction: session.Transaction);
+    }
+
+    public async Task<long> CreateTag(TagEntity tag)
+    {
+        return await _db.QueryFirstAsync<long>("""
+            INSERT INTO tags
+                (name, description) VALUES
+                (@Name, @Description);
+            SELECT LAST_INSERT_ID();
+            """,
+            tag,
+            transaction: session.Transaction);
+    }
+
+    public async Task DeleteTagById(long idTag)
+    {
+        await _db.ExecuteAsync(
+            "DELETE FROM tags WHERE id = @p1",
+            new { p1 = idTag },
             transaction: session.Transaction);
     }
 }

@@ -5,13 +5,13 @@ using MySqlConnector;
 
 namespace GalacticLauncher.Backend.Repositories;
 
-public interface IImageRepository
+public interface IImageRpository
 {
     Task<ImageEntity?> GetImageById(long id);
     Task<IEnumerable<ImageEntity>> GetImagesByGameId(long idGame);
 }
 
-internal class ImageRepository(DbSession session) : IImageRepository
+internal class ImageRepository(DbSession session) : IImageRpository
 {
     private readonly MySqlConnection _db = session.Connection;
 

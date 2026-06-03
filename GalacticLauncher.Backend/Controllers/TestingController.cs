@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using GalacticLauncher.Backend.Infrastructure;
 using GalacticLauncher.Core.Models;
+using GalacticLauncher.Backend.Infrastructure;
+using GalacticLauncher.Backend.Services;
+using GalacticLauncher.Core;
+using GalacticLauncher.Backend.Domain.Exceptions;
 
 namespace GalacticLauncher.Backend.Controllers;
 
 [ApiController]
 [Route("testing")]
 public class TestingController(
-    ILogger<TestingController> logger
-    ) : ControllerBack(logger)
+    ILogger<DownloadController> logger,
+    IHistoryService historyService) : ControllerBack(logger, historyService)
 {
     [HttpPost("game-echo")]
     [EnableRateLimiting("LowCost")]
@@ -17,9 +20,24 @@ public class TestingController(
     public ActionResult<Game> GameEcho(
         [FromBody] Game game)
     {
-        LogCallToConsole();
+        LogAuto(game);
+
+        return HandleEndpoint(() => game);
+    }
+
+    [HttpGet("get-error")]
+    [EnableRateLimiting("MediumCost")]
+    [EndpointDescription("It throws an exception to test error handling.")]
+    public ActionResult GetError()
+    {
+        LogAuto();
 
         return HandleEndpoint(
-            () => game);
+            () =>
+            {
+                throw Utils.IsProduction
+                    ? ClientFaultException.BadRequest400("This endpoint is only available in development environment.")
+                    : new Exception("This is a simulated server error.");
+            });
     }
 }

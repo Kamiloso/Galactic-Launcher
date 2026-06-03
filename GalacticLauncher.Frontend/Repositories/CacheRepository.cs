@@ -50,18 +50,18 @@ internal class CacheRepository : ICacheRepository
     {
         foreach (var game in games)
         {
-            Game? old = GetGame(game.Id);
+            Game? oldGame = GetGame(game.Id);
 
-            bool oldRobust = old is GameData;
-            bool newRobust = game is GameData;
-            bool flatEquals = Game.FlatEquals(old, game);
-
-            if (oldRobust && !newRobust && flatEquals)
+            if (game is GameData)
             {
-                continue; // unnecessary data loss, skip
+                _gameCache[game.Id] = game;
             }
-
-            _gameCache[game.Id] = game;
+            else
+            {
+                _gameCache[game.Id] = oldGame is GameData oldGameData
+                    ? oldGameData.Inject(game)
+                    : game;
+            }
         }
 
         if (clearOther)

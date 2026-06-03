@@ -8,7 +8,8 @@ public interface IAppScopeFactory
     Task<IAppScope> CreateScopeAsync(IsolationLevel? isolation);
 }
 
-internal class AppScopeFactory(IServiceScopeFactory scopeFactory) : IAppScopeFactory
+internal class AppScopeFactory(
+    IServiceScopeFactory scopeFactory) : IAppScopeFactory
 {
     public async Task<IAppScope> CreateScopeNoDbAsync()
     {

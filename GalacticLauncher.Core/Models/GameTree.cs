@@ -1,0 +1,13 @@
+﻿namespace GalacticLauncher.Core.Models;
+
+public record GameTree
+{
+    public required long Id { get; init; }
+    public required string Name { get; init; }
+    public required string Author { get; init; }
+    public required string Description { get; init; }
+
+    public required IEnumerable<Version> Versions { get; init; }
+    public required IEnumerable<Image> Images { get; init; }
+    public required IEnumerable<long> TagIds { get; init; }
+}
