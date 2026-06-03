@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
+using GalacticLauncher.Frontend.Services.Data;
 using System;
+using GalacticLauncher.Frontend.ViewModels.Dialogs;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
@@ -11,7 +13,7 @@ internal partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SideMenuWidth))]
-    private bool _isExpanded = false;
+    private bool _isExpanded = true;
 
     public double SideMenuWidth => IsExpanded ? 200 : 84;
 
@@ -21,11 +23,16 @@ internal partial class MainWindowViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(IsAdminPage))]
     [NotifyPropertyChangedFor(nameof(IsGamePage))]
     public object? _currentPage;
+    
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsDialogVisible))]
+    private object? _currentDialog;
 
     public bool IsHomePage => CurrentPage is HomeViewModel;
     public bool IsLibraryPage => CurrentPage is LibraryViewModel;
     public bool IsAdminPage => CurrentPage is AdminViewModel;
     public bool IsGamePage => CurrentPage is GameViewModel;
+    public bool IsDialogVisible => CurrentDialog != null;
 
     private readonly HomeViewModel _homeViewModel;
     private readonly GameViewModel _gameViewModel;
@@ -33,6 +40,8 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly AdminViewModel _adminViewModel;
     private readonly INavigator _navigator;
     private readonly IThemeManager _themeManager;
+    private readonly IDialog _dialog;
+    private readonly ICacheRefresher _cacheRefresher;
 
     public MainWindowViewModel(
         HomeViewModel homeViewModel,
@@ -40,7 +49,10 @@ internal partial class MainWindowViewModel : ObservableObject
         LibraryViewModel libraryViewModel,
         AdminViewModel adminViewModel,
         INavigator navigator,
-        IThemeManager themeManager
+        IThemeManager themeManager,
+        IDialog dialog,
+        ICacheRefresher cacheRefresher,
+        INotifications notifications
         )
     {
         _navigator = navigator;
@@ -49,6 +61,25 @@ internal partial class MainWindowViewModel : ObservableObject
         _libraryViewModel = libraryViewModel;
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
+        _dialog = dialog;
+        _cacheRefresher = cacheRefresher;
+        
+        _dialog.OnDialogRequested += dvm => CurrentDialog = dvm;
+        _cacheRefresher.OnError += notifications.ShowError;
+
+        HandleStartupLoading();
+
+        void HandleStartupLoading()
+        {
+            LoadingDialogViewModel startupDialog = new(
+                "Starting Launcher",
+                "Fetching data...");
+
+            _dialog.ShowDialogAndForget(startupDialog);
+
+            _cacheRefresher.OnInitialize +=
+                () => _ = startupDialog.Finish();
+        }
 
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();

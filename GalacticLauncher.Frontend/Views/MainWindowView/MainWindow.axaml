@@ -10,20 +10,30 @@
         WindowStartupLocation="CenterScreen"
 		Icon="{StaticResource AppIcon}">
 	
-	<Grid ColumnDefinitions="Auto, *">
+	<Grid>
+		<Grid ColumnDefinitions="Auto, *">
 		
-		<!--Side Menu-->
-		<views:SideMenu x:Name="SideBar" Grid.Column="0" DataContext="{Binding}"/>
+			<!--Side Menu-->
+			<views:SideMenu x:Name="SideBar" Grid.Column="0" DataContext="{Binding}"/>
 		
-		<!--Main panel-->
-		<Grid Grid.Column="1"
-			  Background="{DynamicResource BackgroundGradient}">
+			<!--Main panel-->
+			<Grid Grid.Column="1"
+			      Background="{DynamicResource BackgroundGradient}">
 			
 				<!--Main Panel content-->
 				<Border>
 					<ContentControl Content="{Binding CurrentPage}" />
 				</Border>
+			</Grid>
+
+		</Grid>
+		
+		<!-- Background dimming-->
+		<Grid Background="#99000000" 
+		      IsVisible="{Binding IsDialogVisible}">
+            
+			<ContentControl Content="{Binding CurrentDialog}" />
 		</Grid>
 
-	</Grid>
+    </Grid>
 </Window>
