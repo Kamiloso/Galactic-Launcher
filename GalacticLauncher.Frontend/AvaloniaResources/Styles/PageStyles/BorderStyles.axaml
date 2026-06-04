@@ -69,15 +69,21 @@
 	<Style Selector="ContentControl.noFound">
 		<Setter Property="HorizontalAlignment" Value="Center"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="FontSize" Value="20"/>
 		<Setter Property="Template">
 			<ControlTemplate>
 				<StackPanel Orientation="Vertical">
-					<TextBlock Classes="nothingFound"
-							   Text="{TemplateBinding Tag}"
+					<TextBlock Text="{TemplateBinding Tag}"
 							   HorizontalAlignment="Center"
-							   Margin="0,20,0,10"/>
+							   Margin="0,20,0,10"
+							   FontFamily="{DynamicResource Rajdhani}"
+								FontStyle="Normal"
+								Foreground="{StaticResource GreyBlue}"
+								FontSize="{TemplateBinding FontSize}"/>
 
-					<PathIcon Data="{StaticResource IconSad}"/>
+					<PathIcon Data="{StaticResource IconSad}"
+							  Width="{TemplateBinding FontSize}"
+							  Height="{TemplateBinding FontSize}"/>
 
 					<ContentPresenter Name="PART_ContentPresenter"
 									  Content="{TemplateBinding Content}"/>

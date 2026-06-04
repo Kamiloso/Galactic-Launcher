@@ -68,6 +68,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private readonly ITerminator _terminator;
     private readonly IDialogs _dialogs;
     private readonly INotifications _notifications;
+    private readonly IGameListManager _gameListManager;
 
     public GameViewModel(
         ICacheProvider cacheProvider,
@@ -76,7 +77,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         IExecManager execManager,
         ITerminator terminator,
         IDialogs dialog,
-        INotifications notifications)
+        INotifications notifications,
+        IGameListManager gameListManager)
     {
         _cacheProvider = cacheProvider;
         _cacheRefresher = cacheRefresher;
@@ -85,6 +87,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _terminator = terminator;
         _dialogs = dialog;
         _notifications = notifications;
+        _gameListManager = gameListManager;
 
         _cacheRefresher.OnInitialize +=
             () => { if (_init) RunGameDataRefresh(); };
@@ -170,7 +173,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             await _dialogs.ShowLoadingDialogAsync(
                 $"Downloading",
                 $"Downloading {Title}...", task);
-            
+
+            _gameListManager.AddToLibrary(_id);
+
             _notifications.ShowSuccess("Download Complete", $"{Title} is ready to play.");
         }
         catch (OperationCanceledException) { }

@@ -50,6 +50,7 @@ internal partial class LibraryViewModel : ObservableObject
         _gameButtonFactory = gameButtonFactory;
 
         _cacheRefresher.OnInitialize += RefreshPage;
+        _gameListManager.OnLibraryChanged += ReloadGames;
     }
 
     [RelayCommand]

@@ -14,6 +14,7 @@
                            Text="LIBRARY"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Bottom"
+						   FontSize="35"
                            Grid.Column="0"/>
 			</Grid>
 			<Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto"
@@ -130,10 +131,12 @@
 						</ItemsControl>
 
 						<ContentControl Classes="noFound"
-										Tag="GAMES NOT FOUND"
-										IsVisible="{Binding !GameControls.Count}"
-										VerticalAlignment="Center"
-										HorizontalAlignment="Center"/>
+									Tag="GAMES NOT FOUND"
+									IsVisible="{Binding !GameControls.Count}"
+									VerticalAlignment="Center"
+									HorizontalAlignment="Center"
+									FontSize="30"/>
+						
 				</Panel>
 			</ScrollViewer>
 		</Border>

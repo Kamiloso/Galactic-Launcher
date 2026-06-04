@@ -435,25 +435,6 @@
 													Spacing="5"
 													Margin="10,0,0,0">
 
-											<Button Command="{Binding ToggleFavoriteCommand}"
-													Background="Transparent"
-													BorderBrush="Transparent"
-													BorderThickness="0"
-													Padding="5"
-													Cursor="Hand">
-												<Button.Styles>
-													<Style Selector="Button:pointerover /template/ ContentPresenter">
-														<Setter Property="Background" Value="Transparent"/>
-													</Style>
-												</Button.Styles>
-
-												<PathIcon Data="{Binding IconFav}"
-													  Foreground="{DynamicResource GalaxyGradient}"
-													  Height="15"
-													  Width="15"
-													  Margin="0,0,0,2"/>
-											</Button>
-
 											<Button Command="{Binding ToggleLibraryCommand}"
 													Background="Transparent"
 													BorderBrush="Transparent"
@@ -467,6 +448,25 @@
 												</Button.Styles>
 
 												<PathIcon Data="{Binding IconLib}"
+													  Foreground="{DynamicResource GalaxyGradient}"
+													  Height="15"
+													  Width="15"
+													  Margin="0,0,0,2"/>
+											</Button>
+
+											<Button Command="{Binding ToggleFavoriteCommand}"
+													Background="Transparent"
+													BorderBrush="Transparent"
+													BorderThickness="0"
+													Padding="5"
+													Cursor="Hand">
+												<Button.Styles>
+													<Style Selector="Button:pointerover /template/ ContentPresenter">
+														<Setter Property="Background" Value="Transparent"/>
+													</Style>
+												</Button.Styles>
+
+												<PathIcon Data="{Binding IconFav}"
 													  Foreground="{DynamicResource GalaxyGradient}"
 													  Height="15"
 													  Width="15"

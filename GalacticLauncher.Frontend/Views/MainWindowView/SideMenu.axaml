@@ -14,7 +14,7 @@
 			CornerRadius="0"
 			BorderThickness="0">
 
-		<Grid RowDefinitions="100,30,4*,50,100">
+		<Grid RowDefinitions="100,30,4*,*">
 
 			<!--lOGO-->
 			<Border Grid.Row="0"
@@ -108,7 +108,8 @@
 			<Button Classes="changeTheme"
 					Command="{Binding SwitchThemeCommand}"
 					VerticalAlignment="Bottom"
-					Grid.Row="4">
+					Margin="0,0,0,20"
+					Grid.Row="3">
 
 				<StackPanel Orientation="Horizontal">
 
