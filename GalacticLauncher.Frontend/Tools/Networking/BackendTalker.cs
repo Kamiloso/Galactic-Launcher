@@ -15,6 +15,9 @@ public interface IBackendTalker
     Task<GameData> GetGameData(long id);
     Task<IEnumerable<Tag>> GetAllTags();
 
+    // EP: telemetry
+    Task SendGamePlayed(PlayGame game);
+
     // EP: admin
     Task<LoginResult> GetAdminToken(LoginRequest loginRequest);
     Task PostGameTree(string token, GameTree gameTree);
@@ -40,6 +43,10 @@ internal class BackendTalker(IHttpPoster httpPoster) : IBackendTalker
 
     public async Task<IEnumerable<Tag>> GetAllTags() =>
         await httpPoster.GetAsync<IEnumerable<Tag>>("download/all-tags");
+
+    // EP: telemetry
+    public async Task SendGamePlayed(PlayGame playGame) =>
+        await httpPoster.PostAsync("telemetry/play-game", playGame);
 
     // EP: admin
     public async Task<LoginResult> GetAdminToken(LoginRequest loginRequest) =>

@@ -35,3 +35,11 @@ INSERT IGNORE INTO images (id, id_game, download_url, type, sort_index) VALUES
 (12, 7, 'https://drive.google.com/uc?id=1-SU_jwne0QwjMuciW4c83FG5ZBTDrT8D&export=download','icon',0),
 (13, 8, 'https://drive.google.com/uc?id=1tAa5xbpbviIi5xhB8VIKoKELq8I50k7k&export=download','icon',0),
 (14, 9, 'https://drive.google.com/uc?id=12JW5hJlSFo9G-Xymtk3vYUjLRTetEVMD&export=download','icon',0);
+
+-- 6. Dodawanie relacji między grami a tagami
+INSERT IGNORE INTO games_tags (id_game, id_tag) VALUES
+(4, 1), (4, 4),
+(5, 3), (5, 5),
+(6, 2), (6, 4), (6, 3),
+(7, 3),
+(8, 1), (8, 4);

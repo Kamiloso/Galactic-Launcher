@@ -28,7 +28,7 @@ internal class DataAccessService(
         var imageRepository = scope.GetService<IImageRpository>();
         var tagRepository = scope.GetService<ITagRepository>();
 
-        GameWithIconEntity game = await gameRepository.GetGameById(id)
+        GamePlusEntity game = await gameRepository.GetGameById(id)
             ?? throw ClientFaultException.NotFound404($"Game with id {id} not found.");
 
         return game.ToDomain(

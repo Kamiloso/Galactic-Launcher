@@ -1,12 +1,19 @@
 ﻿namespace GalacticLauncher.Core.Models;
 
-public record Game
+public record Game : GameRaw
 {
-    public required long Id { get; init; }
-    public required string Name { get; init; }
-    public required string Author { get; init; }
-    public required string Description { get; init; }
     public required string? IconUrl { get; init; }
+    public required string? TagIdList { get; init; } // "1,2,3,4" etc.
+
+    public long[] ExtractTagIds()
+    {
+        if (TagIdList == null)
+            return [];
+
+        return [.. TagIdList.Split(',')
+            .Where(arg => long.TryParse(arg, out _))
+            .Select(long.Parse)];
+    }
 
     protected static T InjectInternal<T>(T robustGame, Game game) where T : Game
     {
@@ -16,7 +23,8 @@ public record Game
             Name = game.Name,
             Author = game.Author,
             Description = game.Description,
-            IconUrl = game.IconUrl
+            IconUrl = game.IconUrl,
+            TagIdList = game.TagIdList,
         };
     }
 }

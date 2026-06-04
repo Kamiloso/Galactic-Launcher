@@ -12,26 +12,20 @@ public static class ToEntityConverters
         ) ToEntityDeconstruct(this GameTree gameTree)
     {
         return (
-            Game: new GameEntity
-            {
-                Id = gameTree.Id,
-                Name = gameTree.Name,
-                Author = gameTree.Author,
-                Description = gameTree.Description,
-            },
+            Game: gameTree.ToEntity(),
             Versions: [.. gameTree.Versions.Select(v => v.ToEntity(gameTree.Id))],
             Images: [.. gameTree.Images.Select(i => i.ToEntity(gameTree.Id))],
             TagIds: [.. gameTree.TagIds]);
     }
 
-    public static GameEntity ToEntity(this Game game)
+    public static GameEntity ToEntity(this GameRaw gameRaw)
     {
         return new GameEntity
         {
-            Id = game.Id,
-            Name = game.Name,
-            Author = game.Author,
-            Description = game.Description,
+            Id = gameRaw.Id,
+            Name = gameRaw.Name,
+            Author = gameRaw.Author,
+            Description = gameRaw.Description,
         };
     }
 

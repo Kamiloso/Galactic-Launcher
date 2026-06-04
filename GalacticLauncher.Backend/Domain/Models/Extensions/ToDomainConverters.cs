@@ -5,7 +5,7 @@ namespace GalacticLauncher.Backend.Domain.Models.Extensions;
 
 internal static class ToDomainConverters
 {
-    public static Game ToDomain(this GameWithIconEntity game)
+    public static Game ToDomain(this GamePlusEntity game)
     {
         return new Game
         {
@@ -14,10 +14,11 @@ internal static class ToDomainConverters
             Author = game.Author,
             Description = game.Description,
             IconUrl = game.IconUrl,
+            TagIdList = game.TagIdList,
         };
     }
 
-    public static GameData ToDomain(this GameWithIconEntity game,
+    public static GameData ToDomain(this GamePlusEntity game,
         IEnumerable<VersionEntity> versions,
         IEnumerable<ImageEntity> images,
         IEnumerable<TagEntity> tags)
@@ -29,6 +30,7 @@ internal static class ToDomainConverters
             Author = game.Author,
             Description = game.Description,
             IconUrl = game.IconUrl,
+            TagIdList = game.TagIdList,
             Versions = [.. versions.Select(ToDomain)],
             Images = [.. images.Select(ToDomain)],
             Tags = [..  tags.Select(ToDomain)],
