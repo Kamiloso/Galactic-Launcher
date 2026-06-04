@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dialogs="clr-namespace:GalacticLauncher.Frontend.ViewModels.Dialogs"
+             xmlns:controls="clr-namespace:GalacticLauncher.Frontend.Views.Controls"
+             x:Class="GalacticLauncher.Frontend.Views.DialogViews.FlexibleDialog"
+             x:DataType="dialogs:FlexibleDialogViewModel">
+
+	<controls:MovableBorder Background="#2D2D30"
+                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                            CornerRadius="8" Padding="32" MinWidth="350"
+                            BoxShadow="0 8 32 0 #66000000">
+
+		<StackPanel Spacing="16">
+
+			<TextBlock Text="{Binding Title}" FontSize="20" FontWeight="Bold" Foreground="White"/>
+			<TextBlock Text="{Binding Message}" FontSize="14" Foreground="#CCCCCC" TextWrapping="Wrap"/>
+
+			<ItemsControl ItemsSource="{Binding Inputs}" HorizontalAlignment="Stretch" Margin="-4,16,-4,0">
+             
+             <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                   <StackPanel Orientation="Vertical" Spacing="12" />
+                </ItemsPanelTemplate>
+             </ItemsControl.ItemsPanel>
+
+             <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="dialogs:TextInputViewModel">
+                   
+                   <StackPanel Margin="4,0" Spacing="6">
+                      
+                      <TextBlock Text="{Binding Label}" 
+                                 FontSize="12" 
+                                 Foreground="White" 
+                                 Opacity="0.8" 
+                                 HorizontalAlignment="Left" />
+                        
+                      <TextBox Text="{Binding Text}" 
+                               Watermark="{Binding Watermark}" 
+                               Padding="12,8"
+                               Background="#1E1E1E" 
+                               Foreground="White"
+                               BorderBrush="#333333"
+                               BorderThickness="1"
+                               CornerRadius="4"
+                               AcceptsReturn="False"
+                               MaxHeight="40"> <TextBox.Styles>
+                              <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+                                  <Setter Property="Background" Value="#252525"/>
+                                  <Setter Property="BorderBrush" Value="#555555"/>
+                              </Style>
+                              
+                              <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+                                  <Setter Property="Background" Value="#1E1E1E"/>
+                                  <Setter Property="BorderBrush" Value="#888888"/>
+                                  <Setter Property="BorderThickness" Value="1"/>
+                              </Style>
+                          </TextBox.Styles>
+                          
+                      </TextBox>
+                   </StackPanel>
+                        
+                </DataTemplate>
+             </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+			<ItemsControl ItemsSource="{Binding Buttons}" HorizontalAlignment="Stretch" Margin="-16,16,-16,0">
+
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<UniformGrid Rows="1" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+
+				<ItemsControl.ItemTemplate>
+					<DataTemplate x:DataType="dialogs:DialogButtonViewModel">
+
+						<Panel HorizontalAlignment="{ReflectionBinding Alignment}" Margin="8,0">
+
+							<Button Content="{Binding Text}" Command="{Binding ClickCommand}"
+									IsVisible="{Binding !IsHighlighted}"
+									HorizontalContentAlignment="Center"
+									Background="#404040" Foreground="White" Padding="20,8" CornerRadius="4"/>
+
+							<Button Content="{Binding Text}" Command="{Binding ClickCommand}"
+									IsVisible="{Binding IsHighlighted}"
+									HorizontalContentAlignment="Center"
+									Background="{DynamicResource GalaxyGradient}" Foreground="White" Padding="20,8" CornerRadius="4" FontWeight="Bold"/>
+						</Panel>
+
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+
+			</ItemsControl>
+
+		</StackPanel>
+	</controls:MovableBorder>
+</UserControl>

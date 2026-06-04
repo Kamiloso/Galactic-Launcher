@@ -29,10 +29,10 @@
 			<views:GameView />
 		</DataTemplate>
 		
-		<DataTemplate DataType="{x:Type dialogVms:ConfirmationDialogViewModel}">
-			<dialogViews:ConfirmationDialog />
+		<DataTemplate DataType="{x:Type dialogVms:FlexibleDialogViewModel}">
+			<dialogViews:FlexibleDialog />
 		</DataTemplate>
-
+		
 		<DataTemplate DataType="{x:Type dialogVms:LoadingDialogViewModel}">
 			<dialogViews:LoadingDialog />
 		</DataTemplate>
