@@ -9,7 +9,7 @@ using GalacticLauncher.Core;
 using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Tools.Files;
 
-namespace GalacticLauncher.Frontend.Services.Images;
+namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface IImageProvider
 {

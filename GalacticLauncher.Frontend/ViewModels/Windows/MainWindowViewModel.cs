@@ -5,9 +5,8 @@ using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Frontend.Services.Data;
 using System;
-using GalacticLauncher.Frontend.ViewModels.Dialogs;
 using System.Threading.Tasks;
-using Avalonia.Metadata;
+using GalacticLauncher.Frontend.Services;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
@@ -44,7 +43,7 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly IThemeManager _themeManager;
     private readonly ICacheRefresher _cacheRefresher;
     private readonly IAdminPanelSelector _adminPanelSelector;
-    private readonly IDialogs _dialog;
+    private readonly IDialogs _dialogs;
 
     public MainWindowViewModel(
         HomeViewModel homeViewModel,
@@ -55,6 +54,8 @@ internal partial class MainWindowViewModel : ObservableObject
         IThemeManager themeManager,
         ICacheRefresher cacheRefresher,
         IAdminPanelSelector adminPanelSelector,
+        IErrorHandler errorHandler,
+        INotifications notifications,
         IDialogs dialog)
     {
         _navigator = navigator;
@@ -65,26 +66,31 @@ internal partial class MainWindowViewModel : ObservableObject
         _themeManager = themeManager;
         _cacheRefresher = cacheRefresher;
         _adminPanelSelector = adminPanelSelector;
-        _dialog = dialog;
-        
-        _dialog.OnDialogRequested += dvm => CurrentDialog = dvm;
+        _dialogs = dialog;
 
-        HandleStartupLoading();
+        // Error handling
 
-        void HandleStartupLoading()
-        {
-            LoadingDialogViewModel startupDialog = new(
-                "Starting Launcher",
-                "Fetching data...");
+        errorHandler.OnInfo += notifications.ShowInfo;
+        errorHandler.OnWarning += notifications.ShowWarning;
+        errorHandler.OnError += notifications.ShowError;
+        errorHandler.OnSuccess += notifications.ShowSuccess;
 
-            _ = _dialog.ShowDialogAsync(startupDialog);
-
-            _cacheRefresher.OnInitialize +=
-                () => _ = startupDialog.Finish();
-        }
+        // Navigation
 
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
+
+        // Loading dialog
+
+        _dialogs.OnDialogChanged += dvm => CurrentDialog = dvm;
+
+        Func<Task> finish = _dialogs.ShowLoadingDialogAsync(
+            "Starting Launcher",
+            "Fetching data...");
+
+        _cacheRefresher.OnInitialize += () => finish();
+
+        // Keep it local to not accidentally call it from somewhere else
 
         void InnerNavigate(Type pageType, object[] args)
         {

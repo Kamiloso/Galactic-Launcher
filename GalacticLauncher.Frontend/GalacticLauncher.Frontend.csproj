@@ -45,7 +45,7 @@
   </ItemGroup>
 	<ItemGroup>
 	  <AvaloniaXaml Remove="AvaloniaResources\Styles\DefaultStyles\TextBox.axaml" />
-	  <AvaloniaXaml Remove="Views\MainPanelViews\UserControl1.axaml" />
+	  <AvaloniaXaml Remove="Views\PanelViews\UserControl1.axaml" />
 	</ItemGroup>
 	<ItemGroup>
 	  <None Remove="AvaloniaResources\Assets\Logo\logo_color.png" />
@@ -86,7 +86,7 @@
 	  </AvaloniaResource>
 	</ItemGroup>
 	<ItemGroup>
-	  <Compile Update="Views\MainPanelViews\HomeView.axaml.cs">
+	  <Compile Update="Views\PanelViews\HomeView.axaml.cs">
 	    <DependentUpon>HomeView.axaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>

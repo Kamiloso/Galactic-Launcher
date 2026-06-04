@@ -1,25 +1,23 @@
-﻿using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Domain.Exceptions;
-using GalacticLauncher.Frontend.Services.Images;
+using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
+using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.ViewModels.Controls;
+namespace GalacticLauncher.Frontend.ViewModels.GameButtons;
 
-internal partial class GameButtonViewModel(
+internal abstract partial class GameButtonViewModel(
     IImageProvider imageProvider,
     INavigator navigator) : ObservableObject
 {
-    private const string EMPTY_STATUS = "";
-    private const string GAME_NOT_FOUND = "NO GAME";
-    private const string LOADING_IMAGE = "LOADING IMAGE...";
-    private const string IMAGE_NOT_FOUND = "IMAGE NOT FOUND";
-
-    [ObservableProperty]
-    private bool _isGameValid;
+    protected const string EMPTY_STATUS = "";
+    protected const string GAME_NOT_FOUND = "NO GAME";
+    protected const string LOADING_IMAGE = "LOADING IMAGE...";
+    protected const string IMAGE_NOT_FOUND = "IMAGE NOT FOUND";
 
     [ObservableProperty]
     private long _gameId;
@@ -30,14 +28,10 @@ internal partial class GameButtonViewModel(
     [ObservableProperty]
     private Bitmap? _icon;
 
-    public required long? Id
+    public virtual required long Id
     {
-        get => IsGameValid ? GameId : null;
-        init
-        {
-            IsGameValid = value.HasValue;
-            GameId = value ?? 0;
-        }
+        get => GameId;
+        init => GameId = value;
     }
 
     [RelayCommand]
@@ -46,13 +40,15 @@ internal partial class GameButtonViewModel(
         navigator.NavigateTo<GameViewModel>(GameId);
     }
 
-    public void SetInactiveLook()
+    public virtual void SetInactiveLook()
     {
         StatusMessage = GAME_NOT_FOUND;
     }
 
-    public async Task SetActiveLookAsync(string? url)
+    public virtual async Task SetActiveLookAsync(Game? game)
     {
+        string? url = game?.IconUrl;
+
         if (url == null)
         {
             StatusMessage = IMAGE_NOT_FOUND;

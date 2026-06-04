@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.ViewModels.Controls;
+using GalacticLauncher.Frontend.ViewModels.GameButtons;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
@@ -18,11 +18,11 @@ internal partial class HomeViewModel : ObservableObject
     private readonly ILastGameManager _lastGameManager;
     private readonly IGameButtonFactory _gameButtonFactory;
 
-    public ObservableCollection<GameButtonViewModel> Recommendations { get; } = [];
-    public ObservableCollection<GameButtonViewModel> Library { get; } = [];
+    public ObservableCollection<GameButtonHomeViewModel> Recommendations { get; } = [];
+    public ObservableCollection<GameButtonHomeViewModel> Library { get; } = [];
 
     [ObservableProperty]
-    private GameButtonViewModel? _recent;
+    private GameButtonHomeViewModel? _recent;
 
     public HomeViewModel(
         ICacheRefresher cacheRefresher,

@@ -7,9 +7,10 @@ namespace GalacticLauncher.Frontend.Views.Controls;
 
 internal class MovableBorder : Border
 {
-    private bool _isPressed; 
-    private Point _positionInBlock;
     private readonly TranslateTransform _transform;
+
+    private Point _positionInBlock;
+    private bool _isPressed;
 
     public MovableBorder()
     {

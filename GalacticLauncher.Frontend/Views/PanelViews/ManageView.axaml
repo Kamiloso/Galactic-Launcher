@@ -1,6 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.ManageView"
+             x:Class="GalacticLauncher.Frontend.Views.PanelViews.ManageView"
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:AdminViewModel"
 			 x:CompileBindings="True">

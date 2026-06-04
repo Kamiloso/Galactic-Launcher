@@ -1,9 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="GalacticLauncher.Frontend.Views.MainPanelViews.HomeView"
+             x:Class="GalacticLauncher.Frontend.Views.PanelViews.HomeView"
 			 xmlns:vm="clr-namespace:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:HomeViewModel"
-			 xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.Controls"
+			 xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.GameButtons"
 			 x:CompileBindings="True">
 
 
@@ -75,15 +75,15 @@
 								</ItemsControl.ItemsPanel>
 
 								<ItemsControl.ItemTemplate>
-									<DataTemplate x:DataType="btn:GameButtonViewModel">
+									<DataTemplate x:DataType="btn:GameButtonHomeViewModel">
 										<Button Classes="imageClickable"
 												Command="{Binding ShowGameCommand}"
-												IsEnabled="{Binding IsGameValid}"
+												IsEnabled="true"
 												Tag="{Binding StatusMessage}"
 												Background="{DynamicResource MainPanelGradient}">
 											
 											<Image Source="{Binding Icon}"
-												   IsVisible="{Binding IsGameValid}"/>
+												   IsVisible="true"/>
 										</Button>
 									</DataTemplate>
 								</ItemsControl.ItemTemplate>
@@ -132,15 +132,15 @@
 									</ItemsPanelTemplate>
 								</ItemsControl.ItemsPanel>
 								<ItemsControl.ItemTemplate>
-									<DataTemplate x:DataType="btn:GameButtonViewModel">
+									<DataTemplate x:DataType="btn:GameButtonHomeViewModel">
 										<Button Classes="imageClickable"
 												Command="{Binding ShowGameCommand}"
-												IsEnabled="{Binding IsGameValid}"
+												IsEnabled="true"
 												Tag="{Binding StatusMessage}"
 												Background="{DynamicResource MainPanelGradient}">
 
 											<Image Source="{Binding Icon}"
-												   IsVisible="{Binding IsGameValid}"/>
+												   IsVisible="true"/>
 										</Button>
 									</DataTemplate>
 								</ItemsControl.ItemTemplate>
@@ -169,15 +169,15 @@
 
 							<ContentControl Content="{Binding Recent}">
 								<ContentControl.ContentTemplate>
-									<DataTemplate x:DataType="btn:GameButtonViewModel">
+									<DataTemplate x:DataType="btn:GameButtonHomeViewModel">
 										<Button Classes="imageClickable"
 												Command="{Binding ShowGameCommand}"
-												IsEnabled="{Binding IsGameValid}"
+												IsEnabled="true"
 												Tag="{Binding StatusMessage}"
 												Background="{DynamicResource MainPanelGradient}">
 
 											<Image Source="{Binding Icon}"
-												   IsVisible="{Binding IsGameValid}"/>
+												   IsVisible="true"/>
 										</Button>
 									</DataTemplate>
 								</ContentControl.ContentTemplate>

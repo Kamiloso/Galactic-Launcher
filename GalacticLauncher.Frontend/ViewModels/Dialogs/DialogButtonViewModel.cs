@@ -4,26 +4,38 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace GalacticLauncher.Frontend.ViewModels.Dialogs;
 
-public enum ButtonAlignment
+internal partial class DialogButtonViewModel(string text, bool isHighlighted) : ObservableObject
 {
-    Left,
-    Center,
-    Right
-}
+    [ObservableProperty]
+    private bool _interactable = true;
 
-internal partial class DialogButtonViewModel : ObservableObject
-{
-    public string Text { get; }
-    public bool IsHighlighted { get; }
-    public IRelayCommand ClickCommand { get; }
+    public string Text { get; } = text;
+    public bool IsHighlighted { get; } = isHighlighted;
+
+    public event Action? OnClick;
+
+    internal enum ButtonAlignment
+    {
+        Left,
+        Center,
+        Right
+    }
 
     [ObservableProperty]
     private ButtonAlignment _alignment = ButtonAlignment.Right;
 
-    public DialogButtonViewModel(string text, bool isHighlighted, object? returnValue, Action<object?> closeAction)
+    [RelayCommand]
+    void Click()
     {
-        Text = text;
-        IsHighlighted = isHighlighted;
-        ClickCommand = new RelayCommand(() => closeAction(returnValue));
+        OnClick?.Invoke();
     }
+
+    public void MoveToLeft() =>
+        Alignment = ButtonAlignment.Left;
+
+    public void MoveToCenter() =>
+        Alignment = ButtonAlignment.Center;
+
+    public void MoveToRight() =>
+        Alignment = ButtonAlignment.Right;
 }

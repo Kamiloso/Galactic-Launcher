@@ -2,9 +2,7 @@
 using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Repositories;
-using GalacticLauncher.Frontend.Services.Handlers;
 using GalacticLauncher.Frontend.Tools.Networking;
-using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

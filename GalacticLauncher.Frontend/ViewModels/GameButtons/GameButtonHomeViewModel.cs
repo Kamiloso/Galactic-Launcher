@@ -1,0 +1,12 @@
+﻿using GalacticLauncher.Frontend.Services.Data;
+using GalacticLauncher.Frontend.ViewModels.ViewServices;
+
+namespace GalacticLauncher.Frontend.ViewModels.GameButtons;
+
+internal partial class GameButtonHomeViewModel(
+    IImageProvider imageProvider,
+    INavigator navigator) : GameButtonViewModel(imageProvider, navigator)
+{
+    // All functionality is implemented in the base class,
+    // but everything can be extended in the future if needed.
+}

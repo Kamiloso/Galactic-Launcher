@@ -1,51 +1,56 @@
+using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace GalacticLauncher.Frontend.ViewModels.Dialogs;
 
-internal partial class FlexibleDialogViewModel : DialogViewModel<object?>
+internal partial class FlexibleDialogViewModel(string title, string message) : DialogViewModel<object?>
 {
     [ObservableProperty]
-    private string _title;
+    private string _title = title;
 
     [ObservableProperty]
-    private string _message;
-    
+    private string _message = message;
     
     public ObservableCollection<TextInputViewModel> Inputs { get; } = [];
     public ObservableCollection<DialogButtonViewModel> Buttons { get; } = [];
-
-    public FlexibleDialogViewModel(string title, string message)
-    {
-        Title = title;
-        Message = message;
-    }
     
-    public void AddInput(string watermark = "", string label = "")
+    public TextInputViewModel AddInput(string watermark, string label, bool isPassword = false)
     {
-        Inputs.Add(new TextInputViewModel(watermark, label));
+        var tvm = new TextInputViewModel(watermark, label, isPassword);
+
+        Inputs.Add(tvm);
+        return tvm;
     }
 
-    public void AddButton(string text, object? returnValue, bool isHighlighted = false)
+    public DialogButtonViewModel AddButton(string text, object? returnValue, bool isHighlighted = false)
     {
-        if (Buttons.Count >= 3) return; 
+        if (Buttons.Count >= 3)
+            throw new InvalidOperationException("Max buttons exceeded.");
 
-        Buttons.Add(new DialogButtonViewModel(text, isHighlighted, returnValue, Close));
+        DialogButtonViewModel dvm = new(text, isHighlighted);
+        dvm.OnClick += () => Close(returnValue);
+
+        Buttons.Add(dvm);
 
         if (Buttons.Count == 1)
         {
-            Buttons[0].Alignment = ButtonAlignment.Right;
+            Buttons[0].MoveToRight();
         }
-        else if (Buttons.Count == 2)
+        
+        if (Buttons.Count == 2)
         {
-            Buttons[0].Alignment = ButtonAlignment.Left;
-            Buttons[1].Alignment = ButtonAlignment.Right;
+            Buttons[0].MoveToLeft();
+            Buttons[1].MoveToRight();
         }
-        else if (Buttons.Count == 3)
+        
+        if (Buttons.Count == 3)
         {
-            Buttons[0].Alignment = ButtonAlignment.Left;
-            Buttons[1].Alignment = ButtonAlignment.Center;
-            Buttons[2].Alignment = ButtonAlignment.Right;
+            Buttons[0].MoveToLeft();
+            Buttons[1].MoveToCenter();
+            Buttons[2].MoveToRight();
         }
+
+        return dvm;
     }
 }

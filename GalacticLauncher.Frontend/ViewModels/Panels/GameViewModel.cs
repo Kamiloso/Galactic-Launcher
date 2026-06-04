@@ -13,9 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
-using GalacticLauncher.Frontend.ViewModels.Dialogs;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
@@ -35,12 +33,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
     [ObservableProperty]
     private double _downloadProgress;
-
-    [ObservableProperty]
-    private string _gameDisplayDebugJson = "";
-
-    [ObservableProperty]
-    private string _selectedVersionDebugJson = "";
 
     public ObservableCollection<Version> AvailableVersions { get; } = [];
 
@@ -135,8 +127,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         Description = game?.Description ?? "";
         IconUrl = game?.IconUrl;
 
-        GameDisplayDebugJson = JsonSerializer.Serialize(game);
-
         Version? selectedVersion = SelectedVersion;
 
         List<Version> versions = [.. _cacheProvider.GetVersionsOf(_id)];
@@ -177,7 +167,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
             SetAdequateViewMode();
 
-            await task;
+            await _dialogs.ShowLoadingDialogAsync(
+                $"Downloading",
+                $"Downloading {Title}...", task);
             
             _notifications.ShowSuccess("Download Complete", $"{Title} is ready to play.");
         }
@@ -213,15 +205,10 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ExecInfo? execInfo = MakeCurrentExecInfo();
         if (execInfo == null) return;
 
-        var dialog = new FlexibleDialogViewModel(
+        bool isConfirmed = await _dialogs.ShowConfirmationDialogAsync(
             "Delete Game",
-            "Are you sure you want to delete this game?"
-        );
-
-        dialog.AddButton("Cancel", false);
-        dialog.AddButton("Delete", true, isHighlighted: true);
-        
-        bool isConfirmed = await _dialog.ShowDialogAsync(dialog);
+            "Are you sure you want to delete this game?",
+            textYes: "Delete", textNo: "Cancel");
 
         if (isConfirmed is true)
         {
@@ -260,10 +247,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
     partial void OnSelectedVersionChanged(Version? value)
     {
-        SelectedVersionDebugJson = value == null
-            ? string.Empty
-            : JsonSerializer.Serialize(value);
-
         SetAdequateViewMode();
     }
 

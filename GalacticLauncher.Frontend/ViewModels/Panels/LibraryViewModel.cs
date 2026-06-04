@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.ViewModels.Controls;
+using GalacticLauncher.Frontend.ViewModels.GameButtons;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
@@ -17,7 +17,7 @@ internal partial class LibraryViewModel : ObservableObject
     [ObservableProperty]
     private string? _searchTags;
 
-    public ObservableCollection<LibraryGameButtonViewModel> GameControls { get; } = [];
+    public ObservableCollection<GameButtonLibraryViewModel> GameControls { get; } = [];
 
     public enum LibraryViewMode
     {
@@ -38,16 +38,16 @@ internal partial class LibraryViewModel : ObservableObject
 
     private readonly ICacheRefresher _cacheRefresher;
     private readonly IGameListManager _gameListManager;
-    private readonly ILibraryGameButtonFactory _libraryGameButtonFactory;
+    private readonly IGameButtonFactory _gameButtonFactory;
 
     public LibraryViewModel(
         ICacheRefresher cacheRefresher,
         IGameListManager gameListManager,
-        ILibraryGameButtonFactory libraryGameButtonFactory)
+        IGameButtonFactory gameButtonFactory)
     {
         _cacheRefresher = cacheRefresher;
         _gameListManager = gameListManager;
-        _libraryGameButtonFactory = libraryGameButtonFactory;
+        _gameButtonFactory = gameButtonFactory;
 
         _cacheRefresher.OnInitialize += RefreshPage;
     }
@@ -55,7 +55,7 @@ internal partial class LibraryViewModel : ObservableObject
     [RelayCommand]
     public void RefreshPage()
     {
-        LoadGamesForMode(CurrentMode);
+        ReloadGames();
     }
 
     [RelayCommand]
@@ -64,25 +64,18 @@ internal partial class LibraryViewModel : ObservableObject
         CurrentMode = mode;
     }
 
-    partial void OnCurrentModeChanged(LibraryViewMode value)
-    {
-        LoadGamesForMode(value);
-    }
+    partial void OnCurrentModeChanged(LibraryViewMode value) => ReloadGames();
+    partial void OnSearchGamesChanged(string? value) => ReloadGames();
 
-    partial void OnSearchGamesChanged(string? value)
+    private void ReloadGames()
     {
-        LoadGamesForMode(CurrentMode, value);
-    }
+        string searchFilter = SearchGames ?? "";
 
-    private void LoadGamesForMode(LibraryViewMode mode, string? searchFilter = null)
-    {
-        string? currentSearch = searchFilter ?? SearchGames;
-
-        List<long> gameIdPool = [.. mode switch
+        List<long> gameIdPool = [.. CurrentMode switch
         {
-            LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(currentSearch),
-            LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(currentSearch),
-            LibraryViewMode.MoreGames => _gameListManager.GetNolibGames(currentSearch),
+            LibraryViewMode.YourGames => _gameListManager.GetLibraryGames(searchFilter),
+            LibraryViewMode.Favorites => _gameListManager.GetFavoriteGames(searchFilter),
+            LibraryViewMode.MoreGames => _gameListManager.GetNolibGames(searchFilter),
             _ => throw new NotSupportedException()
         }];
 
@@ -90,7 +83,7 @@ internal partial class LibraryViewModel : ObservableObject
 
         foreach (long id in gameIdPool)
         {
-            var gbvm = _libraryGameButtonFactory.CreateAndStartLoading(id);
+            var gbvm = _gameButtonFactory.CreateAndStartLoadingLibrary(id);
             GameControls.Add(gbvm);
         }
     }

@@ -4,11 +4,10 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using GalacticLauncher.Frontend.Infrastructure.Http;
 using GalacticLauncher.Frontend.Repositories;
+using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Admin;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Executables;
-using GalacticLauncher.Frontend.Services.Handlers;
-using GalacticLauncher.Frontend.Services.Images;
 using GalacticLauncher.Frontend.Tools.Files;
 using GalacticLauncher.Frontend.Tools.Networking;
 using GalacticLauncher.Frontend.ViewModels;
@@ -21,7 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend;
 
@@ -58,7 +56,6 @@ public partial class App : Application
             // View Services
             services.AddSingleton<IAdminPanelSelector, AdminPanelSelector>();
             services.AddSingleton<IGameButtonFactory, GameButtonFactory>();
-            services.AddSingleton<ILibraryGameButtonFactory, LibraryGameButtonFactory>();
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<INavigator, Navigator>();
             services.AddSingleton<INotifications, Notifications>();

@@ -4,7 +4,7 @@
 			 
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 xmlns:vma="using:GalacticLauncher.Frontend.ViewModels.AdminPanels"
-             xmlns:views="using:GalacticLauncher.Frontend.Views.MainPanelViews"
+             xmlns:views="using:GalacticLauncher.Frontend.Views.PanelViews"
              
              xmlns:dialogVms="using:GalacticLauncher.Frontend.ViewModels.Dialogs"
              xmlns:dialogViews="using:GalacticLauncher.Frontend.Views.DialogViews"

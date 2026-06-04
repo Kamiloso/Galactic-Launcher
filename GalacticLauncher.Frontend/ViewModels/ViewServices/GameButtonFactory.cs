@@ -1,36 +1,40 @@
-﻿using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.Services.Images;
-using GalacticLauncher.Frontend.ViewModels.Controls;
+﻿using GalacticLauncher.Core.Models;
+using GalacticLauncher.Frontend.Services.Data;
+using GalacticLauncher.Frontend.ViewModels.GameButtons;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 internal interface IGameButtonFactory
 {
-    GameButtonViewModel CreateEmpty();
-    GameButtonViewModel CreateAndStartLoading(long gameId);
+    GameButtonHomeViewModel CreateAndStartLoading(long gameId);
+    GameButtonLibraryViewModel CreateAndStartLoadingLibrary(long gameId);
 }
 
 internal class GameButtonFactory(
     ICacheProvider cacheProvider,
     IImageProvider imageProvider,
+    IGameListManager gameListManager,
     INavigator navigator) : IGameButtonFactory
 {
-    public GameButtonViewModel CreateEmpty()
+    public GameButtonHomeViewModel CreateAndStartLoading(long gameId)
     {
-        var gbvm = new GameButtonViewModel(imageProvider, navigator) { Id = null };
+        var gbvm = new GameButtonHomeViewModel(imageProvider, navigator) { Id = gameId };
 
-        gbvm.SetInactiveLook();
+        Game? game = cacheProvider.GetGameOf(gameId);
+
+        _ = gbvm.SetActiveLookAsync(game);
 
         return gbvm;
     }
 
-    public GameButtonViewModel CreateAndStartLoading(long gameId)
+    public GameButtonLibraryViewModel CreateAndStartLoadingLibrary(long gameId)
     {
-        var gbvm = new GameButtonViewModel(imageProvider, navigator) { Id = gameId };
+        var gbvm = new GameButtonLibraryViewModel(
+            imageProvider, gameListManager, navigator) { Id = gameId };
 
-        string? url = cacheProvider.GetGameOf(gameId)?.IconUrl;
+        Game? game = cacheProvider.GetGameOf(gameId);
 
-        _ = gbvm.SetActiveLookAsync(url);
+        _ = gbvm.SetActiveLookAsync(game);
 
         return gbvm;
     }

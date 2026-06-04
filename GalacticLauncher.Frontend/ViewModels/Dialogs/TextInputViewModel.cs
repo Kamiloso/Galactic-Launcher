@@ -1,18 +1,19 @@
-using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace GalacticLauncher.Frontend.ViewModels.Dialogs;
 
-internal partial class TextInputViewModel : ObservableObject
+internal partial class TextInputViewModel(
+    string watermark, string label, bool isPassword) : ObservableObject
 {
     [ObservableProperty]
-    private string _text = string.Empty;
-    public string Watermark { get; }
-    public string Label { get; }
+    private string _text = "";
 
-    public TextInputViewModel(string watermark = "", string label = "")
-    {
-        Watermark = watermark;
-        Label = label;
-    }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PasswordChar))]
+    private bool _isPassword = isPassword;
+
+    public char PasswordChar => IsPassword ? '*' : '\0';
+
+    public string Watermark { get; } = watermark;
+    public string Label { get; } = label;
 }

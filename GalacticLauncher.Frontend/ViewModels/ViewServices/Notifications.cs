@@ -1,5 +1,4 @@
 ﻿using System;
-using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Notifications;
 using Avalonia.Threading;
@@ -28,7 +27,7 @@ internal class Notifications(IClassicDesktopStyleApplicationLifetime desktop) : 
         _notifications ??= new WindowNotificationManager(desktop.MainWindow)
         {
             Position = NotificationPosition.BottomRight,
-            MaxItems = 4
+            MaxItems = 100 // you can replace it with no limit in practice
         };
 
         Dispatcher.UIThread.Post(() =>
