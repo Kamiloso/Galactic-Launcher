@@ -6,6 +6,8 @@ using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Frontend.Services.Data;
 using System;
 using GalacticLauncher.Frontend.ViewModels.Dialogs;
+using System.Threading.Tasks;
+using Avalonia.Metadata;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
@@ -40,8 +42,9 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly AdminViewModel _adminViewModel;
     private readonly INavigator _navigator;
     private readonly IThemeManager _themeManager;
-    private readonly IDialog _dialog;
     private readonly ICacheRefresher _cacheRefresher;
+    private readonly IAdminPanelSelector _adminPanelSelector;
+    private readonly IDialogs _dialog;
 
     public MainWindowViewModel(
         HomeViewModel homeViewModel,
@@ -50,10 +53,9 @@ internal partial class MainWindowViewModel : ObservableObject
         AdminViewModel adminViewModel,
         INavigator navigator,
         IThemeManager themeManager,
-        IDialog dialog,
         ICacheRefresher cacheRefresher,
-        INotifications notifications
-        )
+        IAdminPanelSelector adminPanelSelector,
+        IDialogs dialog)
     {
         _navigator = navigator;
         _homeViewModel = homeViewModel;
@@ -61,11 +63,11 @@ internal partial class MainWindowViewModel : ObservableObject
         _libraryViewModel = libraryViewModel;
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
-        _dialog = dialog;
         _cacheRefresher = cacheRefresher;
+        _adminPanelSelector = adminPanelSelector;
+        _dialog = dialog;
         
         _dialog.OnDialogRequested += dvm => CurrentDialog = dvm;
-        _cacheRefresher.OnError += notifications.ShowError;
 
         HandleStartupLoading();
 
@@ -75,7 +77,7 @@ internal partial class MainWindowViewModel : ObservableObject
                 "Starting Launcher",
                 "Fetching data...");
 
-            _dialog.ShowDialogAndForget(startupDialog);
+            _ = _dialog.ShowDialogAsync(startupDialog);
 
             _cacheRefresher.OnInitialize +=
                 () => _ = startupDialog.Finish();
@@ -127,8 +129,8 @@ internal partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void ShowAdmin()
+    public async Task ShowAdmin()
     {
-        _navigator.NavigateTo<AdminViewModel>();
+        await _adminPanelSelector.SelectAdminPanelAsync();
     }
 }

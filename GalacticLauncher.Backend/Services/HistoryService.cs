@@ -21,7 +21,7 @@ internal class HistoryService(
     private readonly int MAX_ENTRIES = config.History.MaxEntries;
     private readonly int PAGE_SIZE = config.History.PageSize;
 
-    private readonly DateTime _startDate = DateTime.Now;
+    private readonly DateTime _startDate = DateTime.UtcNow;
     private readonly TimeSpan _interval = TimeSpan.FromSeconds(config.History.CleanupIntervalSeconds);
 
     private long _cleanCycle = 0;
@@ -67,7 +67,7 @@ internal class HistoryService(
 
     private async Task CheckAndCleanOld(IAppScope scope)
     {
-        DateTime nowTime = DateTime.Now;
+        DateTime nowTime = DateTime.UtcNow;
 
         long currentCycle = Interlocked.Read(ref _cleanCycle);
 

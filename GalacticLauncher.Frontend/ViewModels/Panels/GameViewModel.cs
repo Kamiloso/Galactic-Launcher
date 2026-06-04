@@ -74,7 +74,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private readonly ILastGameManager _lastGameManager;
     private readonly IExecManager _execManager;
     private readonly ITerminator _terminator;
-    private readonly IDialog _dialog;
+    private readonly IDialogs _dialogs;
     private readonly INotifications _notifications;
 
     public GameViewModel(
@@ -83,7 +83,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ILastGameManager lastGameManager,
         IExecManager execManager,
         ITerminator terminator,
-        IDialog dialog,
+        IDialogs dialog,
         INotifications notifications)
     {
         _cacheProvider = cacheProvider;
@@ -91,7 +91,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _lastGameManager = lastGameManager;
         _execManager = execManager;
         _terminator = terminator;
-        _dialog = dialog;
+        _dialogs = dialog;
         _notifications = notifications;
 
         _cacheRefresher.OnInitialize +=
@@ -168,6 +168,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             DownloadProgress = Math.Clamp(value, 0, 1);
         });
 
+        _notifications.ShowInfo("Download Started", $"Downloading {Title}...");
+
         try
         {
             Task task = _downloading.Start(cancellationToken =>
@@ -216,7 +218,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             "Are you sure you want to delete this game?"
         );
 
-        bool isConfirmed = await _dialog.ShowDialogAsync(dialog);
+        bool isConfirmed = await _dialogs.ShowDialogAsync(dialog);
 
         if (isConfirmed)
         {

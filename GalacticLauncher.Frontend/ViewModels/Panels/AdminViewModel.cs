@@ -27,8 +27,7 @@ internal partial class AdminViewModel : ObservableObject
         AdGamesViewModel gamesViewModel,
         AdTagsViewModel tagsViewModel,
         AdUsersViewModel usersViewModel,
-        INavigator navigator
-        )
+        INavigator navigator)
     {
         _gamesViewModel = gamesViewModel;
         _tagsViewModel = tagsViewModel;

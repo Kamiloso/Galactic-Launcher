@@ -7,7 +7,10 @@ internal abstract class DialogViewModel<TResult> : ObservableObject
 {
     private readonly TaskCompletionSource<TResult> _tcs = new();
     
-    public Task<TResult> Result => _tcs.Task;
+    public Task<TResult> GetResultInternal()
+    {
+        return _tcs.Task;
+    }
 
     protected void Close(TResult result)
     {

@@ -69,7 +69,11 @@ internal partial class LibraryViewModel : ObservableObject
         LoadGamesForMode(value);
     }
 
-    partial void OnSearchGamesChanged(string? value) => LoadGamesForMode(CurrentMode, value);
+    partial void OnSearchGamesChanged(string? value)
+    {
+        LoadGamesForMode(CurrentMode, value);
+    }
+
     private void LoadGamesForMode(LibraryViewMode mode, string? searchFilter = null)
     {
         string? currentSearch = searchFilter ?? SearchGames;

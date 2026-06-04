@@ -44,8 +44,7 @@ internal class AdminService(AppConfig config) : IAdminService
 
     private string CreateSession(string username)
     {
-        string token = Convert.ToBase64String(
-            RandomNumberGenerator.GetBytes(32)); // secure random token
+        CleanupExpiredSessions();
 
         AdminSession session = new(
             Username: username,
@@ -53,9 +52,14 @@ internal class AdminService(AppConfig config) : IAdminService
                 config.Admin.AdminSessionSeconds)
             );
 
-        _sessions.TryAdd(token, session);
+        byte[] entropy = RandomNumberGenerator.GetBytes(32);
 
-        CleanupExpiredSessions();
+        string randomPart = Convert.ToBase64String(entropy);
+        string expirationPart = session.Expiration.Ticks.ToString();
+
+        string token = $"{randomPart}|{expirationPart}";
+
+        _sessions.TryAdd(token, session);
 
         return token;
     }
@@ -78,6 +82,7 @@ internal class AdminService(AppConfig config) : IAdminService
     private void CleanupExpiredSessions()
     {
         DateTime now = DateTime.UtcNow;
+
         foreach (var kvp in _sessions)
         {
             if (kvp.Value.Expiration <= now)

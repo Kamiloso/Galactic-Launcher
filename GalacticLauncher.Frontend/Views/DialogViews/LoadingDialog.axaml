@@ -21,13 +21,8 @@
                        HorizontalAlignment="Center"
                        Foreground="White"/>
 
-            <ProgressBar Value="{Binding ProgressValue}"
-                         Minimum="0" Maximum="100"
-                         Margin="0,8"
-                         Height="4"
-                         Foreground="{DynamicResource GalaxyGradient}">
-
-            </ProgressBar>
+			<ProgressBar IsIndeterminate="True"
+				        MaxWidth="300" />
 
             <TextBlock Text="{Binding Message}"
                        FontSize="14"

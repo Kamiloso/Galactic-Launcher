@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace GalacticLauncher.Frontend.ViewModels.Dialogs;
 
-internal partial class LoadingDialogViewModel : DialogViewModel<bool>
+internal partial class LoadingDialogViewModel : DialogViewModel<int>
 {
     [ObservableProperty]
     private string _title;
@@ -11,42 +11,30 @@ internal partial class LoadingDialogViewModel : DialogViewModel<bool>
     [ObservableProperty]
     private string _message;
 
-    [ObservableProperty]
-    private double _progressValue;
-
-    private bool _isFinished;
+    private bool _mustBeVisible = true;
 
     public LoadingDialogViewModel(string title, string message)
     {
         Title = title;
         Message = message;
-        
-        _ = StartFakeProgressAsync();
-    }
 
-    private async Task StartFakeProgressAsync()
-    {
-        await Task.Delay(100);
-        
-        while (!_isFinished && ProgressValue < 95)
+        _ = DelayVisible();
+
+        async Task DelayVisible()
         {
-            await Task.Delay(30); 
-            
-            if (!_isFinished)
-            {
-                ProgressValue += (95 - ProgressValue) * 0.05; 
-            }
+            await Task.Delay(1000); // just to avoid flashing
+
+            _mustBeVisible = false;
         }
     }
 
     public async Task Finish()
     {
-        _isFinished = true;
+        while (_mustBeVisible)
+        {
+            await Task.Delay(50);
+        }
 
-        ProgressValue = 100;
-
-        await Task.Delay(30);
-
-        Close(true);
+        Close(0);
     }
 }
