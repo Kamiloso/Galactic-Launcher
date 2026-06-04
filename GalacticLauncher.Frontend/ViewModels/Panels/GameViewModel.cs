@@ -211,14 +211,17 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ExecInfo? execInfo = MakeCurrentExecInfo();
         if (execInfo == null) return;
 
-        var dialog = new ConfirmationDialogViewModel(
+        var dialog = new FlexibleDialogViewModel(
             "Delete Game",
             "Are you sure you want to delete this game?"
         );
 
-        bool isConfirmed = await _dialog.ShowDialogAsync(dialog);
+        dialog.AddButton("Cancel", false);
+        dialog.AddButton("Delete", true, isHighlighted: true);
+        
+        var isConfirmed = await _dialog.ShowDialogAsync(dialog);
 
-        if (isConfirmed)
+        if (isConfirmed is true)
         {
             if (_execManager.Exists(execInfo))
             {
