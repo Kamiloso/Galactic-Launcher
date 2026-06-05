@@ -21,8 +21,8 @@ internal class HistoryService(
     private readonly int MAX_ENTRIES = config.History.MaxEntries;
     private readonly int PAGE_SIZE = config.History.PageSize;
 
-    private readonly DateTime _startDate = DateTime.UtcNow;
-    private readonly TimeSpan _interval = TimeSpan.FromSeconds(config.History.CleanupIntervalSeconds);
+    private readonly DateTime START_DATE = DateTime.UtcNow;
+    private readonly TimeSpan INTERVAL = TimeSpan.FromSeconds(config.History.CleanupIntervalSeconds);
 
     private long _cleanCycle = 0;
 
@@ -71,8 +71,8 @@ internal class HistoryService(
 
         long currentCycle = Interlocked.Read(ref _cleanCycle);
 
-        long cleanTimeTicks = _startDate.Ticks + (_interval.Ticks * currentCycle);
-        long cyclesPassed = (nowTime.Ticks - cleanTimeTicks) / _interval.Ticks;
+        long cleanTimeTicks = START_DATE.Ticks + (INTERVAL.Ticks * currentCycle);
+        long cyclesPassed = (nowTime.Ticks - cleanTimeTicks) / INTERVAL.Ticks;
 
         if (cyclesPassed > 0)
         {

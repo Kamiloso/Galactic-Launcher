@@ -11,6 +11,7 @@ public record AppConfig
     public record AdminSection
     {
         public required int AdminSessionSeconds { get; init; }
+        public required int GracePeriodSeconds { get; init; }
         public required IEnumerable<LoginData> Logins { get; init; }
 
         public record LoginData

@@ -18,13 +18,13 @@ internal interface IDialogs
         string title, string message, string username = "", string password = "");
 
     Func<Task> ShowLoadingDialogAsync( // Returns a function to close the dialog
-        string title, string message, int minimumTimeMs = 1000);
+        string title, string message, int minimumTimeMs = 0);
 
     Task ShowLoadingDialogAsync( // Returns the result of the task, while showing a loading dialog
-        string title, string message, Task task, int minimumTimeMs = 1000);
+        string title, string message, Task task, int fakeLoadingTime = 0);
 
     Task<T> ShowLoadingDialogAsync<T>( // Returns the result of the task, while showing a loading dialog
-        string title, string message, Task<T> task, int minimumTimeMs = 1000);
+        string title, string message, Task<T> task, int fakeLoadingTime = 0);
 }
 
 internal class Dialogs : IDialogs
@@ -73,10 +73,10 @@ internal class Dialogs : IDialogs
     }
 
     public Func<Task> ShowLoadingDialogAsync(
-        string title, string message, int minimumTimeMs = 1000)
+        string title, string message, int fakeLoadingTime = 0)
     {
         LoadingDialogViewModel dialog = new(title, message,
-            minimumTimeMs: minimumTimeMs);
+            fakeLoadingTime: fakeLoadingTime);
 
         _ = ShowDialogAsync(dialog);
 
@@ -84,18 +84,18 @@ internal class Dialogs : IDialogs
     }
 
     public async Task ShowLoadingDialogAsync(
-        string title, string message, Task task, int minimumTimeMs = 1000)
+        string title, string message, Task task, int fakeLoadingtime = 0)
     {
         await ShowLoadingDialogAsync(title, message,
             task: task.ContinueWith(_ => 0),
-            minimumTimeMs: minimumTimeMs);
+            fakeLoadingTime: fakeLoadingtime);
     }
 
     public async Task<T> ShowLoadingDialogAsync<T>(
-        string title, string message, Task<T> task, int minimumTimeMs = 1000)
+        string title, string message, Task<T> task, int fakeLoadingTime = 0)
     {
         Func<Task> finish = ShowLoadingDialogAsync(title, message,
-            minimumTimeMs: minimumTimeMs);
+            fakeLoadingTime: fakeLoadingTime);
 
         T result = await task;
 

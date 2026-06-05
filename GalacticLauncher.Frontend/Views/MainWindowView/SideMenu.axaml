@@ -99,7 +99,7 @@
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Data="{StaticResource IconSecurity}"/>
 
-						<TextBlock Text="Admin"
+						<TextBlock Text="{Binding AdminTitleText}"
 								   IsVisible="{Binding IsExpanded}"/>
 					</StackPanel>
 				</Button>

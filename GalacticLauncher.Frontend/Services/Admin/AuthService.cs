@@ -72,10 +72,9 @@ internal class AuthService(
             return TimeSpan.Zero;
 
         TimeSpan timeLeft = new DateTime(ticks) - DateTime.UtcNow;
-        TimeSpan timeLeftLower = timeLeft - TimeSpan.FromSeconds(5);
 
-        return timeLeftLower > TimeSpan.Zero
-            ? timeLeftLower
+        return timeLeft > TimeSpan.Zero
+            ? timeLeft
             : TimeSpan.Zero;
     }
 }

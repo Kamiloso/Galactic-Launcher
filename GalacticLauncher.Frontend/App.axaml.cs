@@ -2,6 +2,7 @@ global using Version = GalacticLauncher.Core.Models.Version;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using GalacticLauncher.Frontend.Infrastructure.Http;
 using GalacticLauncher.Frontend.Repositories;
 using GalacticLauncher.Frontend.Services;

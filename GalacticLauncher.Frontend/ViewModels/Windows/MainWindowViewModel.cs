@@ -7,17 +7,24 @@ using System;
 using System.Threading.Tasks;
 using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Cache;
+using GalacticLauncher.Frontend.Services.Admin;
+using GalacticLauncher.Core;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
 internal partial class MainWindowViewModel : ObservableObject
 {
+    private const string ADMIN_TITLE = "ADMIN";
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SideMenuWidth))]
     private bool _isExpanded;
 
     [ObservableProperty]
     private bool _isAdminVisible;
+
+    [ObservableProperty]
+    private string _adminTitleText = ADMIN_TITLE;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsHomePage))]
@@ -45,6 +52,7 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly INavigator _navigator;
     private readonly IThemeManager _themeManager;
     private readonly ICacheRefresher _cacheRefresher;
+    private readonly IAuthService _authService;
     private readonly IPreferenceManager _preferenceManager;
     private readonly IAdminPanelSelector _adminPanelSelector;
     private readonly IDialogs _dialogs;
@@ -57,6 +65,7 @@ internal partial class MainWindowViewModel : ObservableObject
         INavigator navigator,
         IThemeManager themeManager,
         ICacheRefresher cacheRefresher,
+        IAuthService authService,
         IPreferenceManager preferenceManager,
         IAdminPanelSelector adminPanelSelector,
         IDialogs dialog)
@@ -68,6 +77,7 @@ internal partial class MainWindowViewModel : ObservableObject
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
         _cacheRefresher = cacheRefresher;
+        _authService = authService;
         _preferenceManager = preferenceManager;
         _adminPanelSelector = adminPanelSelector;
         _dialogs = dialog;
@@ -76,6 +86,7 @@ internal partial class MainWindowViewModel : ObservableObject
         IsAdminVisible = preferenceManager.IsAdminPanelVisible;
 
         ConfigureNavigation();
+        ConfigureAdminTitle();
         ConfigureLoadingDialog();
     }
 
@@ -102,13 +113,34 @@ internal partial class MainWindowViewModel : ObservableObject
         }
     }
 
+    private void ConfigureAdminTitle()
+    {
+        _ = SpinInfinitely();
+
+        async Task SpinInfinitely()
+        {
+            while (true)
+            {
+                TimeSpan toExpire = _authService.TimeToExpiration();
+                bool isValidSession = _authService.IsValidSession;
+
+                AdminTitleText = isValidSession
+                    ? $"{ADMIN_TITLE} {Utils.FormatTimeSpan(toExpire)}"
+                    : ADMIN_TITLE;
+
+                await Task.Delay(50);
+            }
+        }
+    }
+
     private void ConfigureLoadingDialog()
     {
         _dialogs.OnDialogChanged += dvm => CurrentDialog = dvm;
 
         Func<Task> finish = _dialogs.ShowLoadingDialogAsync(
             "Starting Launcher",
-            "Fetching data...");
+            "Fetching data...",
+            minimumTimeMs: 1000);
 
         _cacheRefresher.OnInitialize += () => finish();
     }

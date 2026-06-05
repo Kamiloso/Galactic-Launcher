@@ -3,6 +3,7 @@ using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
+using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
@@ -21,19 +22,27 @@ internal partial class AdminViewModel : ObservableObject
     private readonly AdGamesViewModel _gamesViewModel;
     private readonly AdTagsViewModel _tagsViewModel;
     private readonly AdUsersViewModel _usersViewModel;
+    private readonly IAdminPanelSelector _adminPanelSelector;
     private readonly INavigator _navigator;
 
     public AdminViewModel(
         AdGamesViewModel gamesViewModel,
         AdTagsViewModel tagsViewModel,
         AdUsersViewModel usersViewModel,
+        IAdminPanelSelector adminPanelSelector,
         INavigator navigator)
     {
         _gamesViewModel = gamesViewModel;
         _tagsViewModel = tagsViewModel;
         _usersViewModel = usersViewModel;
+        _adminPanelSelector = adminPanelSelector;
         _navigator = navigator;
 
+        ConfigureNavigation();
+    }
+
+    private void ConfigureNavigation()
+    {
         _navigator.OnAdminPanelNavigate += InnerNavigate;
         _navigator.NavigateTo<AdGamesViewModel>();
 
@@ -52,6 +61,11 @@ internal partial class AdminViewModel : ObservableObject
                 nav.OnActivate(args);
             }
         }
+    }
+
+    public async Task RefreshSession()
+    {
+        await _adminPanelSelector.RefreshAdminPanelAsync();
     }
 
     public void ShowGames() =>

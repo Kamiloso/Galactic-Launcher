@@ -114,4 +114,23 @@ public static class Utils
                 : path + Path.DirectorySeparatorChar;
         }
     }
+
+    public static string FormatTimeSpan(TimeSpan timeSpan)
+    {
+        if (timeSpan.Milliseconds > 0)
+            timeSpan += TimeSpan.FromSeconds(1); // round up
+
+        string prefix = timeSpan < TimeSpan.Zero ? "-" : "";
+        var ts = timeSpan.Duration();
+
+        string result = ts switch
+        {
+            _ when ts.TotalDays >= 1 => $"{ts.Days}d {ts.Hours}h",
+            _ when ts.TotalHours >= 1 => $"{ts.Hours}h {ts.Minutes}m",
+            _ when ts.TotalMinutes >= 1 => $"{ts.Minutes}m {ts.Seconds}s",
+            _ => $"{ts.Seconds}s"
+        };
+
+        return $"{prefix}{result}";
+    }
 }

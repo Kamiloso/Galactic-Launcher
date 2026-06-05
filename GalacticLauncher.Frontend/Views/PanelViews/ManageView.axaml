@@ -4,15 +4,12 @@
 			 xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:AdminViewModel"
 			 x:CompileBindings="True">
-
-	<!--Admin view-->
 	<Border Margin="30,20,30,20">
 		<Grid RowDefinitions="Auto,*">
 			<Grid RowDefinitions="Auto,Auto"
 				  Margin="0,0,0,20"
 				  Grid.Row="0">
 
-				<!--Laucnher manager-->
 				<TextBlock Classes="slogan"
 						   Grid.Row="0"
 						   Text="ADMIN MANAGER"
@@ -20,24 +17,31 @@
 						   VerticalAlignment="Top"
 						   FontSize="35"/>
 
+				<Button Classes="favouriteAll"
+						Content="REFRESH SESSION"
+						Grid.Row="0"
+						HorizontalAlignment="Right"
+						VerticalAlignment="Top"
+						Command="{Binding RefreshSession}">
+				</Button>
+
 				<Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto"
 					  HorizontalAlignment="Left"
 					  VerticalAlignment="Stretch">
-
-					<!--buttons-->
 					<Button Classes="favouriteAll"
 							Content="TAGS"
 							Grid.Column="0"
 							Command="{Binding ShowTags}"
 							Classes.active="{Binding IsTagsPage}">
 					</Button>
-					
+
 					<Button Classes="favouriteAll"
 							Content="USERS"
 							Grid.Column="1"
 							Command="{Binding ShowUsers}"
 							Classes.active="{Binding IsUsersPage}">
 					</Button>
+
 					<Button Classes="favouriteAll"
 							Content="GAMES"
 							Grid.Column="2"
@@ -49,7 +53,6 @@
 			<Border Grid.Row="1">
 				<ContentControl Content="{Binding CurrentPage}"/>
 			</Border>
-			
 		</Grid>
 	</Border>
 </UserControl>
