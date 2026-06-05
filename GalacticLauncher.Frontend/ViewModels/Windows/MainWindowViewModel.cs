@@ -3,10 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
-using GalacticLauncher.Frontend.Services.Data;
 using System;
 using System.Threading.Tasks;
 using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Cache;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
@@ -14,7 +14,7 @@ internal partial class MainWindowViewModel : ObservableObject
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SideMenuWidth))]
-    private bool _isExpanded = true;
+    private bool _isExpanded;
 
     public double SideMenuWidth => IsExpanded ? 200 : 84;
 
@@ -42,6 +42,7 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly INavigator _navigator;
     private readonly IThemeManager _themeManager;
     private readonly ICacheRefresher _cacheRefresher;
+    private readonly IPreferenceManager _preferenceManager;
     private readonly IAdminPanelSelector _adminPanelSelector;
     private readonly IDialogs _dialogs;
 
@@ -53,9 +54,8 @@ internal partial class MainWindowViewModel : ObservableObject
         INavigator navigator,
         IThemeManager themeManager,
         ICacheRefresher cacheRefresher,
+        IPreferenceManager preferenceManager,
         IAdminPanelSelector adminPanelSelector,
-        IErrorHandler errorHandler,
-        INotifications notifications,
         IDialogs dialog)
     {
         _navigator = navigator;
@@ -65,32 +65,20 @@ internal partial class MainWindowViewModel : ObservableObject
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
         _cacheRefresher = cacheRefresher;
+        _preferenceManager = preferenceManager;
         _adminPanelSelector = adminPanelSelector;
         _dialogs = dialog;
 
-        // Error handling
+        IsExpanded = preferenceManager.IsMenuExpanded;
 
-        errorHandler.OnInfo += notifications.ShowInfo;
-        errorHandler.OnWarning += notifications.ShowWarning;
-        errorHandler.OnError += notifications.ShowError;
-        errorHandler.OnSuccess += notifications.ShowSuccess;
+        ConfigureNavigation();
+        ConfigureLoadingDialog();
+    }
 
-        // Navigation
-
+    private void ConfigureNavigation()
+    {
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
-
-        // Loading dialog
-
-        _dialogs.OnDialogChanged += dvm => CurrentDialog = dvm;
-
-        Func<Task> finish = _dialogs.ShowLoadingDialogAsync(
-            "Starting Launcher",
-            "Fetching data...");
-
-        _cacheRefresher.OnInitialize += () => finish();
-
-        // Keep it local to not accidentally call it from somewhere else
 
         void InnerNavigate(Type pageType, object[] args)
         {
@@ -108,6 +96,22 @@ internal partial class MainWindowViewModel : ObservableObject
                 nav.OnActivate(args);
             }
         }
+    }
+
+    private void ConfigureLoadingDialog()
+    {
+        _dialogs.OnDialogChanged += dvm => CurrentDialog = dvm;
+
+        Func<Task> finish = _dialogs.ShowLoadingDialogAsync(
+            "Starting Launcher",
+            "Fetching data...");
+
+        _cacheRefresher.OnInitialize += () => finish();
+    }
+
+    partial void OnIsExpandedChanged(bool value)
+    {
+        _preferenceManager.IsMenuExpanded = value;
     }
 
     [RelayCommand]

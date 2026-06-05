@@ -5,14 +5,15 @@ using System.Linq;
 using GalacticLauncher.Core;
 using GalacticLauncher.Core.Extensions;
 using GalacticLauncher.Core.Models;
+using GalacticLauncher.Frontend.Services.Cache;
 
 namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface IGameListManager
 {
-    IEnumerable<long> GetLibraryGames(string? searchName = null);
-    IEnumerable<long> GetFavoriteGames(string? searchName = null);
-    IEnumerable<long> GetNolibGames(string? searchName = null);
+    IEnumerable<long> GetLibraryGames(string searchName = "");
+    IEnumerable<long> GetFavoriteGames(string searchName = "");
+    IEnumerable<long> GetNolibGames(string searchName = "");
 
     IEnumerable<long> ObtainLibraryRecommendations(int limit);
     IEnumerable<long> ObtainFavoriteRecommendations(int limit);
@@ -34,26 +35,29 @@ internal class GameListManager(
     IDataRepository dataRepository,
     ICacheProvider cacheProvider) : IGameListManager
 {
+    private const string CKEY_LIBRARY = "library";
+    private const string CKEY_FAVORITE = "favorites";
+
     private readonly Random _rand = new();
 
-    public IEnumerable<long> GetLibraryGames(string? searchName = null)
+    public IEnumerable<long> GetLibraryGames(string searchName = "")
     {
-        return GetFilteredGames(Const.KEY_LIB, RemoveFromLibrary, searchName);
+        return GetFilteredGames(CKEY_LIBRARY, RemoveFromLibrary, searchName);
     }
 
-    public IEnumerable<long> GetFavoriteGames(string? searchName = null)
+    public IEnumerable<long> GetFavoriteGames(string searchName = "")
     {
-        return GetFilteredGames(Const.KEY_FAV, RemoveFromFavorite, searchName);
+        return GetFilteredGames(CKEY_FAVORITE, RemoveFromFavorite, searchName);
     }
 
-    public IEnumerable<long> GetNolibGames(string? searchName = null)
+    public IEnumerable<long> GetNolibGames(string searchName = "")
     {
         List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
 
         return ProcessGames(allGames.Except(GetLibraryGames()), searchName);
     }
 
-    private IEnumerable<long> GetFilteredGames(string key, Action<long> removeAction, string? searchName)
+    private IEnumerable<long> GetFilteredGames(string key, Action<long> removeAction, string searchName)
     {
         List<long> allGames = [.. cacheProvider.GetAllGames().Select(g => g.Id)];
         List<long> storedGames = [.. dataRepository.GetAll(key)];
@@ -66,19 +70,19 @@ internal class GameListManager(
         return ProcessGames(dataRepository.GetAll(key), searchName);
     }
 
-    private IEnumerable<long> ProcessGames(IEnumerable<long> games, string? searchName)
+    private IEnumerable<long> ProcessGames(IEnumerable<long> games, string searchName)
     {
         return games
             .Where(id => FilterGame(id, searchName))
             .OrderBy(id => cacheProvider.GetGameOf(id)?.Name ?? "");
     }
 
-    private bool FilterGame(long id, string? searchName)
+    private bool FilterGame(long id, string searchName)
     {
         Game? game = cacheProvider.GetGameOf(id);
         if (game == null) return false;
 
-        return game.Name.Contains(searchName ?? "", StringComparison.OrdinalIgnoreCase);
+        return game.Name.Contains(searchName, StringComparison.OrdinalIgnoreCase);
     }
 
     public IEnumerable<long> ObtainLibraryRecommendations(int limit)
@@ -108,23 +112,23 @@ internal class GameListManager(
 
     public void AddToLibrary(long id)
     {
-        dataRepository.Add(Const.KEY_LIB, id);
+        dataRepository.Add(CKEY_LIBRARY, id);
     }
 
     public void RemoveFromLibrary(long id)
     {
-        dataRepository.Remove(Const.KEY_FAV, id);
-        dataRepository.Remove(Const.KEY_LIB, id);
+        dataRepository.Remove(CKEY_FAVORITE, id);
+        dataRepository.Remove(CKEY_LIBRARY, id);
     }
 
     public void AddToFavorite(long id)
     {
-        dataRepository.Add(Const.KEY_LIB, id);
-        dataRepository.Add(Const.KEY_FAV, id);
+        dataRepository.Add(CKEY_LIBRARY, id);
+        dataRepository.Add(CKEY_FAVORITE, id);
     }
 
     public void RemoveFromFavorite(long id)
     {
-        dataRepository.Remove(Const.KEY_FAV, id);
+        dataRepository.Remove(CKEY_FAVORITE, id);
     }
 }

@@ -5,6 +5,7 @@ using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Infrastructure;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Executables;
 using GalacticLauncher.Frontend.Tools.Classes;

@@ -1,4 +1,5 @@
-﻿using GalacticLauncher.Frontend.Services.Admin;
+﻿using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Admin;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ public interface IAdminPanelSelector
 
 internal class AdminPanelSelector(
     IAuthService authService,
+    IPreferenceManager preferenceManager,
     IDialogs dialogs,
     INavigator navigator) : IAdminPanelSelector
 {
@@ -24,12 +26,15 @@ internal class AdminPanelSelector(
 
         var credentials = await dialogs.ShowLoginDialogAsync(
             "Login",
-            "Please enter your credentials to access the admin panel.");
+            "Please enter your credentials to access the admin panel.",
+            username: preferenceManager.LastUsername);
 
         if (credentials == null) return;
 
         string username = credentials.Value.Username;
         string password = credentials.Value.Password;
+
+        preferenceManager.LastUsername = username;
 
         bool authenticated = await dialogs.ShowLoadingDialogAsync(
             "Logging In...",

@@ -4,6 +4,7 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Core.Models;
+using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;

@@ -15,7 +15,7 @@ internal interface IDialogs
         string title, string message, string textYes = "Yes", string textNo = "No");
 
     Task<(string Username, string Password)?> ShowLoginDialogAsync(
-        string title, string message);
+        string title, string message, string username = "", string password = "");
 
     Func<Task> ShowLoadingDialogAsync( // Returns a function to close the dialog
         string title, string message, int minimumTimeMs = 1000);
@@ -53,11 +53,11 @@ internal class Dialogs : IDialogs
     }
 
     public async Task<(string Username, string Password)?> ShowLoginDialogAsync(
-        string title, string message)
+        string title, string message, string username = "", string password = "")
     {
         FlexibleDialogViewModel dialog = new(title, message);
 
-        TextInputViewModel ifUser = dialog.AddInput("Username", "Username");
+        TextInputViewModel ifUser = dialog.AddInput("Username", "Username", fillText: username);
         TextInputViewModel ifPass = dialog.AddInput("Password", "Password", isPassword: true);
 
         dialog.AddButton("Login", true, isHighlighted: true);

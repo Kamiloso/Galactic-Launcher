@@ -1,4 +1,6 @@
 ﻿using GalacticLauncher.Core.Models;
+using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.GameButtons;
 

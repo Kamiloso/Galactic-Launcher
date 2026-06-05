@@ -15,15 +15,21 @@ internal partial class FlexibleDialogViewModel(string title, string message) : D
     public ObservableCollection<TextInputViewModel> Inputs { get; } = [];
     public ObservableCollection<DialogButtonViewModel> Buttons { get; } = [];
     
-    public TextInputViewModel AddInput(string watermark, string label, bool isPassword = false)
+    public TextInputViewModel AddInput(string watermark, string label,
+        string fillText = "", bool isPassword = false)
     {
-        var tvm = new TextInputViewModel(watermark, label, isPassword);
+        var tvm = new TextInputViewModel(watermark, label)
+        {
+            Text = fillText,
+            IsPassword = isPassword,
+        };
 
         Inputs.Add(tvm);
         return tvm;
     }
 
-    public DialogButtonViewModel AddButton(string text, object? returnValue, bool isHighlighted = false)
+    public DialogButtonViewModel AddButton(string text, object? returnValue,
+        bool isHighlighted = false)
     {
         if (Buttons.Count >= 3)
             throw new InvalidOperationException("Max buttons exceeded.");

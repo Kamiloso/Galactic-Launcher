@@ -3,7 +3,7 @@ using GalacticLauncher.Frontend.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GalacticLauncher.Frontend.Services.Data;
+namespace GalacticLauncher.Frontend.Services.Cache;
 
 public interface ICacheProvider
 {

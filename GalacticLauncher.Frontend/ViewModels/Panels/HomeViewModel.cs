@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.GameButtons;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
