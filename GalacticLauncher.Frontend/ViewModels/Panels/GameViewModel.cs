@@ -5,6 +5,7 @@ using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Infrastructure;
+using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Executables;
@@ -66,6 +67,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private readonly ICacheRefresher _cacheRefresher;
     private readonly ILastGameManager _lastGameManager;
     private readonly IExecManager _execManager;
+    private readonly IPreferenceManager _preferenceManager;
     private readonly ITerminator _terminator;
     private readonly IDialogs _dialogs;
     private readonly INotifications _notifications;
@@ -75,6 +77,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ICacheRefresher cacheRefresher,
         ILastGameManager lastGameManager,
         IExecManager execManager,
+        IPreferenceManager preferenceManager,
         ITerminator terminator,
         IDialogs dialog,
         INotifications notifications)
@@ -83,6 +86,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _cacheRefresher = cacheRefresher;
         _lastGameManager = lastGameManager;
         _execManager = execManager;
+        _preferenceManager = preferenceManager;
         _terminator = terminator;
         _dialogs = dialog;
         _notifications = notifications;
@@ -128,9 +132,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         Description = game?.Description ?? "";
         IconUrl = game?.IconUrl;
 
-        Version? selectedVersion = SelectedVersion;
-
         List<Version> versions = [.. _cacheProvider.GetVersionsOf(_id)];
+
+        long? selVersionId = _preferenceManager.GetSelectedVersion(_id);
 
         AvailableVersions.Clear();
 
@@ -139,9 +143,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             AvailableVersions.Add(version);
         }
 
-        SelectedVersion = selectedVersion == null
+        SelectedVersion = selVersionId == null
             ? AvailableVersions.FirstOrDefault(v => v.IsPrimary)
-            : AvailableVersions.FirstOrDefault(v => v.Id == selectedVersion.Id);
+            : AvailableVersions.FirstOrDefault(v => v.Id == selVersionId);
     }
 
     [RelayCommand]
@@ -249,6 +253,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     partial void OnSelectedVersionChanged(Version? value)
     {
         SetAdequateViewMode();
+
+        _preferenceManager.SetSelectedVersion(_id, SelectedVersion?.Id);
     }
 
     private void SetAdequateViewMode()
