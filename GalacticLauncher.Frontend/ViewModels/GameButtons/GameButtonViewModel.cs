@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Domain.Exceptions;
-using GalacticLauncher.Frontend.Services.Data;
+using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System.Threading.Tasks;

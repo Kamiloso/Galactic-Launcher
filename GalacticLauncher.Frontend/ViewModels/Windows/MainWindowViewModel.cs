@@ -3,37 +3,47 @@ using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
-using GalacticLauncher.Frontend.Services.Data;
 using System;
 using System.Threading.Tasks;
 using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Cache;
+using GalacticLauncher.Frontend.Services.Admin;
+using GalacticLauncher.Core;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 
 internal partial class MainWindowViewModel : ObservableObject
 {
+    private const string ADMIN_TITLE = "ADMIN";
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(SideMenuWidth))]
-    private bool _isExpanded = true;
+    private bool _isExpanded;
 
-    public double SideMenuWidth => IsExpanded ? 200 : 84;
+    [ObservableProperty]
+    private bool _isAdminVisible;
+
+    [ObservableProperty]
+    private string _adminTitleText = ADMIN_TITLE;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsHomePage))]
     [NotifyPropertyChangedFor(nameof(IsLibraryPage))]
     [NotifyPropertyChangedFor(nameof(IsAdminPage))]
     [NotifyPropertyChangedFor(nameof(IsGamePage))]
-    public object? _currentPage;
+    private object? _currentPage;
     
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsDialogVisible))]
     private object? _currentDialog;
 
+    public double SideMenuWidth => IsExpanded ? 200 : 84;
+    public bool IsDialogVisible => CurrentDialog != null;
+
     public bool IsHomePage => CurrentPage is HomeViewModel;
     public bool IsLibraryPage => CurrentPage is LibraryViewModel;
     public bool IsAdminPage => CurrentPage is AdminViewModel;
     public bool IsGamePage => CurrentPage is GameViewModel;
-    public bool IsDialogVisible => CurrentDialog != null;
 
     private readonly HomeViewModel _homeViewModel;
     private readonly GameViewModel _gameViewModel;
@@ -42,6 +52,8 @@ internal partial class MainWindowViewModel : ObservableObject
     private readonly INavigator _navigator;
     private readonly IThemeManager _themeManager;
     private readonly ICacheRefresher _cacheRefresher;
+    private readonly IAuthService _authService;
+    private readonly IPreferenceManager _preferenceManager;
     private readonly IAdminPanelSelector _adminPanelSelector;
     private readonly IDialogs _dialogs;
 
@@ -53,9 +65,9 @@ internal partial class MainWindowViewModel : ObservableObject
         INavigator navigator,
         IThemeManager themeManager,
         ICacheRefresher cacheRefresher,
+        IAuthService authService,
+        IPreferenceManager preferenceManager,
         IAdminPanelSelector adminPanelSelector,
-        IErrorHandler errorHandler,
-        INotifications notifications,
         IDialogs dialog)
     {
         _navigator = navigator;
@@ -65,32 +77,23 @@ internal partial class MainWindowViewModel : ObservableObject
         _adminViewModel = adminViewModel;
         _themeManager = themeManager;
         _cacheRefresher = cacheRefresher;
+        _authService = authService;
+        _preferenceManager = preferenceManager;
         _adminPanelSelector = adminPanelSelector;
         _dialogs = dialog;
 
-        // Error handling
+        IsExpanded = preferenceManager.IsMenuExpanded;
+        IsAdminVisible = preferenceManager.IsAdminPanelVisible;
 
-        errorHandler.OnInfo += notifications.ShowInfo;
-        errorHandler.OnWarning += notifications.ShowWarning;
-        errorHandler.OnError += notifications.ShowError;
-        errorHandler.OnSuccess += notifications.ShowSuccess;
+        ConfigureNavigation();
+        ConfigureAdminTitle();
+        ConfigureLoadingDialog();
+    }
 
-        // Navigation
-
+    private void ConfigureNavigation()
+    {
         _navigator.OnNavigate += InnerNavigate;
         _navigator.NavigateTo<HomeViewModel>();
-
-        // Loading dialog
-
-        _dialogs.OnDialogChanged += dvm => CurrentDialog = dvm;
-
-        Func<Task> finish = _dialogs.ShowLoadingDialogAsync(
-            "Starting Launcher",
-            "Fetching data...");
-
-        _cacheRefresher.OnInitialize += () => finish();
-
-        // Keep it local to not accidentally call it from somewhere else
 
         void InnerNavigate(Type pageType, object[] args)
         {
@@ -110,10 +113,58 @@ internal partial class MainWindowViewModel : ObservableObject
         }
     }
 
+    private void ConfigureAdminTitle()
+    {
+        _ = SpinInfinitely();
+
+        async Task SpinInfinitely()
+        {
+            while (true)
+            {
+                TimeSpan toExpire = _authService.TimeToExpiration();
+                bool isValidSession = _authService.IsValidSession;
+
+                AdminTitleText = isValidSession
+                    ? $"{ADMIN_TITLE} {Utils.FormatTimeSpan(toExpire)}"
+                    : ADMIN_TITLE;
+
+                await Task.Delay(50);
+            }
+        }
+    }
+
+    private void ConfigureLoadingDialog()
+    {
+        _dialogs.OnDialogChanged += dvm => CurrentDialog = dvm;
+
+        Func<Task> finish = _dialogs.ShowLoadingDialogAsync(
+            "Starting Launcher",
+            "Fetching data...",
+            minimumTimeMs: 1000);
+
+        _cacheRefresher.OnInitialize += () => finish();
+    }
+
+    partial void OnIsExpandedChanged(bool value)
+    {
+        _preferenceManager.IsMenuExpanded = value;
+    }
+
+    partial void OnIsAdminVisibleChanged(bool value)
+    {
+        _preferenceManager.IsAdminPanelVisible = value;
+    }
+
     [RelayCommand]
     public void ToggleMenu()
     {
         IsExpanded = !IsExpanded;
+    }
+
+    [RelayCommand]
+    public void ToggleAdminVisible()
+    {
+        IsAdminVisible = !IsAdminVisible;
     }
 
     [RelayCommand]

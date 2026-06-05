@@ -9,6 +9,14 @@
 		MinHeight="576"
         WindowStartupLocation="CenterScreen"
 		Icon="{StaticResource AppIcon}">
+
+	<!--Key Bindings-->
+
+	<Window.KeyBindings>
+		<KeyBinding Gesture="Ctrl+O" Command="{Binding ToggleAdminVisible}" />
+	</Window.KeyBindings>
+	
+	<!--Grid-->
 	
 	<Grid>
 		<Grid ColumnDefinitions="Auto, *">

@@ -12,6 +12,8 @@ public interface IAdminService
 
 internal class AdminService(AppConfig config) : IAdminService
 {
+    private readonly TimeSpan GRACE_PERIOD = TimeSpan.FromSeconds(config.Admin.GracePeriodSeconds);
+
     private readonly ConcurrentDictionary<string, AdminSession> _sessions = new();
 
     private record AdminSession(
@@ -68,7 +70,7 @@ internal class AdminService(AppConfig config) : IAdminService
     {
         if (_sessions.TryGetValue(token, out var session))
         {
-            if (session.Expiration > DateTime.UtcNow)
+            if (session.Expiration > DateTime.UtcNow + GRACE_PERIOD)
             {
                 username = session.Username;
                 return true;

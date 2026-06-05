@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Services.Data;
+namespace GalacticLauncher.Frontend.Services.Cache;
 
 public interface ICacheRefresher
 {

@@ -5,6 +5,8 @@ using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
 using GalacticLauncher.Frontend.Infrastructure;
+using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Executables;
 using GalacticLauncher.Frontend.Tools.Classes;
@@ -65,29 +67,29 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private readonly ICacheRefresher _cacheRefresher;
     private readonly ILastGameManager _lastGameManager;
     private readonly IExecManager _execManager;
+    private readonly IPreferenceManager _preferenceManager;
     private readonly ITerminator _terminator;
     private readonly IDialogs _dialogs;
     private readonly INotifications _notifications;
-    private readonly IGameListManager _gameListManager;
 
     public GameViewModel(
         ICacheProvider cacheProvider,
         ICacheRefresher cacheRefresher,
         ILastGameManager lastGameManager,
         IExecManager execManager,
+        IPreferenceManager preferenceManager,
         ITerminator terminator,
         IDialogs dialog,
-        INotifications notifications,
-        IGameListManager gameListManager)
+        INotifications notifications)
     {
         _cacheProvider = cacheProvider;
         _cacheRefresher = cacheRefresher;
         _lastGameManager = lastGameManager;
         _execManager = execManager;
+        _preferenceManager = preferenceManager;
         _terminator = terminator;
         _dialogs = dialog;
         _notifications = notifications;
-        _gameListManager = gameListManager;
 
         _cacheRefresher.OnInitialize +=
             () => { if (_init) RunGameDataRefresh(); };
@@ -130,9 +132,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         Description = game?.Description ?? "";
         IconUrl = game?.IconUrl;
 
-        Version? selectedVersion = SelectedVersion;
-
         List<Version> versions = [.. _cacheProvider.GetVersionsOf(_id)];
+
+        long? selVersionId = _preferenceManager.GetSelectedVersion(_id);
 
         AvailableVersions.Clear();
 
@@ -141,9 +143,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             AvailableVersions.Add(version);
         }
 
-        SelectedVersion = selectedVersion == null
+        SelectedVersion = selVersionId == null
             ? AvailableVersions.FirstOrDefault(v => v.IsPrimary)
-            : AvailableVersions.FirstOrDefault(v => v.Id == selectedVersion.Id);
+            : AvailableVersions.FirstOrDefault(v => v.Id == selVersionId);
     }
 
     [RelayCommand]
@@ -156,37 +158,33 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (_execManager.IsDownloading(execInfo)) return;
 
         DownloadProgress = 0;
-        Progress<double> progress = new(value =>
-        {
-            DownloadProgress = Math.Clamp(value, 0, 1);
-        });
-
         _notifications.ShowInfo("Download Started", $"Downloading {Title}...");
+
+        Progress<DownloadProgressData> progress = new();
+        
+        Task task = _downloading.Start(cancellationToken =>
+            _execManager.DownloadAsync(execInfo, progress, cancellationToken));
+
+        SetAdequateViewMode();
 
         try
         {
-            Task task = _downloading.Start(cancellationToken =>
-                _execManager.DownloadAsync(execInfo, progress, cancellationToken));
-
-            SetAdequateViewMode();
-
-            await _dialogs.ShowLoadingDialogAsync(
-                $"Downloading",
-                $"Downloading {Title}...", task);
-
-            _gameListManager.AddToLibrary(_id);
+            await _dialogs.ShowProgressDialogAsync(
+                "Downloading", 
+                $"Downloading {Title}...", 
+                task, 
+                progress, 
+                CancelDownload);
 
             _notifications.ShowSuccess("Download Complete", $"{Title} is ready to play.");
         }
         catch (OperationCanceledException) { }
-        catch (DownloadException )
+        catch (DownloadException)
         {
             _notifications.ShowError("Download Error", $"{Title} failed to download.");
         }
         finally
         {
-            _downloading.Terminate();
-
             SetAdequateViewMode();
         }
     }
@@ -198,8 +196,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (execInfo == null) return;
 
         _downloading.Terminate();
-
-        SetAdequateViewMode();
         
         _notifications.ShowInfo("Download Cancelled", $"Download for {Title} was stopped.");
     }
@@ -215,7 +211,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             "Are you sure you want to delete this game?",
             textYes: "Delete", textNo: "Cancel");
 
-        if (isConfirmed is true)
+        if (isConfirmed)
         {
             if (_execManager.Exists(execInfo))
             {
@@ -253,6 +249,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     partial void OnSelectedVersionChanged(Version? value)
     {
         SetAdequateViewMode();
+
+        _preferenceManager.SetSelectedVersion(_id, SelectedVersion?.Id);
     }
 
     private void SetAdequateViewMode()

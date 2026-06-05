@@ -2,15 +2,16 @@ global using Version = GalacticLauncher.Core.Models.Version;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using GalacticLauncher.Frontend.Infrastructure.Http;
 using GalacticLauncher.Frontend.Repositories;
 using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Admin;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Executables;
 using GalacticLauncher.Frontend.Tools.Files;
 using GalacticLauncher.Frontend.Tools.Networking;
-using GalacticLauncher.Frontend.ViewModels;
 using GalacticLauncher.Frontend.ViewModels.AdminPanels;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend;
 
@@ -74,6 +76,7 @@ public partial class App : Application
             // Repositories
             services.AddSingleton<ICacheRepository, CacheRepository>();
             services.AddSingleton<IDataRepository, DataRepository>();
+            services.AddSingleton<IMemoryRepository, MemoryRepository>();
 
             // Services
             services.AddSingleton<IExecManager, ExecManager>();
@@ -84,25 +87,44 @@ public partial class App : Application
             services.AddSingleton<IImageProvider, ImageProvider>();
             services.AddSingleton<IGameListManager, GameListManager>();
             services.AddSingleton<ILastGameManager, LastGameManager>();
+            services.AddSingleton<IPreferenceManager, PreferenceManager>();
             services.AddSingleton<IAuthService, AuthService>();
 
             // Initialize App
-            var serviceProvider = services.BuildServiceProvider();
-
-            InstantiateSingletons(serviceProvider, services);
-
-            var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
-            var cacheRefresher = serviceProvider.GetRequiredService<ICacheRefresher>();
-
-            _ = cacheRefresher.RefreshRootAsync();
-
-            desktop.MainWindow = mainWindow;
+            InitializeApp(services, services.BuildServiceProvider());
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    public static void InstantiateSingletons(IServiceProvider provider, IServiceCollection services)
+    private static void InitializeApp(
+        IServiceCollection services, ServiceProvider serviceProvider)
+    {
+        InstantiateSingletons(services, serviceProvider);
+
+        // Error handling
+        var errorHandler = serviceProvider.GetRequiredService<IErrorHandler>();
+        var notifications = serviceProvider.GetRequiredService<INotifications>();
+
+        errorHandler.OnInfo += notifications.ShowInfo;
+        errorHandler.OnWarning += notifications.ShowWarning;
+        errorHandler.OnError += notifications.ShowError;
+        errorHandler.OnSuccess += notifications.ShowSuccess;
+
+        // Cache Initialization
+        var cacheRefresher = serviceProvider.GetRequiredService<ICacheRefresher>();
+
+        _ = cacheRefresher.RefreshRootAsync();
+
+        // Window Initialize
+        var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
+        var desktop = serviceProvider.GetRequiredService<IClassicDesktopStyleApplicationLifetime>();
+
+        desktop.MainWindow = mainWindow;
+    }
+
+    private static void InstantiateSingletons(
+        IServiceCollection services, ServiceProvider serviceProvider)
     {
         List<ServiceDescriptor> singletonDescriptors = [..
             services.Where(d =>
@@ -112,7 +134,7 @@ public partial class App : Application
 
         foreach (var descriptor in singletonDescriptors)
         {
-            _ = provider.GetService(descriptor.ServiceType);
+            _ = serviceProvider.GetService(descriptor.ServiceType);
         }
     }
 }

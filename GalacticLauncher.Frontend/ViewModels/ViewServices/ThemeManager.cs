@@ -2,6 +2,7 @@
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
 using GalacticLauncher.Frontend.Infrastructure;
+using GalacticLauncher.Frontend.Services;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
@@ -13,18 +14,31 @@ public interface IThemeManager
 
 internal class ThemeManager : IThemeManager
 {
-    private bool _isGalaxyTheme = true;
+    private bool IsGalaxyTheme
+    {
+        get => _preferenceManager.IsThemeGalactic;
+        set => _preferenceManager.IsThemeGalactic = value;
+    }
+
+    private readonly IPreferenceManager _preferenceManager;
+
+    public ThemeManager(IPreferenceManager preferenceManager)
+    {
+        _preferenceManager = preferenceManager;
+
+        SetTheme(IsGalaxyTheme);
+    }
 
     public void ToggleTheme()
     {
-        SetTheme(!_isGalaxyTheme);
+        SetTheme(!IsGalaxyTheme);
     }
 
     public void SetTheme(bool isGalaxyTheme)
     {
-        _isGalaxyTheme = isGalaxyTheme;
+        IsGalaxyTheme = isGalaxyTheme;
 
-        string themeFile = _isGalaxyTheme
+        string themeFile = IsGalaxyTheme
             ? "PinkThemeGradient.axaml"
             : "BlueThemeGradient.axaml";
 

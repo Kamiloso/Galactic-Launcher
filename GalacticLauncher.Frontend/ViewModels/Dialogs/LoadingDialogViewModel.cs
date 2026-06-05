@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -15,7 +14,7 @@ internal partial class LoadingDialogViewModel : DialogViewModel<int>
     private bool _mustBeVisible = true;
 
     public LoadingDialogViewModel(string title, string message,
-        int minimumTimeMs = 0)
+        int fakeLoadingTime = 0)
     {
         Title = title;
         Message = message;
@@ -24,7 +23,10 @@ internal partial class LoadingDialogViewModel : DialogViewModel<int>
 
         async Task DelayVisible()
         {
-            await Task.Delay(minimumTimeMs); // just to avoid flashing
+            // just to feel more responsive
+            // and avoid flashing the dialog if the task is too fast
+
+            await Task.Delay(fakeLoadingTime);
 
             _mustBeVisible = false;
         }

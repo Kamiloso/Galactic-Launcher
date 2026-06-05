@@ -1,4 +1,4 @@
-﻿using GalacticLauncher.Frontend.Services.Data;
+﻿using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.GameButtons;
