@@ -16,24 +16,27 @@ internal partial class MainWindowViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(SideMenuWidth))]
     private bool _isExpanded;
 
-    public double SideMenuWidth => IsExpanded ? 200 : 84;
+    [ObservableProperty]
+    private bool _isAdminVisible;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsHomePage))]
     [NotifyPropertyChangedFor(nameof(IsLibraryPage))]
     [NotifyPropertyChangedFor(nameof(IsAdminPage))]
     [NotifyPropertyChangedFor(nameof(IsGamePage))]
-    public object? _currentPage;
+    private object? _currentPage;
     
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsDialogVisible))]
     private object? _currentDialog;
 
+    public double SideMenuWidth => IsExpanded ? 200 : 84;
+    public bool IsDialogVisible => CurrentDialog != null;
+
     public bool IsHomePage => CurrentPage is HomeViewModel;
     public bool IsLibraryPage => CurrentPage is LibraryViewModel;
     public bool IsAdminPage => CurrentPage is AdminViewModel;
     public bool IsGamePage => CurrentPage is GameViewModel;
-    public bool IsDialogVisible => CurrentDialog != null;
 
     private readonly HomeViewModel _homeViewModel;
     private readonly GameViewModel _gameViewModel;
@@ -70,6 +73,7 @@ internal partial class MainWindowViewModel : ObservableObject
         _dialogs = dialog;
 
         IsExpanded = preferenceManager.IsMenuExpanded;
+        IsAdminVisible = preferenceManager.IsAdminPanelVisible;
 
         ConfigureNavigation();
         ConfigureLoadingDialog();
@@ -114,10 +118,21 @@ internal partial class MainWindowViewModel : ObservableObject
         _preferenceManager.IsMenuExpanded = value;
     }
 
+    partial void OnIsAdminVisibleChanged(bool value)
+    {
+        _preferenceManager.IsAdminPanelVisible = value;
+    }
+
     [RelayCommand]
     public void ToggleMenu()
     {
         IsExpanded = !IsExpanded;
+    }
+
+    [RelayCommand]
+    public void ToggleAdminVisible()
+    {
+        IsAdminVisible = !IsAdminVisible;
     }
 
     [RelayCommand]

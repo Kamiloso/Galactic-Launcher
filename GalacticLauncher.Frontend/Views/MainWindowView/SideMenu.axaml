@@ -93,6 +93,7 @@
 
 				<!--Admin button-->
 				<Button Classes="menuItem"
+						IsVisible="{Binding IsAdminVisible}"
 						Command="{Binding ShowAdminCommand}"
 						Classes.active="{Binding IsAdminPage}">
 					<StackPanel Orientation="Horizontal">
