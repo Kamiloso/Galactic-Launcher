@@ -158,35 +158,33 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (_execManager.IsDownloading(execInfo)) return;
 
         DownloadProgress = 0;
-        Progress<double> progress = new(value =>
-        {
-            DownloadProgress = Math.Clamp(value, 0, 1);
-        });
-
         _notifications.ShowInfo("Download Started", $"Downloading {Title}...");
+
+        Progress<DownloadProgressData> progress = new();
+        
+        Task task = _downloading.Start(cancellationToken =>
+            _execManager.DownloadAsync(execInfo, progress, cancellationToken));
+
+        SetAdequateViewMode();
 
         try
         {
-            Task task = _downloading.Start(cancellationToken =>
-                _execManager.DownloadAsync(execInfo, progress, cancellationToken));
+            await _dialogs.ShowProgressDialogAsync(
+                "Downloading", 
+                $"Downloading {Title}...", 
+                task, 
+                progress, 
+                CancelDownload);
 
-            SetAdequateViewMode();
-
-            await _dialogs.ShowLoadingDialogAsync(
-                $"Downloading",
-                $"Downloading {Title}...", task);
-            
             _notifications.ShowSuccess("Download Complete", $"{Title} is ready to play.");
         }
         catch (OperationCanceledException) { }
-        catch (DownloadException )
+        catch (DownloadException)
         {
             _notifications.ShowError("Download Error", $"{Title} failed to download.");
         }
         finally
         {
-            _downloading.Terminate();
-
             SetAdequateViewMode();
         }
     }
@@ -198,8 +196,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (execInfo == null) return;
 
         _downloading.Terminate();
-
-        SetAdequateViewMode();
         
         _notifications.ShowInfo("Download Cancelled", $"Download for {Title} was stopped.");
     }
@@ -215,7 +211,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             "Are you sure you want to delete this game?",
             textYes: "Delete", textNo: "Cancel");
 
-        if (isConfirmed is true)
+        if (isConfirmed)
         {
             if (_execManager.Exists(execInfo))
             {
