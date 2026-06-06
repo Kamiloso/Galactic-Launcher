@@ -22,7 +22,7 @@
                        Foreground="White"/>
             
             <TextBlock Text="{Binding Message}"
-                       FontSize="14"
+                       FontSize="16"
                        HorizontalAlignment="Center"
                        Foreground="#CCCCCC"
                        TextWrapping="Wrap"/>
@@ -36,7 +36,7 @@
                          HorizontalAlignment="Stretch"/>
 
             <TextBlock Text="{Binding ProgressText}"
-                       FontSize="12"
+                       FontSize="14"
                        Foreground="#888888"
                        HorizontalAlignment="Center"
                        Margin="0,-8,0,0"/>

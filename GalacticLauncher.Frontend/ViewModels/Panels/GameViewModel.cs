@@ -22,6 +22,7 @@ namespace GalacticLauncher.Frontend.ViewModels.Panels;
 internal partial class GameViewModel : ObservableObject, INavigationAware
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelTitle))]
     private string _title = "";
 
     [ObservableProperty]
@@ -31,6 +32,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     private string? _iconUrl;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelTitle))]
     private Version? _selectedVersion;
 
     [ObservableProperty]
@@ -57,6 +59,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     public bool IsDownloadingState => ViewMode == ViewModeEnum.Downloading;
     public bool IsReadyToPlayState => ViewMode == ViewModeEnum.ReadyToPlay;
     public string DownloadButtonText => IsDownloadingState ? "DOWNLOADING..." : "DOWNLOAD";
+    public string SelTitle => $"{Title} {SelectedVersion?.Caption}";
 
     private bool _init = false;
     private long _id = 0;
@@ -132,9 +135,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         Description = game?.Description ?? "";
         IconUrl = game?.IconUrl;
 
-        List<Version> versions = [.. _cacheProvider.GetVersionsOf(_id)];
-
         long? selVersionId = _preferenceManager.GetSelectedVersion(_id);
+
+        List<Version> versions = [.. _cacheProvider.GetVersionsOf(_id)];
 
         AvailableVersions.Clear();
 
@@ -158,46 +161,44 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (_execManager.IsDownloading(execInfo)) return;
 
         DownloadProgress = 0;
-        _notifications.ShowInfo("Download Started", $"Downloading {Title}...");
+        _notifications.ShowInfo(
+            $"Download Started",
+            $"Downloading {SelTitle}...");
 
         Progress<DownloadProgressData> progress = new();
-        
-        Task task = _downloading.Start(cancellationToken =>
+
+        Task downloadTask = _downloading.Start(cancellationToken =>
             _execManager.DownloadAsync(execInfo, progress, cancellationToken));
 
         SetAdequateViewMode();
 
         try
         {
-            await _dialogs.ShowProgressDialogAsync(
-                "Downloading", 
-                $"Downloading {Title}...", 
-                task, 
-                progress, 
-                CancelDownload);
+            await _dialogs.ShowDownloadProgressDialogAsync(
+                $"Downloading",
+                $"Downloading {SelTitle}...",
+                downloadTask, _downloading.Terminate, progress);
 
-            _notifications.ShowSuccess("Download Complete", $"{Title} is ready to play.");
+            _notifications.ShowSuccess(
+                $"Download Complete",
+                $"{SelTitle} is ready to play.");
         }
-        catch (OperationCanceledException) { }
+        catch (OperationCanceledException)
+        {
+            _notifications.ShowInfo(
+                $"Download Cancelled",
+                $"Download for {SelTitle} was cancelled.");
+        }
         catch (DownloadException)
         {
-            _notifications.ShowError("Download Error", $"{Title} failed to download.");
+            _notifications.ShowError(
+                $"Download Error",
+                $"Download for {SelTitle} has failed.");
         }
         finally
         {
             SetAdequateViewMode();
         }
-    }
-
-    [RelayCommand]
-    private void CancelDownload()
-    {
-        ExecInfo? execInfo = MakeCurrentExecInfo();
-        if (execInfo == null) return;
-
-        _downloading.Terminate();
-        
-        _notifications.ShowInfo("Download Cancelled", $"Download for {Title} was stopped.");
     }
 
     [RelayCommand]
@@ -207,8 +208,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         if (execInfo == null) return;
 
         bool isConfirmed = await _dialogs.ShowConfirmationDialogAsync(
-            "Delete Game",
-            "Are you sure you want to delete this game?",
+            $"Delete Version",
+            $"Are you sure you want to delete {SelTitle}?",
             textYes: "Delete", textNo: "Cancel");
 
         if (isConfirmed)
@@ -216,7 +217,10 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             if (_execManager.Exists(execInfo))
             {
                 _execManager.Delete(execInfo);
-                _notifications.ShowInfo("Game Deleted", $"{Title} has been deleted.");
+
+                _notifications.ShowSuccess(
+                    "Version Deleted",
+                    $"{SelTitle} has been deleted.");
             }
             
             ViewMode = ViewModeEnum.NoInstance;
@@ -242,7 +246,9 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         }
         catch (ExecutableRunException ex)
         {
-            _notifications.ShowError("Run Error", ex.Message);
+            _notifications.ShowError(
+                "Run Error",
+                ex.Message);
         }
     }
 
