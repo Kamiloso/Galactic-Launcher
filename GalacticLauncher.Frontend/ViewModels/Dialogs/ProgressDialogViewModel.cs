@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -39,11 +40,12 @@ internal partial class ProgressDialogViewModel : DialogViewModel<int>
         _onCancel?.Invoke();
     }
 
-    public void Finish()
+    public Task Finish()
     {
-        if (_isFinished) return;
+        if (_isFinished) return Task.CompletedTask;
         _isFinished = true;
 
         Close(0);
+        return Task.CompletedTask;
     }
 }

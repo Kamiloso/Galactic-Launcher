@@ -119,7 +119,7 @@ internal class Dialogs : IDialogs
     {
         ProgressDialogViewModel dialog = new(title, message, onCancel);
 
-        EventHandler<DownloadProgressData> progressHandler = (_, e) =>
+        progress.ProgressChanged += (_, e) =>
         {
             dialog.ProgressValue = e.Percentage;
             
@@ -138,17 +138,10 @@ internal class Dialogs : IDialogs
                 dialog.ProgressText = $"{currentMb:F2} MB Downloaded";
             }
         };
-        
-        progress.ProgressChanged += progressHandler;
 
         _ = ShowDialogAsync(dialog);
 
-        return async () =>
-        {
-            progress.ProgressChanged -= progressHandler;
-            dialog.Finish();
-            await Task.CompletedTask;
-        };
+        return dialog.Finish;
     }
 
     public async Task ShowProgressDialogAsync(
