@@ -111,13 +111,13 @@ internal class PreferenceManager : IPreferenceManager
     public bool GetFilterState(long gameId, string filterName, bool defaultValue)
     {
         return bool.TryParse(
-            memoryRepository[MKEY_FILTER(gameId, filterName)], out var value)
+            _memoryRepository[MKEY_FILTER(gameId, filterName)], out var value)
                 ? value
                 : defaultValue;
     }
 
     public void SetFilterState(long gameId, string filterName, bool value)
     {
-        memoryRepository[MKEY_FILTER(gameId, filterName)] = value.ToString();
+        _memoryRepository[MKEY_FILTER(gameId, filterName)] = value.ToString();
     }
 }

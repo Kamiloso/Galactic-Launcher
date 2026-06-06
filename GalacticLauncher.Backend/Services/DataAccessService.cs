@@ -33,9 +33,7 @@ internal class DataAccessService(
 
         return game.ToDomain(
             await versionRepository.GetVersionsByGameId(id),
-            await imageRepository.GetImagesByGameId(id),
-            await tagRepository.GetTagsByGameId(id)
-            );
+            await imageRepository.GetImagesByGameId(id));
     }
 
     public async Task<IEnumerable<Game>> GetAllGames()

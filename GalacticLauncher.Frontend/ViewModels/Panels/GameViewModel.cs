@@ -228,8 +228,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         _allVersionsRaw.AddRange(versions);
 		
 		ApplyFiltersAndCategories(gameData);
-		
-		AvailableVersions.Clear();
 
         var combinedLists = InstalledVersions.Concat(FilteredAvailableVersions).ToList();
         SelectedVersion = selVersionId == null
