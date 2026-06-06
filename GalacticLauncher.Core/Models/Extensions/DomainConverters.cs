@@ -12,7 +12,7 @@ public static class DomainConverters
             Description = gameData.Description,
             Versions = gameData.Versions,
             Images = gameData.Images,
-            TagIds = gameData.Tags.Select(t => t.Id)
+            TagIds = gameData.ExtractTagIds(),
         };
     }
 }

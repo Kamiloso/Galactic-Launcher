@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GalacticLauncher.Core;
 using GalacticLauncher.Core.Extensions;
 using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Services.Cache;
@@ -11,7 +10,8 @@ namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface IGameListManager
 {
-    event Action? OnLibraryChanged;
+    event Action OnListsChanged;
+
     IEnumerable<long> GetLibraryGames(string searchName = "");
     IEnumerable<long> GetFavoriteGames(string searchName = "");
     IEnumerable<long> GetNolibGames(string searchName = "");
@@ -39,8 +39,9 @@ internal class GameListManager(
     private const string CKEY_LIBRARY = "library";
     private const string CKEY_FAVORITE = "favorites";
 
+    public event Action? OnListsChanged;
+
     private readonly Random _rand = new();
-    public event Action? OnLibraryChanged;
 
     public IEnumerable<long> GetLibraryGames(string searchName = "")
     {
@@ -115,26 +116,26 @@ internal class GameListManager(
     public void AddToLibrary(long id)
     {
         dataRepository.Add(CKEY_LIBRARY, id);
-        OnLibraryChanged?.Invoke();
+        OnListsChanged?.Invoke();
     }
 
     public void RemoveFromLibrary(long id)
     {
         dataRepository.Remove(CKEY_FAVORITE, id);
         dataRepository.Remove(CKEY_LIBRARY, id);
-        OnLibraryChanged?.Invoke();
+        OnListsChanged?.Invoke();
     }
 
     public void AddToFavorite(long id)
     {
         dataRepository.Add(CKEY_LIBRARY, id);
         dataRepository.Add(CKEY_FAVORITE, id);
-        OnLibraryChanged?.Invoke();
+        OnListsChanged?.Invoke();
     }
 
     public void RemoveFromFavorite(long id)
     {
         dataRepository.Remove(CKEY_FAVORITE, id);
-        OnLibraryChanged?.Invoke();
+        OnListsChanged?.Invoke();
     }
 }

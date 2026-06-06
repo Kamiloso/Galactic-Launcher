@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +52,6 @@ internal partial class GameButtonLibraryViewModel(
         {
             base.Id = value;
             RefreshState();
-            LoadTags();
         }
     }
 
@@ -101,18 +101,19 @@ internal partial class GameButtonLibraryViewModel(
 
         IconLib = GetResourceGeometry(IsLib ? "IconLib" : "IconNotLib");
         IconFav = GetResourceGeometry(IsFav ? "IconFav" : "IconNotFav");
+
+        LoadTags();
     }
 
     private void LoadTags()
     {
         Tags.Clear();
-        var gameData = cacheProvider.GetGameDataOf(GameId);
-        if (gameData?.Tags != null)
+
+        List<Tag> gameTags = [.. cacheProvider.GetTagsByGameId(GameId)];
+
+        foreach (Tag tag in gameTags)
         {
-            foreach (var tag in gameData.Tags)
-            {
-                Tags.Add(tag);
-            }
+            Tags.Add(tag);
         }
     }
 }

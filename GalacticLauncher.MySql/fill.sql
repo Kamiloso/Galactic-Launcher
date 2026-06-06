@@ -116,6 +116,9 @@ INSERT INTO versions (id, id_game, caption, type, description, is_primary, relea
 
 INSERT INTO images (id, id_game, download_url, type, sort_index) VALUES
 (1, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','icon',0),
+(7, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','banner',0),
+(8, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','screenshot',0),
+(9, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','screenshot',0),
 (2, 2, 'https://drive.google.com/uc?id=1yCbBx7WG7NWqXaqUm8Ti7QRAhy1X_Wnd&export=download','icon',0),
 (3, 3, 'https://drive.google.com/uc?id=1jzexuK2J_oEIHvkDfyrky5G_xE9FzqF&export=download', 'icon', 0),
 (4, 4, 'https://drive.google.com/uc?id=1-SU_jwne0QwjMuciW4c83FG5ZBTDrT8D&export=download','icon',0),

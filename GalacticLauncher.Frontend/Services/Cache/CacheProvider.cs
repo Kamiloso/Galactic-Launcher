@@ -13,7 +13,7 @@ public interface ICacheProvider
     IEnumerable<Game> GetAllGames();
     IEnumerable<Version> GetVersionsOf(long id);
     IEnumerable<Tag> GetAllTags();
-    IEnumerable<Tag> GetGameTags(long id);
+    IEnumerable<Tag> GetTagsByGameId(long id);
 }
 
 internal class CacheProvider(
@@ -38,7 +38,7 @@ internal class CacheProvider(
     public IEnumerable<Version> GetVersionsOf(long id)
     {
         GameData? gameData = GetGameDataOf(id);
-        if (gameData == null) return [];
+        if (gameData is null) return [];
 
         return [.. gameData.Versions
             .OrderByDescending(v => v.ReleaseDate)];
@@ -50,11 +50,16 @@ internal class CacheProvider(
             .Select(id => cacheRepository.GetTag(id)!)];
     }
 
-    public IEnumerable<Tag> GetGameTags(long id)
+    public IEnumerable<Tag> GetTagsByGameId(long id)
     {
-        List<long> allTagIds = [.. cacheRepository.GetAllTags()];
+        Game? game = GetGameOf(id);
+        if (game is null) return [];
 
-        return GetGameDataOf(id)?.Tags
-            .Where(t => allTagIds.Contains(t.Id)) ?? [];
+        List<Tag> allTags = [.. GetAllTags()];
+
+        return [.. game.ExtractTagIds()
+            .Select(tagId => allTags.FirstOrDefault(t => t.Id == tagId))
+            .Where(tag => tag != null)
+            .Select(tag => tag!)];
     }
 }

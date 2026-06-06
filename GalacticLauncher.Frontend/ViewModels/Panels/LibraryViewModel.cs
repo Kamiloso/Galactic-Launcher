@@ -42,6 +42,8 @@ internal partial class LibraryViewModel : ObservableObject
     public bool IsFavoritePage => CurrentMode == LibraryViewMode.Favorites;
     public bool IsMoreGamesPage => CurrentMode == LibraryViewMode.MoreGames;
 
+    private readonly Dictionary<long, GameButtonLibraryViewModel> _buttonStore = [];
+
     private readonly ICacheRefresher _cacheRefresher;
     private readonly IGameListManager _gameListManager;
     private readonly IGameButtonFactory _gameButtonFactory;
@@ -60,66 +62,37 @@ internal partial class LibraryViewModel : ObservableObject
         _cacheProvider = cacheProvider;
 
         _cacheRefresher.OnInitialize += RefreshPage;
-        
-        _gameListManager.OnLibraryChanged += ReloadGames;
+        _gameListManager.OnListsChanged += RefreshPage;
 
-        ReloadTags();
-    }
+        SelectedTags.CollectionChanged +=
+            (_, _) => RefreshPage();
 
-    partial void OnSearchTagsChanged(string? value) => ReloadTags();
-
-    private void ReloadTags()
-    {
-        AvailableTags.Clear();
-        var allTags = _cacheProvider.GetAllTags();
-
-        string search = SearchTags ?? "";
-
-        foreach (var tag in allTags)
-        {
-            if (SelectedTags.Any(t => t.Id == tag.Id))
-                continue;
-
-            if (string.IsNullOrEmpty(search) || tag.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
-            {
-                AvailableTags.Add(tag);
-            }
-        }
-    }
-
-    [RelayCommand]
-    private void SelectTag(Tag tag)
-    {
-        if (tag == null) return;
-
-        AvailableTags.Remove(tag);
-        SelectedTags.Add(tag);
-
-        ReloadGames();
-        ReloadTags();
-    }
-
-    [RelayCommand]
-    private void UnselectTag(Tag tag)
-    {
-        if (tag == null) return;
-
-        SelectedTags.Remove(tag);
-
-        ReloadTags();
-        ReloadGames();
+        RefreshPage();
     }
 
     [RelayCommand]
     public void RefreshPage()
     {
         ReloadGames();
+        ReloadTags();
     }
 
     [RelayCommand]
-    public void ChangeViewCommand(LibraryViewMode mode)
+    public void ChangeView(LibraryViewMode mode)
     {
         CurrentMode = mode;
+    }
+
+    [RelayCommand]
+    private void SelectTag(Tag tag)
+    {
+        SelectedTags.Add(tag);
+    }
+
+    [RelayCommand]
+    private void UnselectTag(Tag tag)
+    {
+        SelectedTags.Remove(tag);
     }
 
     partial void OnCurrentModeChanged(LibraryViewMode value) => ReloadGames();
@@ -137,20 +110,56 @@ internal partial class LibraryViewModel : ObservableObject
             _ => throw new NotSupportedException()
         }];
 
-        GameControls.Clear();
+        List<GameButtonLibraryViewModel> targetButtonList = [];
 
         foreach (long id in gameIdPool)
         {
-            if (SelectedTags.Any())
-            {
-                //game has to have all the selected tags to be found during the search
-                var gameTags = _cacheProvider.GetGameTags(id);
-                bool matchesAllTags = SelectedTags.All(st => gameTags.Any(gt => gt.Id == st.Id));
+            List<Tag> gameTags = [.. _cacheProvider.GetTagsByGameId(id)];
 
-                if (!matchesAllTags) continue;
+            if (!SelectedTags.Any() ||
+                SelectedTags.Any(t1 => gameTags.Any(t2 => t2.Id == t1.Id)))
+            {
+                if (!_buttonStore.TryGetValue(id, out var gbvm))
+                {
+                    gbvm = _gameButtonFactory.CreateAndStartLoadingLibrary(id);
+                    _buttonStore.Add(id, gbvm);
+                }
+
+                targetButtonList.Add(gbvm);
             }
-            var gbvm = _gameButtonFactory.CreateAndStartLoadingLibrary(id);
+        }
+
+        GameControls.Clear();
+
+        foreach (var gbvm in targetButtonList)
+        {
             GameControls.Add(gbvm);
+        }
+    }
+
+    partial void OnSearchTagsChanged(string? value) => ReloadTags();
+
+    private void ReloadTags()
+    {
+        string searchFilter = SearchTags ?? "";
+
+        AvailableTags.Clear();
+
+        List<Tag> allTags = [..
+            _cacheProvider.GetAllTags()];
+
+        List<Tag> searchTags = [.. allTags
+            .Where(t1 => !SelectedTags.Any(t2 => t1.Id == t2.Id))];
+
+        foreach (Tag tag in searchTags)
+        {
+            bool isFiltering = searchFilter != "";
+            bool searched = tag.Name.Contains(searchFilter, StringComparison.OrdinalIgnoreCase);
+
+            if (!isFiltering || searched)
+            {
+                AvailableTags.Add(tag);
+            }
         }
     }
 }

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Core;
 using GalacticLauncher.Core.Models;
-using GalacticLauncher.Core.Models.Extensions;
 using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Domain.Models;
 using GalacticLauncher.Frontend.Domain.Models.Extensions;
@@ -20,6 +13,11 @@ using GalacticLauncher.Frontend.Services.Executables;
 using GalacticLauncher.Frontend.Tools.Classes;
 using GalacticLauncher.Frontend.ViewModels.ImageLoad;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
@@ -103,17 +101,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
     [ObservableProperty]
     private bool _isAvailableSectionExpanded = false;
 
-
-    partial void OnFilterInstalledReleaseChanged(bool value) { _preferenceManager.SetFilterState(_id, "InstRelease", value); RefreshFilteredLists(); }
-    partial void OnFilterInstalledSnapshotChanged(bool value) { _preferenceManager.SetFilterState(_id, "InstSnapshot", value); RefreshFilteredLists(); }
-    partial void OnFilterInstalledBetaChanged(bool value) { _preferenceManager.SetFilterState(_id, "InstBeta", value); RefreshFilteredLists(); }
-    partial void OnFilterInstalledAlphaChanged(bool value) { _preferenceManager.SetFilterState(_id, "InstAlpha", value); RefreshFilteredLists(); }
-
-    partial void OnFilterAvailableReleaseChanged(bool value) { _preferenceManager.SetFilterState(_id, "AvRelease", value); RefreshFilteredLists(); }
-    partial void OnFilterAvailableSnapshotChanged(bool value) { _preferenceManager.SetFilterState(_id, "AvSnapshot", value); RefreshFilteredLists(); }
-    partial void OnFilterAvailableBetaChanged(bool value) { _preferenceManager.SetFilterState(_id, "AvBeta", value); RefreshFilteredLists(); }
-    partial void OnFilterAvailableAlphaChanged(bool value) { _preferenceManager.SetFilterState(_id, "AvAlpha", value); RefreshFilteredLists(); }
-
     public enum ViewModeEnum
     {
         Locked = 0,
@@ -180,6 +167,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
 
         _cacheRefresher.OnRefreshGameData +=
             id => { if (_init && _id == id) UpdateView(); };
+
+        Banner = _imageFactory.CreateAndStartLoadingImage("www.example.com/nothing");
     }
 
     public void OnActivate(object[] args)
@@ -192,7 +181,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         ResetSelections();
         UpdateView();
 
-        
         FilterInstalledRelease = _preferenceManager.GetFilterState(_id, "InstRelease", true);
         FilterInstalledSnapshot = _preferenceManager.GetFilterState(_id, "InstSnapshot", true);
         FilterInstalledBeta = _preferenceManager.GetFilterState(_id, "InstBeta", true);
@@ -243,11 +231,10 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             ? combinedLists.FirstOrDefault(v => v.IsPrimary) ?? combinedLists.FirstOrDefault()
             : combinedLists.FirstOrDefault(v => v.Id == selVersionId);
 
-        //get banner and screenshots ids
         var screenshotsUrls = gameData?.Images?
             .Where(img => img.Type == ImageType.Screenshot)
             .OrderBy(img => img.SortIndex)
-            .Select(img => img.DownloadUrl) ?? Enumerable.Empty<string>();
+            .Select(img => img.DownloadUrl) ?? [];
 
         AnyScreenshots = screenshotsUrls.Any();
 
@@ -255,10 +242,8 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
             .FirstOrDefault(img => img.Type == ImageType.Banner)?
             .DownloadUrl;
 
-        //set banner
         Banner = _imageFactory.CreateAndStartLoadingImage(bannerUrl);
 
-        // set screenshots
         foreach (string url in screenshotsUrls)
         {
             ImageViewModel? screenshotVM = _imageFactory.CreateAndStartLoadingImage(url);
@@ -269,12 +254,13 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         }
 
         Tags.Clear();
-        if (gameData?.Tags != null)
+
+        List<Tag> gameTags = [..
+            _cacheProvider.GetTagsByGameId(_id)];
+
+        foreach (Tag tag in gameTags)
         {
-            foreach (var tag in gameData.Tags)
-            {
-                Tags.Add(tag);
-            }
+            Tags.Add(tag);
         }
 
         IsInLibrary = _gameListManager.GetLibraryGames().Contains(_id);
@@ -451,8 +437,6 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         }
     }
 
-
-
     private void RefreshFilteredLists()
     {
         GameData? gameData = _cacheProvider.GetGameDataOf(_id);
@@ -502,5 +486,53 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         {
             FilteredAvailableVersions.Add(version);
         }
+    }
+
+    partial void OnFilterInstalledReleaseChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "InstRelease", value);
+        RefreshFilteredLists();
+    }
+
+    partial void OnFilterInstalledSnapshotChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "InstSnapshot", value);
+        RefreshFilteredLists();
+    }
+
+    partial void OnFilterInstalledBetaChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "InstBeta", value);
+        RefreshFilteredLists();
+    }
+
+    partial void OnFilterInstalledAlphaChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "InstAlpha", value);
+        RefreshFilteredLists();
+    }
+
+    partial void OnFilterAvailableReleaseChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "AvRelease", value);
+        RefreshFilteredLists();
+    }
+
+    partial void OnFilterAvailableSnapshotChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "AvSnapshot", value);
+        RefreshFilteredLists();
+    }
+
+    partial void OnFilterAvailableBetaChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "AvBeta", value);
+        RefreshFilteredLists();
+    }
+
+    partial void OnFilterAvailableAlphaChanged(bool value)
+    {
+        _preferenceManager.SetFilterState(_id, "AvAlpha", value);
+        RefreshFilteredLists();
     }
 }

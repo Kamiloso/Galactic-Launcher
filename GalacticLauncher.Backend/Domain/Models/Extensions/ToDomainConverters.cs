@@ -20,8 +20,7 @@ internal static class ToDomainConverters
 
     public static GameData ToDomain(this GamePlusEntity game,
         IEnumerable<VersionEntity> versions,
-        IEnumerable<ImageEntity> images,
-        IEnumerable<TagEntity> tags)
+        IEnumerable<ImageEntity> images)
     {
         return new GameData
         {
@@ -33,7 +32,6 @@ internal static class ToDomainConverters
             TagIdList = game.TagIdList,
             Versions = [.. versions.Select(ToDomain)],
             Images = [.. images.Select(ToDomain)],
-            Tags = [..  tags.Select(ToDomain)],
         };
     }
 

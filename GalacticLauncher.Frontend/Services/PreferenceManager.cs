@@ -7,13 +7,12 @@ public interface IPreferenceManager
     bool IsThemeGalactic { get; set; }
     bool IsMenuExpanded { get; set; }
     bool IsAdminPanelVisible { get; set; }
-
     string LastUsername { get; set; }
 
     long? GetSelectedVersion(long gameId);
     void SetSelectedVersion(long gameId, long? versionId);
 
-    bool GetFilterState(long gameId, string filterName, bool defaultValue = true);
+    bool GetFilterState(long gameId, string filterName, bool defaultValue);
     void SetFilterState(long gameId, string filterName, bool value);
 }
 
@@ -25,6 +24,7 @@ internal class PreferenceManager(
     private const string MKEY_ADMIN_PANEL = "admin-panel";
     private const string MKEY_USERNAME = "username";
     private static string MKEY_SEL_VERSION(long id) => $"sel-version-{id}";
+    private static string MKEY_FILTER(long gameId, string name) => $"filter-{gameId}-{name}";
 
     private const string GALACTIC = "galactic";
     private const string BLUE = "blue";
@@ -78,9 +78,6 @@ internal class PreferenceManager(
 
     public long? GetSelectedVersion(long gameId)
     {
-        // This code has a shape of a gun.
-        // And this is FULLY intentional :)
-
         return long.TryParse(
             memoryRepository[MKEY_SEL_VERSION(gameId)], out var value)
                 ? value
@@ -94,18 +91,16 @@ internal class PreferenceManager(
             : "";
     }
 
-    private static string MKEY_FILTER(long gameId, string name) => $"filter-{gameId}-{name}";
-
-    public bool GetFilterState(long gameId, string filterName, bool defaultValue = true)
+    public bool GetFilterState(long gameId, string filterName, bool defaultValue)
     {
-        string stored = memoryRepository[MKEY_FILTER(gameId, filterName)];
-        if (string.IsNullOrEmpty(stored)) return defaultValue;
-
-        return bool.TryParse(stored, out var result) ? result : defaultValue;
+        return bool.TryParse(
+            memoryRepository[MKEY_FILTER(gameId, filterName)], out var value)
+                ? value
+                : defaultValue;
     }
 
     public void SetFilterState(long gameId, string filterName, bool value)
     {
-        memoryRepository[MKEY_FILTER(gameId, filterName)] = value.ToString().ToLower();
+        memoryRepository[MKEY_FILTER(gameId, filterName)] = value.ToString();
     }
 }
