@@ -284,21 +284,21 @@
 
 
 	<!--Tag button-->
-
 	<Style Selector="Button.tagButton">
-
 		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
 		<Setter Property="FontStyle" Value="Normal"/>
 		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
 		<Setter Property="FontSize" Value="15"/>
-		<Setter Property="Background" Value="{StaticResource TagDarkBlue}"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 		<Setter Property="BorderThickness" Value="0"/>
-		<Setter Property="CornerRadius" Value="40"/>
-		<Setter Property="Height" Value="25"/>
+		<Setter Property="CornerRadius" Value="20"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
-		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="Padding" Value="1,1,1,11"/>
+		<Setter Property="Padding" Value="10,5,10,5"/>
+		<Setter Property="Height" Value="30"/>
+		<Setter Property="Margin" Value="3,3,3,3"/>
 	</Style>
 
 	<!--Menu button Hover-->
@@ -310,15 +310,22 @@
 		<Setter Property="Background" Value="{StaticResource VibrantBlue}"/>
 	</Style>
 
+	<Style Selector="Button.tagButton TextBlock">
+		<Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+		<Setter Property="TextWrapping" Value="NoWrap"/>
+	</Style>
+
 	<!--Acive-->
 	<Style Selector="Button.tagButton.active /template/ ContentPresenter">
 		<Setter Property="Background" Value="{DynamicResource TagBlue}"/>
 		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
 	</Style>
 
-	<Style Selector="Button.tagButton TextBlock">
-		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="Margin" Value="10,0,0,0"/>
+	<Style Selector="Button.tagButton:disabled /template/ ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource TagDarkBlue}"/>
+		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
+		<Setter Property="BorderBrush" Value="{StaticResource GreyBlue}"/>
+		<Setter Property="BorderThickness" Value="1"/>
 	</Style>
 
 
@@ -363,10 +370,9 @@
 		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
 		<Setter Property="BorderThickness" Value="2"/>
-		<Setter Property="Padding" Value="10,10,10,10"/>
+		<Setter Property="Padding" Value="30,10,30,10"/>
 		<Setter Property="VerticalAlignment" Value="Stretch"/>
-		<Setter Property="Height" Value="100"/>
-		<Setter Property="Width" Value="400"/>
+		<Setter Property="Height" Value="150"/>
 		
 		<Setter Property="Template">
 			<ControlTemplate x:CompileBindings="False">
@@ -380,25 +386,26 @@
 						Width="{TemplateBinding Width}"
 						VerticalAlignment="{TemplateBinding VerticalAlignment}">
 
-					<Border HorizontalAlignment="Stretch">
+					<Border HorizontalAlignment="Stretch"
+							VerticalAlignment="Top">
+						
 						<Grid ColumnDefinitions="Auto,*">
 
 							<Border CornerRadius="0"
 									Background="{StaticResource DarkestNight}"
 									BorderBrush="{DynamicResource GalaxyGradient}"
-									Width="80"
-									Height="80"
+									Width="120"
+									Height="120"
 									BorderThickness="2"
-									VerticalAlignment="Stretch"
+									VerticalAlignment="Top"
 									HorizontalAlignment="Stretch"
 									Grid.Column="0">
 
 								<Panel>
-
 									<TextBlock FontFamily="{DynamicResource Rajdhani}"
 											   FontStyle="Normal"
 											   Foreground="{StaticResource GreyBlue}"
-											   FontSize="8"
+											   FontSize="15"
 											   Text="{Binding StatusMessage}"
 											   TextAlignment="Center"
 											   TextWrapping="WrapWithOverflow"
@@ -412,16 +419,17 @@
 								</Panel>
 							</Border>
 
-								<Grid RowDefinitions="Auto,Auto,Auto"
+								<Grid RowDefinitions="Auto,Auto,*,Auto"
 									  Margin="10,0,0,0"
 									  HorizontalAlignment="Stretch"
+									  VerticalAlignment="Top"
 									  Grid.Column="1">
 
 									<Grid ColumnDefinitions="*,Auto"
 										  Grid.Row="0">
 
 										<TextBlock Text="{Binding GameTitle}"
-												   FontSize="15"
+												   FontSize="20"
 												   TextWrapping="NoWrap"
 												   TextTrimming="CharacterEllipsis"
 												   Grid.Column="0"
@@ -449,8 +457,8 @@
 
 												<PathIcon Data="{Binding IconLib}"
 													  Foreground="{DynamicResource GalaxyGradient}"
-													  Height="15"
-													  Width="15"
+													  Height="20"
+													  Width="20"
 													  Margin="0,0,0,2"/>
 											</Button>
 
@@ -468,20 +476,77 @@
 
 												<PathIcon Data="{Binding IconFav}"
 													  Foreground="{DynamicResource GalaxyGradient}"
-													  Height="15"
-													  Width="15"
+													  Height="20"
+													  Width="20"
 													  Margin="0,0,0,2"/>
 											</Button>
 										</StackPanel>
 									</Grid>
 									<TextBlock FontFamily="{DynamicResource Roboto}"
 												FontStyle="Normal"
-												FontSize="8"
+												FontSize="12"
+											    Margin="0,0,0,5"
 												TextTrimming="CharacterEllipsis"
-												Text="AUTHOR: GRZEGORZ BRZĘCZYSZCZYKIEWICZ"
+												Text="{Binding GameAuthor, StringFormat='AUTHOR: {0}'}"
 												Foreground="{StaticResource GreyBlue}"
 												TextWrapping="NoWrap"
 												Grid.Row="1"/>
+									
+									<ItemsControl ItemsSource="{Binding Tags}"
+												  Background="Transparent"
+												  Grid.Row="2"
+												  ClipToBounds="True">
+										<ItemsControl.ItemsPanel>
+											<ItemsPanelTemplate>
+												<StackPanel Orientation="Horizontal"
+															HorizontalAlignment="Left"
+															VerticalAlignment="Center"
+															Spacing="4"/>
+											</ItemsPanelTemplate>
+										</ItemsControl.ItemsPanel>
+
+										<ItemsControl.ItemTemplate>
+											<DataTemplate>
+												<Button Classes="tagButton"
+														IsEnabled="False"
+														Content="{Binding Name}">
+
+													<Button.Styles>
+														<Style Selector="Button.tagButton">
+															<Setter Property="FontSize" Value="12"/>
+															<Setter Property="Height" Value="22"/>
+															<Setter Property="Padding" Value="4,0,4,0"/>
+															<Setter Property="MinHeight" Value="0"/>
+															<Setter Property="MinWidth" Value="0"/>
+														</Style>
+
+														<Style Selector="Button.tagButton:disabled /template/ ContentPresenter">
+															<Setter Property="BorderThickness" Value="1"/>
+															<Setter Property="BorderBrush" Value="{StaticResource GreyBlue}"/>
+															<Setter Property="Padding" Value="4,0,4,0"/>
+															<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+														</Style>
+
+														<Style Selector="Button.tagButton /template/ ContentPresenter TextBlock">
+															<Setter Property="FontSize" Value="12"/>
+															<Setter Property="VerticalAlignment" Value="Center"/>
+														</Style>
+													</Button.Styles>
+												</Button>
+											</DataTemplate>
+										</ItemsControl.ItemTemplate>
+									</ItemsControl>
+
+									<TextBlock FontFamily="{DynamicResource Roboto}"
+												FontStyle="Normal"
+												FontSize="12"
+											    Margin="0,5,0,5"
+												TextTrimming="CharacterEllipsis"
+												Text="{Binding GameDescription}"
+												Foreground="{StaticResource GreyBlue}"
+												TextWrapping="Wrap"
+											    MaxLines="2"
+												Grid.Row="3"/>
 								</Grid>
 						</Grid>
 					</Border>

@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.PanelViews.GameView"
              xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
+			 xmlns:imageVM="clr-namespace:GalacticLauncher.Frontend.ViewModels.ImageLoad"
              x:DataType="vm:GameViewModel">
 
 	<!--Game view-->
@@ -34,8 +35,19 @@
 							BorderThickness="4">
 
 						<!--Banner image-->
-						<Image Source="/AvaloniaResources/Assets/Placeholders/banner.png"
-							   Stretch="UniformToFill"/>
+						<Panel>
+
+							<TextBlock Text="{Binding Banner.StatusMessage}"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center"
+									   FontSize="24"
+									   Foreground="{StaticResource GreyBlue}"
+									   FontFamily="{DynamicResource Rajdhani}"/>
+
+							<Image Source="{Binding Banner.Image}"
+								   Stretch="UniformToFill"/>
+
+						</Panel>
 					</Border>
 				</Viewbox>
 
@@ -73,7 +85,7 @@
 										TextWrapping="Wrap"
 										FontSize="15"
 										Foreground="{StaticResource GreyBlue}"
-										Text="AUTHOR: GRZEGORZ BRZĘCZYSZCZYKIEWICZ"
+										Text="{Binding Author, StringFormat='AUTHOR: {0}'}"
 										Grid.Row="1"
 										Margin="0,0,0,0">
 							 </TextBlock>
@@ -128,35 +140,78 @@
 
 					</Grid>
 
+					 <Grid ColumnDefinitions="*,Auto">
+						 <!--Tags-->
+						 <ItemsControl ItemsSource="{Binding Tags}" Background="Transparent" Margin="0,15,0,0"
+									   Grid.Column="0">
+							 <ItemsControl.ItemsPanel>
+								 <ItemsPanelTemplate>
+									 <WrapPanel Orientation="Horizontal"
+												HorizontalAlignment="Left"
+												VerticalAlignment="Center"/>
+								 </ItemsPanelTemplate>
+							 </ItemsControl.ItemsPanel>
 
-					
+							 <ItemsControl.ItemTemplate>
+								 <DataTemplate>
+									 <Button Classes="tagButton"
+											 IsEnabled="False"
+											 Content="{Binding Name}"
+											 Margin="0,0,10,10">
+									 </Button>
+								 </DataTemplate>
+							 </ItemsControl.ItemTemplate>
+						 </ItemsControl>
+						 <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center"
+									 Grid.Column="1">
+							 <StackPanel.Styles>
+								 <Style Selector="Button.iconBtn">
+									 <Setter Property="Background" Value="Transparent"/>
+									 <Setter Property="BorderBrush" Value="Transparent"/>
+									 <Setter Property="BorderThickness" Value="0"/>
+									 <Setter Property="Padding" Value="5"/>
+									 <Setter Property="Cursor" Value="Hand"/>
+								 </Style>
+								 <Style Selector="Button.iconBtn:pointerover /template/ ContentPresenter">
+									 <Setter Property="Background" Value="Transparent"/>
+								 </Style>
 
+								 <Style Selector="PathIcon[Name=LibIcon][Tag=True]">
+									 <Setter Property="Data" Value="{StaticResource IconLib}"/>
+									 <Setter Property="Foreground" Value="{DynamicResource GalaxyGradient}"/>
+								 </Style>
+								 <Style Selector="PathIcon[Name=LibIcon][Tag=False]">
+									 <Setter Property="Data" Value="{StaticResource IconNotLib}"/>
+									 <Setter Property="Foreground" Value="{DynamicResource GalaxyGradient}"/>
+								 </Style>
 
-					<!--Tags-->
-					<!--
-					<ItemsControl Background="Transparent">
-						
-						<ItemsControl.ItemsPanel>
-							<ItemsPanelTemplate>
-								<WrapPanel Orientation="Horizontal"
-										   HorizontalAlignment="Left"
-										   VerticalAlignment="Center"
-										   ItemWidth="Auto"
-										   ItemHeight="Auto"/>
-							</ItemsPanelTemplate>
-						</ItemsControl.ItemsPanel>
+								 <Style Selector="PathIcon[Name=FavIcon][Tag=True]">
+									 <Setter Property="Data" Value="{StaticResource IconFav}"/>
+									 <Setter Property="Foreground" Value="{DynamicResource GalaxyGradient}"/>
+								 </Style>
+								 <Style Selector="PathIcon[Name=FavIcon][Tag=False]">
+									 <Setter Property="Data" Value="{StaticResource IconNotFav}"/>
+									 <Setter Property="Foreground" Value="{DynamicResource GalaxyGradient}"/>
+								 </Style>
+							 </StackPanel.Styles>
 
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<Button Classes="tagButton"
-									    IsEnabled="false"
-									    Tag="ROMANCE"
-									    Margin="0,0,10,10">
-									</Button>
-								</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-					-->
+							 <Button Command="{Binding ToggleLibraryCommand}" Classes="iconBtn">
+								 <PathIcon Name="LibIcon"
+										   Tag="{Binding IsInLibrary}"
+										   Height="25"
+										   Width="25"
+										   Margin="0,0,0,2"/>
+							 </Button>
+
+							 <Button Command="{Binding ToggleFavoriteCommand}" Classes="iconBtn">
+								 <PathIcon Name="FavIcon"
+										   Tag="{Binding IsFavorite}"
+										   Height="25"
+										   Width="25"
+										   Margin="0,0,0,2"/>
+							 </Button>
+						 </StackPanel>
+					 </Grid>
 
 					 <Border Classes="gameViewBorder" Margin="0,30,0,0">
 						 <StackPanel Orientation="Vertical">
@@ -186,32 +241,82 @@
 
 
 					 <Border Classes="gameViewBorder" Margin="0,30,0,0">
-						 <StackPanel Orientation="Vertical">
-							 <!--Versions-->
-							 <TextBlock Classes="gameTitle"
-										VerticalAlignment="Center"
-										HorizontalAlignment="Stretch"
-										TextTrimming="CharacterEllipsis"
-										TextWrapping="Wrap"
-										FontSize="20"
-										Text="Versions"
-										Margin="0,0,0,5">
-							 </TextBlock>
+						 <Expander IsExpanded="{Binding IsInstalledSectionExpanded}"
+								  HorizontalAlignment="Stretch"
+								  Padding="0">
+
+							 <Expander.Resources>
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushPointerOver">Transparent</SolidColorBrush>
+
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushPressed">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpandedPressed">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushExpandedPressed">Transparent</SolidColorBrush>
+
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpanded">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushExpanded">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderContentBackground">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderContentBorderBrush">Transparent</SolidColorBrush>
+
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpandedPointerOver">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushExpandedPointerOver">Transparent</SolidColorBrush>
+
+								 <Thickness x:Key="ExpanderBorderThickness">0</Thickness>
+								 <Thickness x:Key="ExpanderContentBorderThickness">0</Thickness>
+							 </Expander.Resources>
+
+							 <Expander.Styles>
+								 <Style Selector="Expander /template/ ToggleButton">
+									 <Setter Property="Background" Value="Transparent"/>
+									 <Setter Property="BorderBrush" Value="Transparent"/>
+									 <Setter Property="BorderThickness" Value="0"/>
+									 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+									 <Setter Property="Padding" Value="0,0,0,5"/>
+								 </Style>
+
+								 <Style Selector="Expander /template/ ContentPresenter#PART_ContentPresenter">
+									 <Setter Property="Background" Value="Transparent"/>
+									 <Setter Property="BorderBrush" Value="Transparent"/>
+									 <Setter Property="BorderThickness" Value="0"/>
+									 <Setter Property="Padding" Value="0"/>
+								 </Style>
+							 </Expander.Styles>
+
+							 <Expander.Header>
+								 <Grid ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch">
+									 <TextBlock Classes="gameTitle"
+												Grid.Column="0"
+												VerticalAlignment="Center"
+												HorizontalAlignment="Stretch"
+												TextTrimming="CharacterEllipsis"
+												TextWrapping="Wrap"
+												FontSize="20"
+												Text="INSTALLED VERSIONS">
+									 </TextBlock>
+
+									 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+										 <TextBlock Text="FILTER:" VerticalAlignment="Center" Foreground="{StaticResource GreyBlue}" FontSize="12" Margin="0,0,5,0"/>
+										 <CheckBox Content="Release" IsChecked="{Binding FilterInstalledRelease}" VerticalAlignment="Center"/>
+										 <CheckBox Content="Snapshot" IsChecked="{Binding FilterInstalledSnapshot}" VerticalAlignment="Center"/>
+										 <CheckBox Content="Beta" IsChecked="{Binding FilterInstalledBeta}" VerticalAlignment="Center"/>
+									 </StackPanel>
+								 </Grid>
+							 </Expander.Header>
 
 							 <Border Classes="gameViewBorder"
 									 Background="{StaticResource GridColor}"
 									 CornerRadius="0"
 									 Padding="2,2,2,2">
-								 
-								 <DataGrid ItemsSource="{Binding AvailableVersions}"
-									   SelectedItem="{Binding SelectedVersion}"
-									   AutoGenerateColumns="False"
-									   IsReadOnly="True"
-									   BorderThickness="0"
-									   GridLinesVisibility="None"
-									   SelectionMode="Single"
-									   Background="{StaticResource AmostBlack}">
 
+								 <DataGrid ItemsSource="{Binding InstalledVersions}"
+										   SelectedItem="{Binding SelectedVersion}"
+										   AutoGenerateColumns="False"
+										   IsReadOnly="True"
+										   BorderThickness="0"
+										   GridLinesVisibility="None"
+										   SelectionMode="Single"
+										   Background="{StaticResource AmostBlack}">
 									 <DataGrid.Styles>
 										 <Style Selector="DataGrid /template/ DataGridRowsPresenter">
 											 <Setter Property="Focusable" Value="False"/>
@@ -219,68 +324,33 @@
 									 </DataGrid.Styles>
 
 									 <DataGrid.Columns>
-										 <DataGridTemplateColumn Header="VERSION" Width="*">
+										 <DataGridTemplateColumn Header="VERSION" Width="Auto">
 											 <DataTemplate>
-												 <TextBlock VerticalAlignment="Center" Margin="5,0">
-													 <TextBlock.Text>
-														 <MultiBinding StringFormat="{}{0} ({1})">
-															 <Binding Path="Caption"/>
-															 <Binding Path="Type"/>
-														 </MultiBinding>
-													 </TextBlock.Text>
-												 </TextBlock>
-											 </DataTemplate>
-										 </DataGridTemplateColumn>
-
-										 <DataGridTemplateColumn Header="PLATFORM" Width="Auto">
-											 <DataTemplate>
-												 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
-
-													 <PathIcon Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0">
+												 <StackPanel Orientation="Horizontal">
+													 <TextBlock Text="{Binding Caption}"
+																VerticalAlignment="Center"
+																Margin="5,0"/>
+													 <PathIcon Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" Tag="{Binding IsPrimary}">
 														 <PathIcon.Styles>
-															 <Style Selector="PathIcon[Tag=windows]">
-																 <Setter Property="Data" Value="{StaticResource IconWindows}"/>
+															 <Style Selector="PathIcon[Tag=True]">
+																 <Setter Property="Data" Value="{StaticResource IconFav}"/>
+																 <Setter Property="Foreground" Value="LightGreen"/>
 															 </Style>
-															 <Style Selector="PathIcon[Tag=linux]">
-																 <Setter Property="Data" Value="{StaticResource IconLinux}"/>
-															 </Style>
-															 <Style Selector="PathIcon[Tag=macsilicon]">
-																 <Setter Property="Data" Value="{StaticResource IconMac}"/>
-															 </Style>
-															 <Style Selector="PathIcon[Tag=macintel]">
-																 <Setter Property="Data" Value="{StaticResource IconMac}"/>
+															 <Style Selector="PathIcon[Tag=False]">
+																 <Setter Property="Data" Value="{StaticResource IconNotFav}"/>
+																 <Setter Property="Foreground" Value="Orange"/>
 															 </Style>
 														 </PathIcon.Styles>
-														 <PathIcon.Tag>
-															 <Binding Path="Platform"/>
-														 </PathIcon.Tag>
 													 </PathIcon>
-
-													 <TextBlock Text="{Binding Platform}" VerticalAlignment="Center"/>
 												 </StackPanel>
 											 </DataTemplate>
 										 </DataGridTemplateColumn>
-
-										 <DataGridTemplateColumn Header="DESCRIPTION" Width="200">
-											 <DataTemplate>
-												 <TextBlock Text="{Binding Description}"
-															TextWrapping="Wrap"
-															VerticalAlignment="Center"
-															Margin="5,0"/>
-											 </DataTemplate>
-										 </DataGridTemplateColumn>
-
-										 <DataGridTemplateColumn Header="PRIMARY" Width="Auto">
-											 <DataTemplate>
-												 <TextBlock Text="{Binding IsPrimary}" VerticalAlignment="Center" Margin="5,0"/>
-											 </DataTemplate>
-										 </DataGridTemplateColumn>
-
-										 <DataGridTemplateColumn Header="ALERT" Width="200">
+										 <DataGridTextColumn Header="TYPE" Binding="{Binding Type}" Width="100" />
+										 <DataGridTextColumn Header="RELEASE DATE" Binding="{Binding ReleaseDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="SizeToHeader"/>
+										 <DataGridTemplateColumn Header="ALERT" Width="150">
 											 <DataTemplate>
 												 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
-
-													 <PathIcon Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0">
+													 <PathIcon Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0" Tag="{Binding Alert}">
 														 <PathIcon.Styles>
 															 <Style Selector="PathIcon[Tag=stable]">
 																 <Setter Property="Data" Value="{StaticResource IconShield}"/>
@@ -295,26 +365,167 @@
 																 <Setter Property="Foreground" Value="Crimson"/>
 															 </Style>
 														 </PathIcon.Styles>
-														 <PathIcon.Tag>
-															 <Binding Path="Alert"/>
-														 </PathIcon.Tag>
 													 </PathIcon>
-
-													 <TextBlock Text="{Binding Alert}" VerticalAlignment="Center"/>
+													 <TextBlock Text="{Binding Alert}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 												 </StackPanel>
 											 </DataTemplate>
 										 </DataGridTemplateColumn>
-
+										 <DataGridTemplateColumn Header="DESCRIPTION" Width="*">
+											 <DataTemplate>
+												 <TextBlock Text="{Binding Description}" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0"/>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
 									 </DataGrid.Columns>
 								 </DataGrid>
 							 </Border>
-						 </StackPanel>
+						</Expander>
+					 </Border>
+
+					 <Border Classes="gameViewBorder" Margin="0,30,0,0">
+						 <Expander IsExpanded="{Binding IsAvailableSectionExpanded}"
+								  HorizontalAlignment="Stretch"
+								  Padding="0">
+
+							 <Expander.Resources>
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushPointerOver">Transparent</SolidColorBrush>
+
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushPressed">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpandedPressed">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushExpandedPressed">Transparent</SolidColorBrush>
+
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpanded">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushExpanded">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderContentBackground">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderContentBorderBrush">Transparent</SolidColorBrush>
+
+								 <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpandedPointerOver">Transparent</SolidColorBrush>
+								 <SolidColorBrush x:Key="ExpanderHeaderBorderBrushExpandedPointerOver">Transparent</SolidColorBrush>
+
+								 <Thickness x:Key="ExpanderBorderThickness">0</Thickness>
+								 <Thickness x:Key="ExpanderContentBorderThickness">0</Thickness>
+							 </Expander.Resources>
+
+							 <Expander.Styles>
+								 <Style Selector="Expander /template/ ToggleButton">
+									 <Setter Property="Background" Value="Transparent"/>
+									 <Setter Property="BorderBrush" Value="Transparent"/>
+									 <Setter Property="BorderThickness" Value="0"/>
+									 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+									 <Setter Property="Padding" Value="0,0,0,5"/>
+								 </Style>
+
+								 <Style Selector="Expander /template/ ContentPresenter#PART_ContentPresenter">
+									 <Setter Property="Background" Value="Transparent"/>
+									 <Setter Property="BorderBrush" Value="Transparent"/>
+									 <Setter Property="BorderThickness" Value="0"/>
+									 <Setter Property="Padding" Value="0"/>
+								 </Style>
+							 </Expander.Styles>
+
+							 <Expander.Header>
+								 <Grid ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch">
+									 <TextBlock Classes="gameTitle"
+												Grid.Column="0"
+												VerticalAlignment="Center"
+												HorizontalAlignment="Stretch"
+												TextTrimming="CharacterEllipsis"
+												TextWrapping="Wrap"
+												FontSize="20"
+												Text="AVAILABLE VERSIONS">
+									 </TextBlock>
+
+									 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+										 <TextBlock Text="FILTER:" VerticalAlignment="Center" Foreground="{StaticResource GreyBlue}" FontSize="12" Margin="0,0,5,0"/>
+										 <CheckBox Content="Release" IsChecked="{Binding FilterAvailableRelease}" VerticalAlignment="Center"/>
+										 <CheckBox Content="Snapshot" IsChecked="{Binding FilterAvailableSnapshot}" VerticalAlignment="Center"/>
+										 <CheckBox Content="Beta" IsChecked="{Binding FilterAvailableBeta}" VerticalAlignment="Center"/>
+									 </StackPanel>
+								 </Grid>
+							 </Expander.Header>
+
+							 <Border Classes="gameViewBorder"
+									 Background="{StaticResource GridColor}"
+									 CornerRadius="0"
+									 Padding="2,2,2,2">
+
+								 <DataGrid ItemsSource="{Binding FilteredAvailableVersions}"
+										   SelectedItem="{Binding SelectedVersion}"
+										   AutoGenerateColumns="False"
+										   IsReadOnly="True"
+										   BorderThickness="0"
+										   GridLinesVisibility="None"
+										   SelectionMode="Single"
+										   Background="{StaticResource AmostBlack}">
+									 <DataGrid.Styles>
+										 <Style Selector="DataGrid /template/ DataGridRowsPresenter">
+											 <Setter Property="Focusable" Value="False"/>
+										 </Style>
+									 </DataGrid.Styles>
+
+									 <DataGrid.Columns>
+										 <DataGridTemplateColumn Header="VERSION" Width="Auto">
+											 <DataTemplate>
+												 <StackPanel Orientation="Horizontal">
+													 <TextBlock Text="{Binding Caption}"
+																VerticalAlignment="Center"
+																Margin="5,0"/>
+													 <PathIcon Width="16" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" Tag="{Binding IsPrimary}">
+														 <PathIcon.Styles>
+															 <Style Selector="PathIcon[Tag=True]">
+																 <Setter Property="Data" Value="{StaticResource IconFav}"/>
+																 <Setter Property="Foreground" Value="LightGreen"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=False]">
+																 <Setter Property="Data" Value="{StaticResource IconNotFav}"/>
+																 <Setter Property="Foreground" Value="Orange"/>
+															 </Style>
+														 </PathIcon.Styles>
+													 </PathIcon>
+												 </StackPanel>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+										 <DataGridTextColumn Header="TYPE" Binding="{Binding Type}" Width="100" />
+										 <DataGridTextColumn Header="RELEASE DATE" Binding="{Binding ReleaseDate, StringFormat=\{0:dd.MM.yyyy\}}" Width="SizeToHeader"/>
+										 <DataGridTemplateColumn Header="ALERT" Width="150">
+											 <DataTemplate>
+												 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
+													 <PathIcon Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,8,0" Tag="{Binding Alert}">
+														 <PathIcon.Styles>
+															 <Style Selector="PathIcon[Tag=stable]">
+																 <Setter Property="Data" Value="{StaticResource IconShield}"/>
+																 <Setter Property="Foreground" Value="LightGreen"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=alert]">
+																 <Setter Property="Data" Value="{StaticResource IconAlert}"/>
+																 <Setter Property="Foreground" Value="Orange"/>
+															 </Style>
+															 <Style Selector="PathIcon[Tag=danger]">
+																 <Setter Property="Data" Value="{StaticResource IconDanger}"/>
+																 <Setter Property="Foreground" Value="Crimson"/>
+															 </Style>
+														 </PathIcon.Styles>
+													 </PathIcon>
+													 <TextBlock Text="{Binding Alert}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+												 </StackPanel>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+										 <DataGridTemplateColumn Header="DESCRIPTION" Width="*">
+											 <DataTemplate>
+												 <TextBlock Text="{Binding Description}" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0"/>
+											 </DataTemplate>
+										 </DataGridTemplateColumn>
+									 </DataGrid.Columns>
+								 </DataGrid>
+							 </Border>
+						 </Expander>
 					 </Border>
 
 
-					 <Border Classes="gameViewBorder" Margin="0,30,0,10">
+					 <Border Classes="gameViewBorder" Margin="0,30,0,10"
+							 IsVisible="{Binding AnyScreenshots}">
 						 <StackPanel Orientation="Vertical">
-							 <!--ScreenShots-->
 							 <TextBlock Classes="gameTitle"
 										VerticalAlignment="Center"
 										HorizontalAlignment="Stretch"
@@ -324,9 +535,44 @@
 										Text="SCREENSHOTS"
 										Margin="0,0,0,10">
 							 </TextBlock>
+
+							 <ItemsControl ItemsSource="{Binding Screenshots}"
+										   IsVisible="{Binding AnyScreenshots}">
+								 <ItemsControl.ItemsPanel>
+									 <ItemsPanelTemplate>
+										 <WrapPanel Orientation="Horizontal"/>
+									 </ItemsPanelTemplate>
+								 </ItemsControl.ItemsPanel>
+
+								 <ItemsControl.ItemTemplate>
+									 <DataTemplate x:DataType="imageVM:ImageViewModel">
+										 <Border CornerRadius="4"
+												 ClipToBounds="True"
+												 BorderBrush="{DynamicResource GalaxyGradient}"
+												 BorderThickness="1"
+												 Width="240"
+												 Height="135"
+												 Margin="5"
+												 Background="{StaticResource DarkestNight}">
+											 <Panel>
+												 <TextBlock Text="{Binding StatusMessage}"
+															HorizontalAlignment="Center"
+															VerticalAlignment="Center"
+															FontSize="14"
+															Foreground="{StaticResource GreyBlue}"
+															TextAlignment="Center"
+															TextWrapping="Wrap"
+															FontFamily="{DynamicResource Rajdhani}"/>
+
+												 <Image Source="{Binding Image}"
+														Stretch="UniformToFill"/>
+											 </Panel>
+										 </Border>
+									 </DataTemplate>
+								 </ItemsControl.ItemTemplate>
+							 </ItemsControl>
 						 </StackPanel>
 					 </Border>
-					
 					</StackPanel>
 				</StackPanel>
 			</Border>

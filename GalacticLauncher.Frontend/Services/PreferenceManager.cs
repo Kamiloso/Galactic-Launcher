@@ -12,6 +12,9 @@ public interface IPreferenceManager
 
     long? GetSelectedVersion(long gameId);
     void SetSelectedVersion(long gameId, long? versionId);
+
+    bool GetFilterState(long gameId, string filterName, bool defaultValue = true);
+    void SetFilterState(long gameId, string filterName, bool value);
 }
 
 internal class PreferenceManager(
@@ -89,5 +92,20 @@ internal class PreferenceManager(
         memoryRepository[MKEY_SEL_VERSION(gameId)] = versionId.HasValue
             ? versionId.Value.ToString()
             : "";
+    }
+
+    private static string MKEY_FILTER(long gameId, string name) => $"filter-{gameId}-{name}";
+
+    public bool GetFilterState(long gameId, string filterName, bool defaultValue = true)
+    {
+        string stored = memoryRepository[MKEY_FILTER(gameId, filterName)];
+        if (string.IsNullOrEmpty(stored)) return defaultValue;
+
+        return bool.TryParse(stored, out var result) ? result : defaultValue;
+    }
+
+    public void SetFilterState(long gameId, string filterName, bool value)
+    {
+        memoryRepository[MKEY_FILTER(gameId, filterName)] = value.ToString().ToLower();
     }
 }

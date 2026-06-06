@@ -11,6 +11,7 @@ namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface IGameListManager
 {
+    event Action? OnLibraryChanged;
     IEnumerable<long> GetLibraryGames(string searchName = "");
     IEnumerable<long> GetFavoriteGames(string searchName = "");
     IEnumerable<long> GetNolibGames(string searchName = "");
@@ -39,6 +40,7 @@ internal class GameListManager(
     private const string CKEY_FAVORITE = "favorites";
 
     private readonly Random _rand = new();
+    public event Action? OnLibraryChanged;
 
     public IEnumerable<long> GetLibraryGames(string searchName = "")
     {
@@ -113,22 +115,26 @@ internal class GameListManager(
     public void AddToLibrary(long id)
     {
         dataRepository.Add(CKEY_LIBRARY, id);
+        OnLibraryChanged?.Invoke();
     }
 
     public void RemoveFromLibrary(long id)
     {
         dataRepository.Remove(CKEY_FAVORITE, id);
         dataRepository.Remove(CKEY_LIBRARY, id);
+        OnLibraryChanged?.Invoke();
     }
 
     public void AddToFavorite(long id)
     {
         dataRepository.Add(CKEY_LIBRARY, id);
         dataRepository.Add(CKEY_FAVORITE, id);
+        OnLibraryChanged?.Invoke();
     }
 
     public void RemoveFromFavorite(long id)
     {
         dataRepository.Remove(CKEY_FAVORITE, id);
+        OnLibraryChanged?.Invoke();
     }
 }

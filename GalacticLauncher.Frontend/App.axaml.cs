@@ -58,6 +58,7 @@ public partial class App : Application
             // View Services
             services.AddSingleton<IAdminPanelSelector, AdminPanelSelector>();
             services.AddSingleton<IGameButtonFactory, GameButtonFactory>();
+            services.AddSingleton<IImageFactory, ImageFactory>();
             services.AddSingleton<IThemeManager, ThemeManager>();
             services.AddSingleton<INavigator, Navigator>();
             services.AddSingleton<INotifications, Notifications>();

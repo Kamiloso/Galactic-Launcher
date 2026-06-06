@@ -1,21 +1,24 @@
-﻿using Avalonia;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.GameButtons;
 
 internal partial class GameButtonLibraryViewModel(
     IImageProvider imageProvider,
     IGameListManager gameListManager,
+    ICacheProvider cacheProvider,
     INavigator navigator) : GameButtonViewModel(imageProvider, navigator)
 {
     [ObservableProperty]
@@ -39,6 +42,8 @@ internal partial class GameButtonLibraryViewModel(
     [ObservableProperty]
     private Geometry? _iconFav;
 
+    public ObservableCollection<Tag> Tags { get; } = [];
+
     public override required long Id
     {
         get => base.Id;
@@ -46,6 +51,7 @@ internal partial class GameButtonLibraryViewModel(
         {
             base.Id = value;
             RefreshState();
+            LoadTags();
         }
     }
 
@@ -95,5 +101,18 @@ internal partial class GameButtonLibraryViewModel(
 
         IconLib = GetResourceGeometry(IsLib ? "IconLib" : "IconNotLib");
         IconFav = GetResourceGeometry(IsFav ? "IconFav" : "IconNotFav");
+    }
+
+    private void LoadTags()
+    {
+        Tags.Clear();
+        var gameData = cacheProvider.GetGameDataOf(GameId);
+        if (gameData?.Tags != null)
+        {
+            foreach (var tag in gameData.Tags)
+            {
+                Tags.Add(tag);
+            }
+        }
     }
 }

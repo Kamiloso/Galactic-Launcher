@@ -44,13 +44,15 @@
 			</Grid>
 		</Grid>
 
+		<!--Search games/tags-->
+
 		<Border Classes="SearchBorder"
-                Padding="20,20,20,30"
+                Padding="15,15,15,30"
                 HorizontalAlignment="Right"
-                Width="230"
+                Width="250"
                 Margin="30,120,30,30">
 
-			<Grid RowDefinitions="40,35,40,35">
+			<Grid RowDefinitions="35,30,35,30,Auto,*">
 				<Grid Grid.Row="0">
 					<StackPanel Orientation="Horizontal"
                                 Spacing="10"
@@ -87,30 +89,105 @@
 				<Border Grid.Row="3"
                         Classes="TagSearchBorder"
                         Height="30"
-                        Margin="0,0,0,20"
-                        VerticalAlignment="Center">
+                        Margin="0,0,0,10"
+                        VerticalAlignment="Center"
+						ClipToBounds="True">
 					<TextBox Classes="galaxyTextBox"
-                             Text="{Binding SearchTags, Mode=TwoWay}"/>
+                             Text="{Binding SearchTags}"/>
+				</Border>
+
+				<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+								  VerticalScrollBarVisibility="Auto"
+								  AllowAutoHide="False"
+								  Grid.Row="4"
+								 MaxHeight="100">
+					<ItemsControl ItemsSource="{Binding SelectedTags}"
+						  Grid.Row="4"
+						  Margin="0,0,0,10">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel Orientation="Horizontal"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Button Classes="tagButton active"
+										Command="{Binding $parent[ItemsControl].DataContext.UnselectTagCommand}"
+										CommandParameter="{Binding}"
+										FontSize="14"
+										Height="27">
+
+									<TextBlock Text="{Binding Name}"/>
+								</Button>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+
+				<Border Classes="TagsBorder"
+						Padding="10,10,10,10"
+						Margin="0,10,0,10"
+						ClipToBounds="True"
+						Grid.Row="5"
+						MinHeight="170">
+
+					<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+								  VerticalScrollBarVisibility="Auto"
+								  AllowAutoHide="False">
+						<Panel>
+							<ItemsControl ItemsSource="{Binding AvailableTags}">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<WrapPanel Orientation="Horizontal"/>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Classes="tagButton inactive"
+												Command="{Binding $parent[ItemsControl].DataContext.SelectTagCommand}"
+												CommandParameter="{Binding}"
+												FontSize="14"
+												Height="27"
+												MaxWidth="100">
+											<TextBlock Text="{Binding Name}"/>
+										</Button>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						<TextBlock Text="NO TAGS FOUND"
+								   IsVisible="{Binding !AvailableTags.Count}"
+								   FontFamily="{DynamicResource Roboto}"
+								   FontSize="10"
+								   FontWeight="Bold"
+								   Foreground="{StaticResource GreyBlue}"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"/>
+							
+						</Panel>
+					</ScrollViewer>
 				</Border>
 			</Grid>
 		</Border>
 
+		<!--Games from library-->
+
 		<Border Classes="galaxyBorder"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Margin="30,120,270,30"
+                Margin="30,120,300,30"
                 Padding="20,20,20,20">
 
 				<ScrollViewer Classes="ScrollBar"
 							  HorizontalScrollBarVisibility="Disabled"
 							  VerticalScrollBarVisibility="Auto"
-							  ClipToBounds="False">
+							  ClipToBounds="False"
+							  AllowAutoHide="False">
 
 					<Panel>
 
 						<ItemsControl ItemsSource="{Binding GameControls}"
 									  Background="Transparent"
-									  Margin="0,0,25,0">
+									  Margin="0,0,0,0">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
 									<StackPanel Orientation="Vertical"
@@ -120,12 +197,9 @@
 
 							<ItemsControl.ItemTemplate>
 								<DataTemplate>
-									
-									<Viewbox>
 										<Button Classes="libraryGameButton"
 												Command="{Binding ShowGameCommand}"
 												HorizontalAlignment="Stretch"/>
-									</Viewbox>
 								</DataTemplate>
 							</ItemsControl.ItemTemplate>
 						</ItemsControl>

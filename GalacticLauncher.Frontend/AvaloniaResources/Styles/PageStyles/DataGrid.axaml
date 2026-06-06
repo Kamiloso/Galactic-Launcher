@@ -14,7 +14,7 @@
 		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
 		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
 		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
-		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="FontSize" Value="12"/>
 		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
 
@@ -27,6 +27,24 @@
 		<Setter Property="MinHeight" Value="60"/>
 		<Setter Property="VerticalAlignment" Value="Stretch"/>
 		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Padding" Value="4"/>
+
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border x:Name="CellBorder"
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{TemplateBinding CornerRadius}"
+						Padding="{TemplateBinding Padding}">
+					<ContentPresenter Content="{TemplateBinding Content}"
+									  ContentTemplate="{TemplateBinding ContentTemplate}"
+									  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+									  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+									  Margin="{TemplateBinding Padding}"/>
+				</Border>
+			</ControlTemplate>
+		</Setter>
 	</Style>
 
 	<Style Selector="DataGridRow:selected">
@@ -35,6 +53,7 @@
 
 	<Style Selector="DataGridRow:selected DataGridCell">
 		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
 
 	<Style Selector="DataGridRow:selected DataGridCell TextBlock">
@@ -44,16 +63,19 @@
 	<Style Selector="DataGridCell:selected">
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
 
 	<Style Selector="DataGridCell:focus">
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
 
 	<Style Selector="DataGridCell:focus-visible">
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderBrush" Value="Transparent"/>
+		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
 
 </Styles>

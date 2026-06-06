@@ -15,7 +15,8 @@
 	<!--View tags border-->
 	<Style Selector="Border.TagsBorder">
 		<Setter Property="BorderBrush" Value="{StaticResource TagBlue}"/>
-		<Setter Property="Background" Value="{DynamicResource BackgroundGradient}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Background" Value="{DynamicResource MainPanelGradient}"/>
 	</Style>
 
 	
@@ -34,6 +35,7 @@
 	<Style Selector="Border.GameSearchBorder">
 		<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
 		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+		<Setter Property="Padding" Value="1,1,1,1"/>
 	</Style>
 
 	
