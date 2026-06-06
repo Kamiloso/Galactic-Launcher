@@ -1,10 +1,25 @@
-﻿using GalacticLauncher.Core.Models;
-using Version = GalacticLauncher.Core.Models.Version;
-
-namespace GalacticLauncher.Core.Dto;
+﻿namespace GalacticLauncher.Core.Dto;
 
 public record PlayGame
 {
-    public required Game Game { get; init; }
-    public required Version Version { get; init; }
+    public required long GameId { get; init; }
+    public required string GameName { get; init; }
+    public required long VersionId { get; init; }
+    public required string VersionName { get; init; }
+
+    public PlayGame Sanitize()
+    {
+        const int MAX_LENGTH = 128;
+
+        return this with
+        {
+            GameName = GameName.Length > MAX_LENGTH
+                ? GameName[..MAX_LENGTH]
+                : GameName,
+
+            VersionName = VersionName.Length > MAX_LENGTH
+                ? VersionName[..MAX_LENGTH]
+                : VersionName,
+        };
+    }
 }

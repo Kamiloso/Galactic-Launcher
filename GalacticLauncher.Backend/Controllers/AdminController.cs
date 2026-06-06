@@ -71,7 +71,7 @@ public class AdminController(
     [EnableRateLimiting("MediumCost")]
     [EndpointDescription("Creates a new game and adds it to the database.")]
     public async Task<ActionResult<long>> CreateGame(
-        [FromBody] AdminBox<Game> adminBox)
+        [FromBody] AdminBox<GameRaw> adminBox)
     {
         return await HandleEndpointAsync(async () =>
         {

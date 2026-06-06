@@ -14,9 +14,4 @@ internal static class InfoExtensions
                 .Where(ver => ver.Platform == Utils.CurrentPlatform)]
         };
     }
-
-    public static string GetIdentity(this ExecInfo execInfo)
-    {
-        return $"{execInfo.GameUnique}::{execInfo.VersionUnique}";
-    }
 }

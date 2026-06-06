@@ -21,7 +21,7 @@ public interface IBackendTalker
     // EP: admin
     Task<LoginResult> GetAdminToken(LoginRequest loginRequest);
     Task PostGameTree(string token, GameTree gameTree);
-    Task CreateGame(string token, Game game);
+    Task CreateGame(string token, GameRaw gameRaw);
     Task DeleteGame(string token, long id);
     Task CreateTag(string token, Tag tag);
     Task DeleteTag(string token, long id);
@@ -56,9 +56,9 @@ internal class BackendTalker(IHttpPoster httpPoster) : IBackendTalker
         await httpPoster.PostAsync("admin/post-game-tree",
             new AdminBox<GameTree>() { Token = token, Body = gameTree });
 
-    public async Task CreateGame(string token, Game game) =>
+    public async Task CreateGame(string token, GameRaw gameRaw) =>
         await httpPoster.PostAsync("admin/create-game",
-            new AdminBox<Game>() { Token = token, Body = game });
+            new AdminBox<GameRaw>() { Token = token, Body = gameRaw });
 
     public async Task DeleteGame(string token, long id) =>
         await httpPoster.PostAsync("admin/delete-game",

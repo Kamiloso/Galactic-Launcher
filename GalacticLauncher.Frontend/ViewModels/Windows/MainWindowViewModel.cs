@@ -126,7 +126,7 @@ internal partial class MainWindowViewModel : ObservableObject
 
                 AdminTitleText = isValidSession
                     ? $"{ADMIN_TITLE} {Utils.FormatTimeSpan(toExpire)}"
-                    : ADMIN_TITLE;
+                    : $"{ADMIN_TITLE}";
 
                 await Task.Delay(50);
             }
@@ -137,12 +137,13 @@ internal partial class MainWindowViewModel : ObservableObject
     {
         _dialogs.OnDialogChanged += dvm => CurrentDialog = dvm;
 
-        Func<Task> finish = _dialogs.ShowLoadingDialogAsync(
+        Func<Task> close = _dialogs.ShowLoadingDialog(
             "Starting Launcher",
             "Fetching data...",
-            minimumTimeMs: 1000);
+            fakeLoadingTime: 1000);
 
-        _cacheRefresher.OnInitialize += () => finish();
+        _cacheRefresher.OnInitialize +=
+            async () => await close();
     }
 
     partial void OnIsExpandedChanged(bool value)

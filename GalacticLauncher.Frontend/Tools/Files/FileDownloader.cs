@@ -56,8 +56,12 @@ internal class FileDownloader(HttpClient httpClient) : IFileDownloader
                 await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken);
                 totalRead += bytesRead;
 
-                double percentage = totalBytes.HasValue ? (double)totalRead / totalBytes.Value : 0; 
-                progress?.Report(new DownloadProgressData(percentage, totalRead, totalBytes));
+                double percentage = totalBytes.HasValue
+                    ? (double)totalRead / totalBytes.Value
+                    : 0;
+
+                progress?.Report(new DownloadProgressData(
+                    percentage, totalRead, totalBytes));
             }
         }
         catch (OperationCanceledException) { throw; }

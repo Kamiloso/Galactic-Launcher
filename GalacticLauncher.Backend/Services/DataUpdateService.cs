@@ -11,7 +11,7 @@ namespace GalacticLauncher.Backend.Services;
 public interface IDataUpdateService
 {
     Task UpdateGameTree(GameTree gameData);
-    Task<long> CreateGame(Game game);
+    Task<long> CreateGame(GameRaw gameRaw);
     Task DeleteGameById(long idGame);
     Task<long> CreateTag(Tag tag);
     Task DeleteTagById(long idTag);
@@ -39,14 +39,14 @@ internal class DataUpdateService(
         await scope.CommitAsync();
     }
 
-    public async Task<long> CreateGame(Game game)
+    public async Task<long> CreateGame(GameRaw gameRaw)
     {
         await using var scope =
             await scopeFactory.CreateScopeAsync(IsolationLevel.RepeatableRead);
 
         var gameRepository = scope.GetService<IGameRepository>();
 
-        GameEntity gameEntity = game.ToEntity();
+        GameEntity gameEntity = gameRaw.ToEntity();
 
         long id = await gameRepository.CreateGame(gameEntity);
         await scope.CommitAsync();

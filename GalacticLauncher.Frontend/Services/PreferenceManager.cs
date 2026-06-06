@@ -1,4 +1,5 @@
 ﻿using GalacticLauncher.Frontend.Repositories;
+using System;
 
 namespace GalacticLauncher.Frontend.Services;
 
@@ -8,6 +9,7 @@ public interface IPreferenceManager
     bool IsMenuExpanded { get; set; }
     bool IsAdminPanelVisible { get; set; }
     string LastUsername { get; set; }
+    Guid Guid { get; set; }
 
     long? GetSelectedVersion(long gameId);
     void SetSelectedVersion(long gameId, long? versionId);
@@ -16,31 +18,36 @@ public interface IPreferenceManager
     void SetFilterState(long gameId, string filterName, bool value);
 }
 
-internal class PreferenceManager(
-    IMemoryRepository memoryRepository) : IPreferenceManager
+internal class PreferenceManager : IPreferenceManager
 {
     private const string MKEY_THEME = "galactic";
     private const string MKEY_EXPANDED = "expanded";
     private const string MKEY_ADMIN_PANEL = "admin-panel";
     private const string MKEY_USERNAME = "username";
+    private const string MKEY_GUID = "guid";
     private static string MKEY_SEL_VERSION(long id) => $"sel-version-{id}";
     private static string MKEY_FILTER(long gameId, string name) => $"filter-{gameId}-{name}";
-
-    private const string GALACTIC = "galactic";
-    private const string BLUE = "blue";
-    private const string EXPANDED = "expanded";
-    private const string SHRINKED = "shrinked";
-    private const string VISIBLE = "visible";
-    private const string HIDDEN = "hidden";
 
     private static bool DefaultThemeGalactic => true;
     private static bool DefaultMenuExpanded => true;
     private static bool DefaultAdminPanelVisible => false;
 
+    private readonly IMemoryRepository _memoryRepository;
+
+    public PreferenceManager(IMemoryRepository memoryRepository)
+    {
+        _memoryRepository = memoryRepository;
+
+        if (Guid == default)
+            Guid = Guid.NewGuid(); // single guid per launcher copy
+    }
+
+    private const string GALACTIC = "galactic";
+    private const string BLUE = "blue";
     public bool IsThemeGalactic
     {
-        set => memoryRepository[MKEY_THEME] = value ? GALACTIC : BLUE;
-        get => memoryRepository[MKEY_THEME] switch
+        set => _memoryRepository[MKEY_THEME] = value ? GALACTIC : BLUE;
+        get => _memoryRepository[MKEY_THEME] switch
         {
             GALACTIC => true,
             BLUE => false,
@@ -48,10 +55,12 @@ internal class PreferenceManager(
         };
     }
 
+    private const string EXPANDED = "expanded";
+    private const string SHRINKED = "shrinked";
     public bool IsMenuExpanded
     {
-        set => memoryRepository[MKEY_EXPANDED] = value ? EXPANDED : SHRINKED;
-        get => memoryRepository[MKEY_EXPANDED] switch
+        set => _memoryRepository[MKEY_EXPANDED] = value ? EXPANDED : SHRINKED;
+        get => _memoryRepository[MKEY_EXPANDED] switch
         {
             EXPANDED => true,
             SHRINKED => false,
@@ -59,10 +68,12 @@ internal class PreferenceManager(
         };
     }
 
+    private const string VISIBLE = "visible";
+    private const string HIDDEN = "hidden";
     public bool IsAdminPanelVisible
     {
-        set => memoryRepository[MKEY_ADMIN_PANEL] = value ? VISIBLE : HIDDEN;
-        get => memoryRepository[MKEY_ADMIN_PANEL] switch
+        set => _memoryRepository[MKEY_ADMIN_PANEL] = value ? VISIBLE : HIDDEN;
+        get => _memoryRepository[MKEY_ADMIN_PANEL] switch
         {
             VISIBLE => true,
             HIDDEN => false,
@@ -72,21 +83,27 @@ internal class PreferenceManager(
 
     public string LastUsername
     {
-        get => memoryRepository[MKEY_USERNAME];
-        set => memoryRepository[MKEY_USERNAME] = value;
+        get => _memoryRepository[MKEY_USERNAME];
+        set => _memoryRepository[MKEY_USERNAME] = value;
+    }
+
+    public Guid Guid
+    {
+        get => Guid.TryParse(_memoryRepository[MKEY_GUID], out var guid) ? guid : default;
+        set => _memoryRepository[MKEY_GUID] = value.ToString();
     }
 
     public long? GetSelectedVersion(long gameId)
     {
         return long.TryParse(
-            memoryRepository[MKEY_SEL_VERSION(gameId)], out var value)
+            _memoryRepository[MKEY_SEL_VERSION(gameId)], out var value)
                 ? value
                 : null;
     }
 
     public void SetSelectedVersion(long gameId, long? versionId)
     {
-        memoryRepository[MKEY_SEL_VERSION(gameId)] = versionId.HasValue
+        _memoryRepository[MKEY_SEL_VERSION(gameId)] = versionId.HasValue
             ? versionId.Value.ToString()
             : "";
     }

@@ -1,11 +1,11 @@
 ﻿namespace GalacticLauncher.Core.Dto;
 
-public record Telemetry
+public record TelemetryBox
 {
     public required Guid Guid { get; init; }
 }
 
-public record Telemetry<T> : Telemetry
+public record TelemetryBox<T> : TelemetryBox
 {
     public required T Body { get; init; }
 }

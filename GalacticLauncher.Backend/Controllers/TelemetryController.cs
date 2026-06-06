@@ -16,12 +16,12 @@ public class TelemetryController(
     [EnableRateLimiting("TelemetryCost")]
     [EndpointDescription("Registers information when player starts to play the game.")]
     public ActionResult GameEcho(
-        [FromBody] Telemetry<PlayGame> telemetryBox)
+        [FromBody] TelemetryBox<PlayGame> telemetryBox)
     {
         LogAuto(new { telemetryBox.Guid, PlayGame = telemetryBox.Body },
             importance: LogLevel.Information,
             toHistory: true,
-            idGame: telemetryBox.Body.Game.Id);
+            idGame: telemetryBox.Body.GameId);
 
         return HandleEndpoint(() => { });
     }
