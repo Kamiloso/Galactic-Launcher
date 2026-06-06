@@ -105,14 +105,17 @@ public static class Utils
 
         return fullPath.StartsWith(fullBasePath, comparison);
 
-        // Hack: We append a trailing separator everywhere.
         static string Normalize(string path)
         {
-            path = Path.GetFullPath(path);
-            return path.EndsWith(Path.DirectorySeparatorChar)
-                ? path
-                : path + Path.DirectorySeparatorChar;
+            return Path.GetFullPath(path)
+                .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
         }
+    }
+
+    public static bool ArePathsEqual(string path1, string path2)
+    {
+        return IsPathInside(path1, path2) &&
+               IsPathInside(path2, path1);
     }
 
     public static string FormatTimeSpan(TimeSpan timeSpan)

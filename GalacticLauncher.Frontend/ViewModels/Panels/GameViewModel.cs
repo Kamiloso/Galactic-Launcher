@@ -175,7 +175,7 @@ internal partial class GameViewModel : ObservableObject, INavigationAware
         try
         {
             await _dialogs.ShowDownloadProgressDialogAsync(
-                $"Downloading",
+                $"Downloading...",
                 $"Downloading {SelTitle}...",
                 downloadTask, _downloading.Terminate, progress);
 

@@ -18,10 +18,8 @@ using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Frontend.ViewModels.Windows;
 using GalacticLauncher.Frontend.Views.MainWindowView;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend;
 
@@ -82,6 +80,7 @@ public partial class App : Application
             services.AddSingleton<IExecManager, ExecManager>();
             services.AddSingleton<IExecPathSystem, ExecPathSystem>();
             services.AddSingleton<IExecRunner, ExecRunner>();
+            services.AddSingleton<IExecCleaner, ExecCleaner>();
             services.AddSingleton<ICacheRefresher, CacheRefresher>();
             services.AddSingleton<ICacheProvider, CacheProvider>();
             services.AddSingleton<IImageProvider, ImageProvider>();
