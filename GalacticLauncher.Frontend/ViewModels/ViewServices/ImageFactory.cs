@@ -10,10 +10,10 @@ internal interface IImageFactory
 
 internal class ImageFactory(IImageProvider imageProvider): IImageFactory
 {
-    public ImageViewModel CreateAndStartLoadingImage(string? imageUrl)
+    public ImageViewModel CreateAndStartLoadingImage(string? url)
     {
-        ImageViewModel ivm = new(imageProvider) { ImageUrl = imageUrl };
-        _ = ivm.SetActiveLookAsync();
+        ImageViewModel ivm = new(imageProvider);
+        _ = ivm.SetActiveLookAsync(url);
 
         return ivm;
     }

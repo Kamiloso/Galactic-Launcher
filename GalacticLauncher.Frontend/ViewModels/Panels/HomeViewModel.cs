@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.ViewModels.GameButtons;
+using GalacticLauncher.Frontend.ViewModels.ImageControls;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;

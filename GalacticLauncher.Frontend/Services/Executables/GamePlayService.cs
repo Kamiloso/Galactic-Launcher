@@ -18,7 +18,6 @@ public interface IGamePlayService
 
 internal class GamePlayService(
     IExecManager execManager,
-    ILastGameManager lastGameManager,
     ITelemetryCollector telemetryCollector,
     IDialogs dialogs,
     INotifications notifications,
@@ -108,7 +107,6 @@ internal class GamePlayService(
                 Task.CompletedTask,
                 fakeLoadingTime: 1000);
 
-            lastGameManager.SetLastGame(id);
             terminator.Terminate();
 
             return true;

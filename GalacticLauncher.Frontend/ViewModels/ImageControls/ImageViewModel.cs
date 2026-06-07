@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.ImageLoad;
 
-internal partial class ImageViewModel(IImageProvider imageProvider): ObservableObject
+internal partial class ImageViewModel(IImageProvider imageProvider) : ObservableObject
 {
-    private const string EMPTY_STATUS = "";
-    private const string LOADING_IMAGE = "LOADING IMAGE...";
-    private const string IMAGE_NOT_FOUND = "IMAGE NOT FOUND";
+    protected const string EMPTY_STATUS = "";
+    protected const string LOADING_IMAGE = "LOADING IMAGE...";
+    protected const string IMAGE_NOT_FOUND = "IMAGE NOT FOUND";
 
     [ObservableProperty]
     private string _statusMessage = EMPTY_STATUS;
@@ -18,11 +18,9 @@ internal partial class ImageViewModel(IImageProvider imageProvider): ObservableO
     [ObservableProperty]
     private Bitmap? _image;
 
-    public required string? ImageUrl { get; init; }
-
-    public virtual async Task SetActiveLookAsync()
+    public async Task SetActiveLookAsync(string? url)
     {
-        if (ImageUrl == null)
+        if (url == null)
         {
             StatusMessage = IMAGE_NOT_FOUND;
             return;
@@ -32,7 +30,7 @@ internal partial class ImageViewModel(IImageProvider imageProvider): ObservableO
 
         try
         {
-            string filePath = await imageProvider.GetImagePathAsync(ImageUrl);
+            string filePath = await imageProvider.GetImagePathAsync(url);
 
             Image = new Bitmap(filePath);
             StatusMessage = EMPTY_STATUS;

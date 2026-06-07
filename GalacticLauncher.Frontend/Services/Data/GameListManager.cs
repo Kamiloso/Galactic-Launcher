@@ -26,8 +26,10 @@ public interface IGameListManager
     // Adding to favorites also adds to library,
     // and removing from library also removes from favorites.
 
+    bool InLibrary(long gameId);
     void AddToLibrary(long gameId);
     void RemoveFromLibrary(long gameId);
+    bool InFavorite(long gameId);
     void AddToFavorite(long gameId);
     void RemoveFromFavorite(long gameId);
 }
@@ -113,6 +115,11 @@ internal class GameListManager(
             .Limit(limit)];
     }
 
+    public bool InLibrary(long id)
+    {
+        return dataRepository.GetAll(CKEY_LIBRARY).Contains(id);
+    }
+
     public void AddToLibrary(long id)
     {
         dataRepository.Add(CKEY_LIBRARY, id);
@@ -124,6 +131,11 @@ internal class GameListManager(
         dataRepository.Remove(CKEY_FAVORITE, id);
         dataRepository.Remove(CKEY_LIBRARY, id);
         OnListsChanged?.Invoke();
+    }
+
+    public bool InFavorite(long id)
+    {
+        return dataRepository.GetAll(CKEY_FAVORITE).Contains(id);
     }
 
     public void AddToFavorite(long id)

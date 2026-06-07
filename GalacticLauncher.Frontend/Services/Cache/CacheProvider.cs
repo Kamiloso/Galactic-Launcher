@@ -13,7 +13,7 @@ public interface ICacheProvider
     IEnumerable<Game> GetAllGames();
     IEnumerable<Version> GetVersionsOf(long id);
     IEnumerable<Tag> GetAllTags();
-    IEnumerable<Tag> GetTagsByGameId(long id);
+    IEnumerable<Tag> GetTagsOf(long id);
 }
 
 internal class CacheProvider(
@@ -50,7 +50,7 @@ internal class CacheProvider(
             .Select(id => cacheRepository.GetTag(id)!)];
     }
 
-    public IEnumerable<Tag> GetTagsByGameId(long id)
+    public IEnumerable<Tag> GetTagsOf(long id)
     {
         Game? game = GetGameOf(id);
         if (game is null) return [];

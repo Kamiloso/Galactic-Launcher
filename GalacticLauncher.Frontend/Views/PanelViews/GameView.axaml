@@ -197,7 +197,7 @@
 
 							 <Button Command="{Binding ToggleLibraryCommand}" Classes="iconBtn">
 								 <PathIcon Name="LibIcon"
-										   Tag="{Binding IsInLibrary}"
+										   Tag="{Binding InLibrary}"
 										   Height="25"
 										   Width="25"
 										   Margin="0,0,0,2"/>
@@ -205,7 +205,7 @@
 
 							 <Button Command="{Binding ToggleFavoriteCommand}" Classes="iconBtn">
 								 <PathIcon Name="FavIcon"
-										   Tag="{Binding IsFavorite}"
+										   Tag="{Binding InFavorite}"
 										   Height="25"
 										   Width="25"
 										   Margin="0,0,0,2"/>

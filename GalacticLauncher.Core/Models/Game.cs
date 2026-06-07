@@ -27,4 +27,17 @@ public record Game : GameRaw
             TagIdList = game.TagIdList,
         };
     }
+
+    public static Game GetFallback(long id)
+    {
+        return new Game
+        {
+            Id = id,
+            Name = "Unknown",
+            Description = "",
+            Author = "Unknown",
+            IconUrl = null,
+            TagIdList = null,
+        };
+    }
 }

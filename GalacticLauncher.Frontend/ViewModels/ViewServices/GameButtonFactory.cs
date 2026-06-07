@@ -2,7 +2,7 @@
 using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.ViewModels.GameButtons;
+using GalacticLauncher.Frontend.ViewModels.ImageControls;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
@@ -22,7 +22,7 @@ internal class GameButtonFactory(
     {
         var gbvm = new GameButtonHomeViewModel(imageProvider, navigator) { Id = gameId };
 
-        Game? game = cacheProvider.GetGameOf(gameId);
+        Game game = cacheProvider.GetGameOf(gameId) ?? Game.GetFallback(gameId);
 
         _ = gbvm.SetActiveLookAsync(game);
 
@@ -34,7 +34,7 @@ internal class GameButtonFactory(
         var gbvm = new GameButtonLibraryViewModel(
             imageProvider, gameListManager, cacheProvider, navigator) { Id = gameId };
 
-        Game? game = cacheProvider.GetGameOf(gameId);
+        Game? game = cacheProvider.GetGameOf(gameId) ?? Game.GetFallback(gameId);
 
         _ = gbvm.SetActiveLookAsync(game);
 

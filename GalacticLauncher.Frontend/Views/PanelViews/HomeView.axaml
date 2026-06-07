@@ -3,7 +3,7 @@
              x:Class="GalacticLauncher.Frontend.Views.PanelViews.HomeView"
 			 xmlns:vm="clr-namespace:GalacticLauncher.Frontend.ViewModels.Panels"
 			 x:DataType="vm:HomeViewModel"
-			 xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.GameButtons"
+			 xmlns:btn="clr-namespace:GalacticLauncher.Frontend.ViewModels.ImageControls"
 			 x:CompileBindings="True">
 
 
@@ -82,7 +82,7 @@
 												Tag="{Binding StatusMessage}"
 												Background="{DynamicResource MainPanelGradient}">
 											
-											<Image Source="{Binding Icon}"
+											<Image Source="{Binding Image}"
 												   IsVisible="true"/>
 										</Button>
 									</DataTemplate>
@@ -139,7 +139,7 @@
 												Tag="{Binding StatusMessage}"
 												Background="{DynamicResource MainPanelGradient}">
 
-											<Image Source="{Binding Icon}"
+											<Image Source="{Binding Image}"
 												   IsVisible="true"/>
 										</Button>
 									</DataTemplate>
@@ -176,7 +176,7 @@
 												Tag="{Binding StatusMessage}"
 												Background="{DynamicResource MainPanelGradient}">
 
-											<Image Source="{Binding Icon}"
+											<Image Source="{Binding Image}"
 												   IsVisible="true"/>
 										</Button>
 									</DataTemplate>

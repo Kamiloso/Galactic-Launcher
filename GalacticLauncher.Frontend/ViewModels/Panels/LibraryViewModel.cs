@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
-using GalacticLauncher.Frontend.ViewModels.GameButtons;
+using GalacticLauncher.Frontend.ViewModels.ImageControls;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Infrastructure;
@@ -122,7 +122,7 @@ internal partial class LibraryViewModel : ObservableObject, INavigationAware
 
         foreach (long id in gameIdPool)
         {
-            List<Tag> gameTags = [.. _cacheProvider.GetTagsByGameId(id)];
+            List<Tag> gameTags = [.. _cacheProvider.GetTagsOf(id)];
 
             if (!SelectedTags.Any() ||
                 SelectedTags.Any(t1 => gameTags.Any(t2 => t2.Id == t1.Id)))
