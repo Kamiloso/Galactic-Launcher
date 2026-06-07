@@ -14,7 +14,7 @@ internal abstract partial class GameButtonViewModel(
     [ObservableProperty]
     private long _gameId;
 
-    public required long Id
+    public virtual required long Id
     {
         init => GameId = value;
     }

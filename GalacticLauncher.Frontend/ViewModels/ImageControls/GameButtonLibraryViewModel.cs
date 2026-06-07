@@ -28,6 +28,17 @@ internal partial class GameButtonLibraryViewModel : GameButtonViewModel
 
     public ObservableCollection<Tag> Tags { get; } = [];
 
+    public override required long Id
+    {
+        init
+        {
+            base.Id = value;
+
+            RefreshIcons();
+            LoadTags();
+        }
+    }
+
     private readonly IGameListManager _gameListManager;
     private readonly ICacheProvider _cacheProvider;
 
@@ -41,9 +52,6 @@ internal partial class GameButtonLibraryViewModel : GameButtonViewModel
         _cacheProvider = cacheProvider;
 
         _gameListManager.OnListsChanged += RefreshIcons;
-
-        RefreshIcons();
-        LoadTags();
     }
 
     private void RefreshIcons()
