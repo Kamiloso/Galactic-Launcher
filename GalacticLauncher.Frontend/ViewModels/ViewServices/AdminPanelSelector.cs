@@ -1,5 +1,5 @@
-﻿using GalacticLauncher.Frontend.Services;
-using GalacticLauncher.Frontend.Services.Admin;
+﻿using GalacticLauncher.Frontend.Services.Admin;
+using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using System;
 using System.Threading.Tasks;

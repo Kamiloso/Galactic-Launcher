@@ -1,7 +1,7 @@
 ﻿using GalacticLauncher.Frontend.Repositories;
 using System;
 
-namespace GalacticLauncher.Frontend.Services;
+namespace GalacticLauncher.Frontend.Services.Data;
 
 public interface IPreferenceManager
 {
@@ -14,8 +14,8 @@ public interface IPreferenceManager
     long? GetSelectedVersion(long gameId);
     void SetSelectedVersion(long gameId, long? versionId);
 
-    bool GetFilterState(long gameId, string filterName, bool defaultValue);
-    void SetFilterState(long gameId, string filterName, bool value);
+    bool GetGameBool(long gameId, string filterName, bool defaultValue);
+    void SetGameBool(long gameId, string filterName, bool value);
 }
 
 internal class PreferenceManager : IPreferenceManager
@@ -108,7 +108,7 @@ internal class PreferenceManager : IPreferenceManager
             : "";
     }
 
-    public bool GetFilterState(long gameId, string filterName, bool defaultValue)
+    public bool GetGameBool(long gameId, string filterName, bool defaultValue)
     {
         return bool.TryParse(
             _memoryRepository[MKEY_FILTER(gameId, filterName)], out var value)
@@ -116,7 +116,7 @@ internal class PreferenceManager : IPreferenceManager
                 : defaultValue;
     }
 
-    public void SetFilterState(long gameId, string filterName, bool value)
+    public void SetGameBool(long gameId, string filterName, bool value)
     {
         _memoryRepository[MKEY_FILTER(gameId, filterName)] = value.ToString();
     }

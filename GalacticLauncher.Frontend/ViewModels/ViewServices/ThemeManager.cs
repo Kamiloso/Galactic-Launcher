@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
 using GalacticLauncher.Frontend.Infrastructure;
-using GalacticLauncher.Frontend.Services;
+using GalacticLauncher.Frontend.Services.Data;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 

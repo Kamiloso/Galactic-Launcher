@@ -105,7 +105,7 @@
 								 <!--Download button-->
 								 <Button Classes="play"
 										 VerticalAlignment="Center"
-										 Content="{Binding DownloadButtonText}"
+										 Content="DOWNLOAD"
 										 Command="{Binding DownloadSelectedVersionCommand}"
 										 IsEnabled="{Binding IsNoInstanceState}"
 										 IsVisible="{Binding IsNoInstanceState}"/>
@@ -296,10 +296,7 @@
 									 </TextBlock>
 
 									 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-										 <TextBlock Text="FILTER:" VerticalAlignment="Center" Foreground="{StaticResource GreyBlue}" FontSize="12" Margin="0,0,5,0"/>
-										 <CheckBox Content="Release" IsChecked="{Binding FilterInstalledRelease}" VerticalAlignment="Center"/>
 										 <CheckBox Content="Snapshot" IsChecked="{Binding FilterInstalledSnapshot}" VerticalAlignment="Center"/>
-										 <CheckBox Content="Beta" IsChecked="{Binding FilterInstalledBeta}" VerticalAlignment="Center"/>
 									 </StackPanel>
 								 </Grid>
 							 </Expander.Header>
@@ -437,10 +434,7 @@
 									 </TextBlock>
 
 									 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-										 <TextBlock Text="FILTER:" VerticalAlignment="Center" Foreground="{StaticResource GreyBlue}" FontSize="12" Margin="0,0,5,0"/>
-										 <CheckBox Content="Release" IsChecked="{Binding FilterAvailableRelease}" VerticalAlignment="Center"/>
 										 <CheckBox Content="Snapshot" IsChecked="{Binding FilterAvailableSnapshot}" VerticalAlignment="Center"/>
-										 <CheckBox Content="Beta" IsChecked="{Binding FilterAvailableBeta}" VerticalAlignment="Center"/>
 									 </StackPanel>
 								 </Grid>
 							 </Expander.Header>

@@ -58,6 +58,7 @@ public partial class App : Application
             services.AddSingleton<IGameButtonFactory, GameButtonFactory>();
             services.AddSingleton<IImageFactory, ImageFactory>();
             services.AddSingleton<IThemeManager, ThemeManager>();
+            services.AddSingleton<IGamePlayService, GamePlayService>();
             services.AddSingleton<INavigator, Navigator>();
             services.AddSingleton<INotifications, Notifications>();
             services.AddSingleton<ITerminator, Terminator>();
@@ -71,6 +72,7 @@ public partial class App : Application
             services.AddSingleton<IJsonFiles, JsonFiles>();
             services.AddSingleton<IHttpPoster, HttpPoster>(_ => new(HttpProvider.ApiClient));
             services.AddSingleton<IBackendTalker, BackendTalker>();
+            services.AddSingleton<ITelemetryCollector, TelemetryCollector>();
 
             // Repositories
             services.AddSingleton<ICacheRepository, CacheRepository>();

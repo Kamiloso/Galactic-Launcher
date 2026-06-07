@@ -1,5 +1,6 @@
 ﻿using GalacticLauncher.Core.Dto;
 using GalacticLauncher.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ public interface IBackendTalker
     Task<IEnumerable<Tag>> GetAllTags();
 
     // EP: telemetry
-    Task SendGamePlayed(PlayGame game);
+    Task TrackGameLaunch(Guid guid, PlayGame playGame);
 
     // EP: admin
     Task<LoginResult> GetAdminToken(LoginRequest loginRequest);
@@ -45,8 +46,9 @@ internal class BackendTalker(IHttpPoster httpPoster) : IBackendTalker
         await httpPoster.GetAsync<IEnumerable<Tag>>("download/all-tags");
 
     // EP: telemetry
-    public async Task SendGamePlayed(PlayGame playGame) =>
-        await httpPoster.PostAsync("telemetry/play-game", playGame);
+    public async Task TrackGameLaunch(Guid guid, PlayGame playGame) =>
+        await httpPoster.PostAsync("telemetry/play-game",
+            new TelemetryBox<PlayGame> { Guid = guid, Body = playGame });
 
     // EP: admin
     public async Task<LoginResult> GetAdminToken(LoginRequest loginRequest) =>

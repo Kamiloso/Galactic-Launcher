@@ -5,10 +5,10 @@ using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
 using System.Threading.Tasks;
-using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Admin;
 using GalacticLauncher.Core;
+using GalacticLauncher.Frontend.Services.Data;
 
 namespace GalacticLauncher.Frontend.ViewModels.Windows;
 

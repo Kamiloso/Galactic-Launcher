@@ -9,10 +9,11 @@ using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.GameButtons;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using GalacticLauncher.Core.Models;
+using GalacticLauncher.Frontend.Infrastructure;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal partial class LibraryViewModel : ObservableObject
+internal partial class LibraryViewModel : ObservableObject, INavigationAware
 {
     [ObservableProperty]
     private string? _searchGames;
@@ -53,8 +54,7 @@ internal partial class LibraryViewModel : ObservableObject
         ICacheRefresher cacheRefresher,
         IGameListManager gameListManager,
         IGameButtonFactory gameButtonFactory,
-        ICacheProvider cacheProvider
-        )
+        ICacheProvider cacheProvider)
     {
         _cacheRefresher = cacheRefresher;
         _gameListManager = gameListManager;
@@ -68,6 +68,14 @@ internal partial class LibraryViewModel : ObservableObject
             (_, _) => RefreshPage();
 
         RefreshPage();
+    }
+
+    public void OnActivate(object[] args)
+    {
+        if (GameControls.Count == 0)
+        {
+            CurrentMode = LibraryViewMode.MoreGames;
+        }
     }
 
     [RelayCommand]

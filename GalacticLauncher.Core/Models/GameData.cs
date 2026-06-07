@@ -9,4 +9,13 @@ public record GameData : Game
     {
         return InjectInternal(this, game);
     }
+
+    public GameData RemoveIncompatiblePlatforms()
+    {
+        return this with
+        {
+            Versions = [.. Versions
+                .Where(ver => ver.Platform == Utils.CurrentPlatform)]
+        };
+    }
 }

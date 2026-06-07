@@ -9,6 +9,8 @@ internal static class ToInfoConverters
     {
         return new GameInfo
         {
+            GameId = game.Id,
+            GameName = game.Name,
             GameUnique = Normalize($"Game_{game.Id}"),
         };
     }
@@ -24,7 +26,11 @@ internal static class ToInfoConverters
     {
         return new ExecInfo
         {
+            GameId = gameInfo.GameId,
+            GameName = gameInfo.GameName,
             GameUnique = gameInfo.GameUnique,
+            VersionId = version.Id,
+            VersionName = version.Caption,
             VersionUnique = Normalize($"Version_{version.Id}"),
             DownloadUrl = version.DownloadUrl,
             ExecLocation = version.ExecLocation,

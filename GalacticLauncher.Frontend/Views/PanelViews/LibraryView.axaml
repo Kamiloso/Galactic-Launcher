@@ -28,7 +28,7 @@
                         Grid.Column="0">
 				</Button>
 				<Button Classes="favouriteAll"
-                        Content="FAVOURITES"
+                        Content="FAVORITES"
                         Classes.active="{Binding IsFavoritePage}"
                         Command="{Binding ChangeViewCommand}"
                         CommandParameter="{x:Static vm:LibraryViewModel+LibraryViewMode.Favorites}"

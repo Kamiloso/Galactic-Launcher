@@ -30,10 +30,10 @@ Features:
 
 INSERT INTO versions (id, id_game, caption, type, description, is_primary, release_date, platform, download_url, exec_location, sha256_hash, alert) VALUES
 -- Wersje dla Teeworlds (ID 1)
-(1, 1, 'v0.7.5', 'release', 'Fixed using correct array measurements when placing egg doodads', 1, '2025-11-11', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.5/teeworlds-0.7.5-win64.zip', 'teeworlds-0.7.5-win64-teeworlds.exe', null, 'stable'),
-(50, 1, 'v0.7.5', 'release', 'Fixed using correct array measurements when placing egg doodads', 1, '2025-11-11', 'linux', 'https://drive.google.com/uc?id=1ghoYSIfmhuAoBW4GIW0rgL0i7WjEZmxJ&export=download', 'teeworlds-0.7.5-win64-teeworlds', null, 'stable'),
-(2, 1, 'v0.7.3.1', 'release', 'Fix platform-specific client libraries for Linux', 0, '2025-05-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.3.1/teeworlds-0.7.3.1-win64.zip', 'teeworlds-0.7.3.1-win64-teeworlds.exe', null, 'stable'),
-(40, 1, 'v0.7.2.1', 'release', 'Small fixes', 0, '2025-03-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.2/teeworlds-0.7.2-win64.zip', 'teeworlds-0.7.2-win64-teeworlds.exe', null, 'stable'),
+(1, 1, 'v0.7.5', 'release', 'Fixed using correct array measurements when placing egg doodads', 1, '2025-11-11', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.5/teeworlds-0.7.5-win64.zip', 'teeworlds-0.7.5-win64\\teeworlds.exe', null, 'stable'),
+(50, 1, 'v0.7.5', 'release', 'Fixed using correct array measurements when placing egg doodads', 1, '2025-11-11', 'linux', 'https://drive.google.com/uc?id=1ghoYSIfmhuAoBW4GIW0rgL0i7WjEZmxJ&export=download', 'teeworlds-0.7.5-win64\\teeworlds', null, 'stable'),
+(2, 1, 'v0.7.3.1', 'release', 'Fix platform-specific client libraries for Linux', 0, '2025-05-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.3.1/teeworlds-0.7.3.1-win64.zip', 'teeworlds-0.7.3.1-win64\\teeworlds.exe', null, 'stable'),
+(40, 1, 'v0.7.2.1', 'release', 'Small fixes', 0, '2025-03-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.2/teeworlds-0.7.2-win64.zip', 'teeworlds-0.7.2-win64\\teeworlds.exe', null, 'stable'),
 
 -- Wersje dla Sonic Robo Blast 2 (ID 2)
 (3, 2, 'v1.22.1.5', 'release', 'Fixed nothing', 1, '2025-11-11', 'windows', 'https://github.com/STJr/SRB2/releases/download/SRB2_release_2.2.15/SRB2-v2215-Full.zip', 'Sonic-2-2-15.exe', null, 'stable'),

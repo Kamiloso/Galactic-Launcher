@@ -18,10 +18,12 @@ public class TelemetryController(
     public ActionResult GameEcho(
         [FromBody] TelemetryBox<PlayGame> telemetryBox)
     {
-        LogAuto(new { telemetryBox.Guid, PlayGame = telemetryBox.Body },
+        PlayGame body = telemetryBox.Body.Sanitize();
+
+        LogAuto(new { telemetryBox.Guid, PlayGame = body },
             importance: LogLevel.Information,
             toHistory: true,
-            idGame: telemetryBox.Body.GameId);
+            idGame: body.GameId);
 
         return HandleEndpoint(() => { });
     }
