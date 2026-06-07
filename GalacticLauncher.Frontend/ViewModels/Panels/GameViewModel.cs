@@ -18,11 +18,9 @@ using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-internal partial class GameViewModel
-    : ObservableObject, INavigationAware
+internal partial class GameViewModel : ObservableObject, INavigationAware
 {
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SelTitle))]
     private string _title = "";
 
     [ObservableProperty]
@@ -30,17 +28,6 @@ internal partial class GameViewModel
 
     [ObservableProperty]
     private string _author = "";
-
-    [ObservableProperty]
-    private bool _anyScreenshots = false;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(InstalledVersions))]
-    private bool _filterInstalledSnapshot;
-
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(FilteredAvailableVersions))]
-    private bool _filterAvailableSnapshot;
 
     [ObservableProperty]
     private bool _isInLibrary;
@@ -55,14 +42,22 @@ internal partial class GameViewModel
     private bool _isAvailableSectionExpanded;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SelTitle))]
     private Version? _selectedVersion;
 
     [ObservableProperty]
     private ImageViewModel? _banner;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(InstalledVersions))]
+    private bool _filterInstalledSnapshot;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AvailableVersions))]
+    private bool _filterAvailableSnapshot;
+
     public ObservableCollection<Version> InstalledVersions { get; } = [];
-    public ObservableCollection<Version> FilteredAvailableVersions { get; } = [];
+    public ObservableCollection<Version> AvailableVersions { get; } = [];
+
     public ObservableCollection<ImageViewModel> Screenshots { get; } = [];
     public ObservableCollection<Tag> Tags { get; } = [];
 
@@ -81,12 +76,11 @@ internal partial class GameViewModel
 
     public bool IsNoInstanceState => ViewMode == ViewModeEnum.NoInstance;
     public bool IsReadyToPlayState => ViewMode == ViewModeEnum.ReadyToPlay;
-    public string SelTitle => $"{Title} {SelectedVersion?.Caption}";
 
     private bool _init = false;
     private long _id = 0;
 
-    private readonly List<Version> _allVersionsRaw = [];
+    private List<Version> _allVersions = [];
 
     private readonly ICacheProvider _cacheProvider;
     private readonly ICacheRefresher _cacheRefresher;
@@ -114,7 +108,7 @@ internal partial class GameViewModel
         _imageFactory = imageFactory;
 
         _cacheRefresher.OnInitialize +=
-            () => { if (_init) RunGameDataRefresh(); };
+            () => { if (_init) _ = _cacheRefresher.RefreshGameDataAsync(_id); };
 
         _cacheRefresher.OnRefreshGameData +=
             id => { if (_init && _id == id) UpdateView(); };
@@ -125,164 +119,120 @@ internal partial class GameViewModel
         _init = true;
         _id = (long)args[0];
 
-        RunGameDataRefresh();
+        _cacheRefresher.RefreshGameDataAsync(_id);
+
         InitializePreferences();
-        ResetSelections();
         UpdateView();
-    }
-
-    private void RunGameDataRefresh()
-    {
-        _ = _cacheRefresher.RefreshGameDataAsync(_id);
-    }
-
-    private void ResetSelections()
-    {
-        SelectedVersion = null;
-
-        ViewMode = GetAdequateViewMode();
     }
 
     private void UpdateView()
     {
+        RefreshBasicInfo();
+        RefreshListsAndSelection();
+        RefreshBanner();
+        RefreshScreenshots();
+        RefreshTags();
+
+        RefreshGameLists();
+    }
+
+    private void RefreshBasicInfo()
+    {
         Game? game = _cacheProvider.GetGameOf(_id);
-        GameData? gameData = _cacheProvider.GetGameDataOf(_id);
 
         Title = game?.Name ?? "Unknown";
         Description = game?.Description ?? "";
         Author = game?.Author ?? "";
-		
-		Screenshots.Clear();
-		
-		long? selVersionId = _preferenceManager.GetSelectedVersion(_id);
-
-        List<Version> versions = [..
-            _cacheProvider.GetVersionsOf(_id)];
-
-		_allVersionsRaw.Clear();
-        _allVersionsRaw.AddRange(versions);
-		
-		ApplyFiltersAndCategories();
-
-        var combinedLists = InstalledVersions
-            .Concat(FilteredAvailableVersions)
-            .ToList();
-
-        SelectedVersion = selVersionId == null
-            ? combinedLists.FirstOrDefault(v => v.IsPrimary) ?? combinedLists.FirstOrDefault()
-            : combinedLists.FirstOrDefault(v => v.Id == selVersionId);
-
-        var screenshotsUrls = gameData?.Images?
-            .Where(img => img.Type == ImageType.Screenshot)
-            .OrderBy(img => img.SortIndex)
-            .Select(img => img.DownloadUrl) ?? [];
-
-        AnyScreenshots = screenshotsUrls.Any();
-
-        string? bannerUrl = gameData?.Images?
-            .FirstOrDefault(img => img.Type == ImageType.Banner)?
-            .DownloadUrl;
-
-        Banner = _imageFactory.CreateAndStartLoadingImage(bannerUrl);
-
-        foreach (string url in screenshotsUrls)
-        {
-            ImageViewModel? screenshotVm = _imageFactory.CreateAndStartLoadingImage(url);
-            if (screenshotVm != null)
-            {
-                Screenshots.Add(screenshotVm);
-            }
-        }
-
-        Tags.Clear();
-
-        List<Tag> gameTags = [.. _cacheProvider.GetTagsByGameId(_id)];
-
-        foreach (Tag tag in gameTags)
-        {
-            Tags.Add(tag);
-        }
-
-        UpdateLists();
     }
 
-    private void ApplyFiltersAndCategories()
+    private void RefreshListsAndSelection()
     {
+        long? oldVersionId = _preferenceManager.GetSelectedVersion(_id);
+
+        _allVersions = [.. _cacheProvider.GetVersionsOf(_id)];
+
+        UpdateObservableVersions(InstalledVersions);
+        UpdateObservableVersions(AvailableVersions);
+
+        SelectedVersion = oldVersionId is null
+            ? _allVersions.FirstOrDefault(v => v.IsPrimary)
+            : _allVersions.FirstOrDefault(v => v.Id == oldVersionId);
+
+        SelectedVersion ??= _allVersions.FirstOrDefault();
+
+        ViewMode = AdequateViewMode();
+    }
+
+    private void RefreshBanner()
+    {
+        Banner = null;
+
         GameData? gameData = _cacheProvider.GetGameDataOf(_id);
         if (gameData is null) return;
 
-        InstalledVersions.Clear();
-        FilteredAvailableVersions.Clear();
+        List<string> bannerUrls = [.. gameData.Images
+            .Where(i => i.Type == ImageType.Banner)
+            .Select(i => i.DownloadUrl)];
 
-        var categorizedVersions = _allVersionsRaw.Select(v => new
+        ImageViewModel bannerViewModel =
+            _imageFactory.CreateAndStartLoadingImage(
+                bannerUrls.FirstOrDefault());
+
+        Banner = bannerViewModel;
+    }
+
+    private void RefreshScreenshots()
+    {
+        Screenshots.Clear();
+
+        GameData? gameData = _cacheProvider.GetGameDataOf(_id);
+        if (gameData is null) return;
+
+        List<string> screenshotUrls = [.. gameData.Images
+            .Where(i => i.Type == ImageType.Screenshot)
+            .OrderBy(i => i.SortIndex)
+            .Select(i => i.DownloadUrl) ?? []];
+
+        List<ImageViewModel> screenshotViewModels = [.. screenshotUrls
+            .Select(url => _imageFactory.CreateAndStartLoadingImage(url))
+            .Where(i => i != null)];
+
+        foreach (var scvm in screenshotViewModels)
         {
-            Version = v,
-            IsInstalled = gameData.ToExecInfo(v) is { } execInfo && _execManager.Exists(execInfo)
-        }).ToList();
-
-        var installedFiltered = categorizedVersions
-            .Where(x => x.IsInstalled)
-            .Select(x => x.Version)
-            .Where(v => v.Type switch
-            {
-                VersionType.Snapshot => FilterInstalledSnapshot,
-                _ => true
-            });
-
-        foreach (var version in installedFiltered)
-        {
-            InstalledVersions.Add(version);
-        }
-
-        var availableFiltered = categorizedVersions
-            .Select(x => x.Version)
-            .Where(v => v.Type switch
-            {
-                VersionType.Snapshot => FilterAvailableSnapshot,
-                _ => true
-            });
-
-        foreach (var version in availableFiltered)
-        {
-            FilteredAvailableVersions.Add(version);
+            Screenshots.Add(scvm);
         }
     }
 
-    partial void OnSelectedVersionChanged(Version? value)
+    private void RefreshTags()
     {
-        _preferenceManager.SetSelectedVersion(_id, SelectedVersion?.Id);
+        Tags.Clear();
 
-        ViewMode = GetAdequateViewMode();
+        _cacheProvider.GetTagsByGameId(_id)
+            .ToList()
+            .ForEach(Tags.Add);
     }
 
-    [RelayCommand]
-    private void ToggleLibrary()
+    private void UpdateObservableVersions(ObservableCollection<Version> observableVersions)
     {
-        Action<long> action = IsInLibrary
-            ? _gameListManager.RemoveFromLibrary
-            : _gameListManager.AddToLibrary;
+        bool showInstalled = ReferenceEquals(InstalledVersions, observableVersions);
+        bool showAvailable = ReferenceEquals(AvailableVersions, observableVersions);
 
-        action(_id);
+        observableVersions.Clear();
 
-        UpdateLists();
-    }
+        Game? game = _cacheProvider.GetGameOf(_id);
 
-    [RelayCommand]
-    private void ToggleFavorite()
-    {
-        Action<long> action = IsFavorite
-            ? _gameListManager.RemoveFromFavorite
-            : _gameListManager.AddToFavorite;
+        foreach (Version version in _allVersions)
+        {
+            ExecInfo? execInfo = game?.ToExecInfo(version);
+            if (execInfo is null) continue;
 
-        action(_id);
+            bool exists = _execManager.Exists(execInfo);
 
-        UpdateLists();
-    }
-
-    private void UpdateLists()
-    {
-        IsInLibrary = _gameListManager.GetLibraryGames().Contains(_id);
-        IsFavorite = _gameListManager.GetFavoriteGames().Contains(_id);
+            if ((exists && showInstalled) || (!exists && showAvailable))
+            {
+                observableVersions.Add(version);
+            }
+        }
     }
 
     [RelayCommand]
@@ -295,10 +245,10 @@ internal partial class GameViewModel
         if (success)
         {
             _gameListManager.AddToLibrary(_id);
-        }
 
-        ViewMode = GetAdequateViewMode();
-        ApplyFiltersAndCategories();
+            RefreshListsAndSelection();
+            RefreshGameLists();
+        }
     }
 
     [RelayCommand]
@@ -310,11 +260,7 @@ internal partial class GameViewModel
         bool success = await _gamePlayService.Delete(execInfo);
         if (success)
         {
-            SelectedVersion ??= _allVersionsRaw
-                .FirstOrDefault(v => v.IsPrimary);
-
-            ViewMode = GetAdequateViewMode();
-            ApplyFiltersAndCategories();
+            RefreshListsAndSelection();
         }
     }
 
@@ -327,7 +273,14 @@ internal partial class GameViewModel
         await _gamePlayService.PlayAndTerminate(execInfo);
     }
 
-    private ViewModeEnum GetAdequateViewMode()
+    partial void OnSelectedVersionChanged(Version? value)
+    {
+        _preferenceManager.SetSelectedVersion(_id, SelectedVersion?.Id);
+
+        ViewMode = AdequateViewMode();
+    }
+
+    private ViewModeEnum AdequateViewMode()
     {
         if (SelectedVersion is null)
             return ViewModeEnum.Locked;
@@ -346,5 +299,37 @@ internal partial class GameViewModel
         return _cacheProvider
             .GetGameDataOf(_id)?
             .ToExecInfo(SelectedVersion);
+    }
+
+    // -----
+
+    [RelayCommand]
+    private void ToggleLibrary()
+    {
+        Action<long> action = IsInLibrary
+            ? _gameListManager.RemoveFromLibrary
+            : _gameListManager.AddToLibrary;
+
+        action(_id);
+
+        RefreshGameLists();
+    }
+
+    [RelayCommand]
+    private void ToggleFavorite()
+    {
+        Action<long> action = IsFavorite
+            ? _gameListManager.RemoveFromFavorite
+            : _gameListManager.AddToFavorite;
+
+        action(_id);
+
+        RefreshGameLists();
+    }
+
+    private void RefreshGameLists()
+    {
+        IsInLibrary = _gameListManager.GetLibraryGames().Contains(_id);
+        IsFavorite = _gameListManager.GetFavoriteGames().Contains(_id);
     }
 }

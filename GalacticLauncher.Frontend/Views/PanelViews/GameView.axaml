@@ -444,7 +444,7 @@
 									 CornerRadius="0"
 									 Padding="2,2,2,2">
 
-								 <DataGrid ItemsSource="{Binding FilteredAvailableVersions}"
+								 <DataGrid ItemsSource="{Binding AvailableVersions}"
 										   SelectedItem="{Binding SelectedVersion}"
 										   AutoGenerateColumns="False"
 										   IsReadOnly="True"
@@ -517,8 +517,7 @@
 					 </Border>
 
 
-					 <Border Classes="gameViewBorder" Margin="0,30,0,10"
-							 IsVisible="{Binding AnyScreenshots}">
+					 <Border Classes="gameViewBorder" Margin="0,30,0,10">
 						 <StackPanel Orientation="Vertical">
 							 <TextBlock Classes="gameTitle"
 										VerticalAlignment="Center"
@@ -530,8 +529,7 @@
 										Margin="0,0,0,10">
 							 </TextBlock>
 
-							 <ItemsControl ItemsSource="{Binding Screenshots}"
-										   IsVisible="{Binding AnyScreenshots}">
+							 <ItemsControl ItemsSource="{Binding Screenshots}">
 								 <ItemsControl.ItemsPanel>
 									 <ItemsPanelTemplate>
 										 <WrapPanel Orientation="Horizontal"/>

@@ -20,13 +20,15 @@ internal partial class GameViewModel
     partial void OnFilterInstalledSnapshotChanged(bool value)
     {
         _preferenceManager.SetGameBool(_id, INS_SNAPSHOT, value);
-        ApplyFiltersAndCategories();
+
+        RefreshListsAndSelection();
     }
 
     partial void OnFilterAvailableSnapshotChanged(bool value)
     {
         _preferenceManager.SetGameBool(_id, AVB_SNAPSHOT, value);
-        ApplyFiltersAndCategories();
+
+        RefreshListsAndSelection();
     }
 
     partial void OnIsInstalledSectionExpandedChanged(bool value)
