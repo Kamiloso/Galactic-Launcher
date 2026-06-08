@@ -9,22 +9,21 @@ from urllib3.connection import HTTPSConnection
 from urllib3.connectionpool import HTTPSConnectionPool
 from urllib3.poolmanager import PoolManager
 
-from utils.state import State
-from utils.const import Const
+from utils import Utils
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def cert_thumbprint() -> str:
-    if State.dev_mode:
-        return Const.DEV_CERT_THUMBPRINT
-    return Const.PRD_CERT_THUMBPRINT
+    if Utils.DEV_MODE():
+        return Utils.DEV_CERT_THUMBPRINT
+    return Utils.PRD_CERT_THUMBPRINT
 
 
 def endpoint() -> str:
-    if State.dev_mode:
-        return Const.DEV_ENDPOINT
-    return Const.PRD_ENDPOINT
+    if Utils.DEV_MODE():
+        return Utils.DEV_ENDPOINT
+    return Utils.PRD_ENDPOINT
 
 
 class PinnedConnection(HTTPSConnection):
@@ -74,5 +73,4 @@ class HttpClient:
         return self.session.get(self._build_url(path), **kwargs)
 
     def post(self, path: str, **kwargs) -> requests.Response:
-
         return self.session.post(self._build_url(path), **kwargs)

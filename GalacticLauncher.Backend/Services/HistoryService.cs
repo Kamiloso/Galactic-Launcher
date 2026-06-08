@@ -61,8 +61,13 @@ internal class HistoryService(
 
         await CheckAndCleanOld(scope);
 
-        return [.. (await historyRepository.GetHistoryEntries(page, PAGE_SIZE))
-            .Select(h => h.ToDomain())];
+        IEnumerable<History> historyList = [..
+            (await historyRepository.GetHistoryEntries(page, PAGE_SIZE))
+                .Select(h => h.ToDomain())];
+
+        await scope.CommitAsync();
+
+        return historyList;
     }
 
     private async Task CheckAndCleanOld(IAppScope scope)
@@ -83,7 +88,6 @@ internal class HistoryService(
                 var historyRepository = scope.GetService<IHistoryRepository>();
 
                 await historyRepository.ReduceHistoryTo(MAX_ENTRIES);
-                await scope.CommitAsync();
             }
         }
     }
