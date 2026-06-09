@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.Tools.Classes;
+namespace GalacticLauncher.Frontend.Infrastructure.System;
 
 internal class TaskObserver : IDisposable
 {

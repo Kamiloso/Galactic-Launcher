@@ -1,7 +1,6 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
-using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services.Data;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
@@ -21,10 +20,14 @@ internal class ThemeManager : IThemeManager
     }
 
     private readonly IPreferenceManager _preferenceManager;
+    private readonly INotifications _notifications;
 
-    public ThemeManager(IPreferenceManager preferenceManager)
+    public ThemeManager(
+        IPreferenceManager preferenceManager,
+        INotifications notifications)
     {
         _preferenceManager = preferenceManager;
+        _notifications = notifications;
 
         SetTheme(IsGalaxyTheme);
     }
@@ -45,7 +48,7 @@ internal class ThemeManager : IThemeManager
         ChangeColorTheme(themeFile);
     }
 
-    private static void ChangeColorTheme(string themePath)
+    private void ChangeColorTheme(string themePath)
     {
         if (Application.Current?.Resources is not { } resources)
             return;
@@ -72,9 +75,9 @@ internal class ThemeManager : IThemeManager
 
             mergedDicts.Add(newTheme);
         }
-        catch (Exception ex)
+        catch
         {
-            DebugBox.Show(ex.ToString(), "Theme Load Error");
+            _notifications.ShowError("Error", "Theme could not be loaded.");
         }
     }
 }

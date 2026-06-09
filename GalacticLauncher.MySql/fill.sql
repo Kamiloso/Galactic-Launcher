@@ -64,52 +64,6 @@ INSERT INTO versions (id, id_game, caption, type, description, is_primary, relea
 (43, 7, 'v155', 'beta', 'Upgraded desktop backend from SDL2 to SDL3 - this may cause new issues, report them if you see any', 0, '2026-06-02', 'linux', 'https://drive.google.com/uc?id=18-fVaxxyfWsPWRgKoWYwvbVYc14NrLUJ&export=download', 'mindustry-155', null, 'alert'),
 
 -- Unciv (ID 15)
-<<<<<<< Updated upstream
-(18, 15, 'v4.11.16', 'release', 'Latest performance tweaks for late-game AI processing.', 1, '2026-04-10', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(19, 15, 'v4.11.0', 'release', 'Introduced new visual UI theme system.', 0, '2026-02-28', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(20, 15, 'v4.10.5', 'release', 'Bugfixes regarding ocean trade route gold values.', 0, '2026-01-15', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(21, 15, 'v4.10.0', 'release', 'Major overhaul of the mod-loading framework.', 0, '2025-11-20', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(22, 15, 'v4.9.12', 'release', 'Hotfix for multiplayer connection timeouts.', 0, '2025-09-02', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(23, 15, 'v4.9.0', 'release', 'Added map generation options for archipelago maps.', 0, '2025-07-14', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(24, 15, 'v4.8.2', 'release', 'Legacy mechanics balance update.', 0, '2025-04-01', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(25, 15, 'v4.7.0', 'release', 'Introduced custom scenario loaders.', 0, '2025-01-10', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(26, 15, 'v4.12.0-Alpha1', 'alpha', 'Testing global mechanics rewrites.', 0, '2026-05-12', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'alert'),
-(27, 15, 'v4.12.0-Beta3', 'beta', 'Beta build testing tactical overlay systems.', 0, '2026-05-25', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'alert'),
-
--- Shattered Pixel Dungeon (ID 8)
-(28, 8, 'v2.4.2', 'release', 'Latest stable desktop release.', 1, '2026-02-10', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-(29, 8, 'v2.4.0', 'release', 'Previous major update.', 0, '2025-11-20', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- OpenTTD (ID 9)
-(30, 9, 'v14.1', 'release', 'Stable update fixing simulation memory leaks.', 1, '2026-04-01', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- SuperTuxKart (ID 10)
-(31, 10, 'v1.4', 'release', 'Stable release 1.4. Features new tracks.', 1, '2025-10-01', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- Cataclysm DDA (ID 11)
-(32, 11, '0.G-Stable', 'release', 'The Gaiman release. Highly optimized.', 1, '2025-05-20', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- Xonotic (ID 12)
-(33, 12, 'v0.8.6', 'release', 'Latest arena build with netcode optimizations.', 1, '2025-09-11', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- Zero-K (ID 13)
-(34, 13, 'v1.12.5', 'release', 'Stable balance branch.', 1, '2026-03-10', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- The Battle for Wesnoth (ID 14)
-(35, 14, 'v1.18.2', 'release', 'Maintenance build including campaign fixes.', 1, '2026-05-18', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- Velas (ID 16)
-(36, 16, 'v1.0.3', 'release', 'Day-1 patches for input delay fixes.', 1, '2025-04-10', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- Hedgewars (ID 17)
-(37, 17, 'v1.0.2', 'release', 'Network lobbies security fix.', 1, '2025-11-29', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- Warzone 2100 (ID 18)
-(38, 18, 'v4.4.2', 'release', 'Fixed cross-play connection drops.', 1, '2026-03-05', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable'),
-
--- Mari0 (ID 19)
-(39, 19, 'v1.6.2', 'release', 'Official compilation pack.', 1, '2025-02-18', 'windows', 'UZUPEŁNIJ_LINK_ZIP', 'UZUPEŁNIJ_EXE', null, 'stable');
-=======
 (18, 15, 'v4.11.16', 'release', 'Latest performance tweaks for late-game AI processing.', 1, '2026-04-10', 'windows', 'https://github.com/yairm210/Unciv/archive/refs/tags/4.11.16.zip', 'unciv-4-11-16.exe', null, 'stable'),
 (19, 15, 'v4.11.0', 'release', 'Introduced new visual UI theme system.', 0, '2026-02-28', 'windows', 'https://github.com/yairm210/Unciv/archive/refs/tags/4.11.0.zip', 'unciv-4-11.exe', null, 'stable'),
 (20, 15, 'v4.10.5', 'release', 'Bugfixes regarding ocean trade route gold values.', 0, '2026-01-15', 'windows', 'https://github.com/yairm210/Unciv/archive/refs/tags/4.10.5.zip', 'unciv-4-10-5.exe', null, 'stable'),
@@ -120,7 +74,6 @@ INSERT INTO versions (id, id_game, caption, type, description, is_primary, relea
 (25, 15, 'v4.7.0', 'release', 'Introduced custom scenario loaders.', 0, '2025-01-10', 'windows', 'https://github.com/yairm210/Unciv/archive/refs/tags/4.7.0.zip', 'unciv-4-7.exe', null, 'alert'),
 (26, 15, 'v4.13.0-Alpha1', 'alpha', 'Testing global mechanics rewrites.', 0, '2026-05-12', 'windows', 'https://github.com/yairm210/Unciv/archive/refs/tags/4.13.6.zip', 'univ-4-13-6.exe', null, 'alert'),
 (27, 15, 'v4.12.0-Beta3', 'beta', 'Beta build testing tactical overlay systems.', 0, '2026-05-25', 'windows', 'https://github.com/yairm210/Unciv/archive/refs/tags/4.13.7-patch1.zip', 'unciv-4-13-7.exe', null, 'danger'),
-
 -- Shattered Pixel Dungeon (ID 8)
 (28, 8, 'v2.4.2', 'release', 'Latest stable desktop release.', 1, '2026-02-10', 'windows', 'https://github.com/00-Evan/shattered-pixel-dungeon/releases/download/v2.4.2/ShatteredPD-v2.4.2-Windows.zip', 'shattered-2-4-2.exe', null, 'stable'),
 (29, 8, 'v2.4.0', 'release', 'Previous major update.', 0, '2025-11-20', 'windows', 'https://github.com/00-Evan/shattered-pixel-dungeon/archive/refs/tags/v2.4.0.zip', 'shattered-2-4.exe', null, 'stable'),
