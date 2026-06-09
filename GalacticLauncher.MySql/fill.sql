@@ -1,59 +1,5 @@
 USE galactic;
 
-<<<<<<< Updated upstream
-INSERT INTO games (id, name, author, description) VALUES
-(1, 'Teeworlds', 'Robyt3', 'Teeworlds is a free online multiplayer game, available for all major operating systems. Battle with up to 16 players in a variety of game modes, including Team Deathmatch and Capture The Flag. You can even design your own maps!'),
-(2, 'Sonic Robo Blast 2', 'LJSonik', 'Sonic Robo Blast 2 is a 3D open-source Sonic the Hedgehog fangame built using a modified version of the Doom Legacy port of Doom. SRB2 is closely inspired by the original Sonic games from the Sega Genesis, and attempts to recreate the design in 3D. While SRB2 isn\'t fully completed, it already features tons of levels, enemies, speed, and quite a lot of the fun that the original Sonic games provided.'),
-(3, 'Canabalt', 'Adam Atomic', 'Escape the destruction of your city with just one button! The game that popularized the infinite runner genre is back with two-player mode, new challenges, new music, new achievements, and new leaderboards!'),
-(4, 'Endless sky', 'juzzlin', 'Explore other star systems. Earn money by trading, carrying passengers, or completing missions.'),
-(5, 'Dust racing', 'Vladyslav', 'Dust Racing 2D (Dustrac) is a tile-based, cross-platform 2D racing game written in Qt (C++) and OpenGL. Dust Racing 2D comes with a Qt-based level editor for easy level creation. A separate engine, MiniCore, is used for physics modeling.'),
-(6, 'SDL Sopwith', 'fragglet', 'SDL Sopwith is a port of the game "Sopwith", which was originally by BMB Compuscience Canada. The original author David L. Clark has kindly released the source code under the GNU GPL.
-Features:
-- Uses LibSDL, so will run on most modern operating systems, and also the web (via emscripten)
-- Support for loading custom mission files (new levels)
-- TCP/IP multiplayer
-- PC speaker emulation
-- Multiple palettes that emulate a selection of old monitors
-- Medals and high score table'),
-(7, 'Mindustry', 'Anuken', 'A hybrid tower-defense sandbox factory game designed with deep logistical systems. Create elaborate, multi-layered supply chains using conveyor belts, conduits, and mass drivers to feed ammo into your defensive turrets, produce advanced materials for structural building, and manage power grids. Defend your core from relentless waves of enemies in the campaign, or challenge other players in intense cross-platform multiplayer matches spanning across massive, resource-rich hex maps.'),
-(8, 'Shattered Pixel Dungeon', '00-Evan', 'A traditional 2D pixel-art roguelike dungeon crawler that offers incredible mechanical depth, high replayability, and randomized procedural level generation. Every single run is a unique tactical puzzle featuring fierce enemies, unique environmental hazards, and hidden secrets. Choose from four distinct playable characters—each with their own sub-classes, unique talent trees, and specialized gear configurations—and descend into the brutal depths to retrieve the elusive Amulet of Yendor.'),
-(9, 'OpenTTD', 'OpenTTD Team', 'A massive business simulation game in which players earn money by transporting passengers and complex cargo across vast procedural maps via road, rail, water, and air. Acting as an open-source remake and expansion of the legendary Transport Tycoon Deluxe, it features advanced pathfinding algorithms, competitive AI opponents, and a highly customizable economic environment. Supports multiplayer sessions with up to 255 players competing to build the ultimate transport empire.'),
-(10, 'SuperTuxKart', 'STK Team', 'A beautifully crafted 3D open-source arcade racing game featuring a variety of mascot characters, colorful tracks, and diverse gameplay modes. Players can experience a full story-driven single-player campaign, participate in classic Grand Prix tournaments, battle in specialized arenas, or test their driving reflexes in time trials. The game fully supports local split-screen action as well as massive online multiplayer races driven by an advanced physics engine.'),
-(11, 'Cataclysm: Dark Days Ahead', 'CleverRaven', 'A brutally realistic, turn-based survival RPG set in a procedurally generated post-apocalyptic world. After the collapse of civilization, you must scavenge ruined towns for food, rare medical equipment, weapons, and tools. Build reinforced shelters, modify vehicles with heavy plating, and craft custom gear to survive against infinite hordes of zombies, Lovecraftian monsters, deadly bio-weapons, and the harsh, unforgiving changing of seasons.'),
-(12, 'Xonotic', 'Team Xonotic', 'An addictive, arena-style first-person shooter combining crisp, high-speed movement mechanics with a wide array of uniquely balanced futuristic weapons. Heavily inspired by classic arena shooters like Unreal Tournament and Quake, Xonotic offers adrenaline-fueled multiplayer gameplay modes including Capture The Flag, Deathmatch, and Nexball. It is built on a highly optimized custom engine, delivering smooth competitive frame rates and deep tracking statistics.'),
-(13, 'Zero-K', 'Zero-K Team', 'A traditional multi-platform 3D real-time strategy game driven by an advanced physics engine, featuring intense robotic warfare and fully terraformable battlefield terrain. Command hundreds of diverse units—from agile raiders to colossal walking mechs—in epic battles where flat plains can be raised into defensive hills or carved into deep trenches. Enjoy an expansive single-player campaign with co-op support, or dive into competitive planet-war multiplayer matchmaking.'),
-(14, 'The Battle for Wesnoth', 'Wesnoth Team', 'An immersive, open-source turn-based tactical strategy game set in a rich high-fantasy universe. Players build and command a powerful army composed of various distinct factions, turning raw elven recruits, dwarven warriors, and human mages into hardened battle veterans through an intricate experience and leveling system. Features dozens of official, fully voiced narrative campaigns, user-created content, and tactical multiplayer scenarios.'),
-(15, 'Unciv', 'Yairm210', 'An open-source, incredibly lightweight, and highly optimized re-implementation of the world-famous turn-based civilization-building genre. Build your empire from a primitive tribe into a global superpower by researching ancient and futuristic technologies, managing diplomatic ties, managing city production, and maneuvering military units across a hex-based map. Features absolute modding support, cross-platform saves, and highly efficient processing loops.'),
-(16, 'Velas', 'VelasTeam', 'A retro-inspired indie action platformer featuring challenging level design, tight responsive controls, and beautifully animated classic 2D atmospheric sprites. Players navigate dangerous environments filled with treacherous traps, mechanical enemies, and massive, multi-phase boss encounters. The game emphasizes precise timing, speedrunning mechanics, and unlocking hidden traversal abilities hidden across stylized pixelated worlds.'),
-(17, 'Hedgewars', 'Hedgewars Team', 'A hilarious and chaotic turn-based strategy artillery game featuring the explosive antics of pink hedgehogs battling across fully destructible 2D environments. Command your customized team to completely obliterate the enemy using a bizarre selection of weapons—including exploding cakes, homing bees, and orbital strikes. Packed with hundreds of single-player challenges, customizable game modes, and wacky multiplayer maps.'),
-(18, 'Warzone 2100', 'Warzone Project', 'A classic 3D real-time strategy game where you command the specialized military forces of "The Project" in a desperate battle to rebuild the world after a catastrophic global nuclear apocalypse. The game separates itself from standard RTS titles by offering a massive tech tree featuring over 400 distinct technologies, a highly innovative modular vehicle design system, and persistent multi-map base building throughout its campaign.'),
-(19, 'Mari0', 'Stabyourself', 'An ingenious puzzle-platformer mashup that represents a complete recreation of the original Super Mario Bros combined with the groundbreaking portal-gun mechanics from Portal. Run through classic levels while shooting entry and exit portals to fling Goombas, redirect turtle shells, or bypass massive platforming obstacles. Includes simultaneous 4-player co-op, a built-in map editor, and custom downloadable level packs.');
-
-INSERT INTO versions (id, id_game, caption, type, description, is_primary, release_date, platform, download_url, exec_location, sha256_hash, alert) VALUES
--- Wersje dla Teeworlds (ID 1)
-(1, 1, 'v0.7.5', 'release', 'Fixed using correct array measurements when placing egg doodads', 1, '2025-11-11', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.5/teeworlds-0.7.5-win64.zip', 'teeworlds-0.7.5-win64\\teeworlds.exe', null, 'stable'),
-(50, 1, 'v0.7.5', 'release', 'Fixed using correct array measurements when placing egg doodads', 1, '2025-11-11', 'linux', 'https://drive.google.com/uc?id=1ghoYSIfmhuAoBW4GIW0rgL0i7WjEZmxJ&export=download', 'teeworlds-0.7.5-win64\\teeworlds', null, 'stable'),
-(2, 1, 'v0.7.3.1', 'release', 'Fix platform-specific client libraries for Linux', 0, '2025-05-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.3.1/teeworlds-0.7.3.1-win64.zip', 'teeworlds-0.7.3.1-win64\\teeworlds.exe', null, 'stable'),
-(40, 1, 'v0.7.2.1', 'release', 'Small fixes', 0, '2025-03-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.2/teeworlds-0.7.2-win64.zip', 'teeworlds-0.7.2-win64\\teeworlds.exe', null, 'stable'),
-=======
-<<<<<<< Updated upstream
--- 1. Dodawanie gier
-INSERT IGNORE INTO games (id, name, author, description) VALUES
-(4, 'Teeworlds', 'Magda', 'A free online multiplayer game, available for all major operating systems. Battle with up to 16 players in a variety of game modes, including Team Deathmatch and Capture The Flag. You can even design your own maps!'),
-(5, 'Sonic 2 Robot Blast', 'Magda', "Sonic Robo Blast 2 is a 3D open-source Sonic the Hedgehog fangame built using a modified version of the Doom Legacy port of Doom. SRB2 is closely inspired by the original Sonic games from the Sega Genesis, and attempts to recreate the design in 3D. While SRB2 isn't fully completed, it already features tons of levels, enemies, speed, and quite a lot of the fun that the original Sonic games provided."),
-(6, 'Canabalt', 'Kamiloso', 'Endless runner game'),
-(7, 'Endless sky', 'Kamiloso', 'Explore other star systems. Earn money by trading, carrying passengers, or completing missions. Use your earnings to buy a better ship or to upgrade the weapons and engines on your current one. Blow up pirates. Take sides in a civil war. Or leave human space behind and hope to find some friendly aliens whose culture is more civilized than your own...'),
-(8, 'Dust racing', 'Vladyslav', '2D racing game'),
-(9, 'SDL slopwidth', 'Vladyslav', '2D planes game');
-
--- 2. Dodawanie tagów
-INSERT IGNORE INTO tags (id, name, description) VALUES
-(1, 'Multiplayer', 'Games that support multiple players interacting online.'),
-(2, 'Procedural Generation', 'Games where content is generated algorithmically.'),
-(3, 'Sandbox', 'Games providing the player with a great degree of creativity.'),
-(4, '2D', 'Games with two-dimensional graphics and sprites.'),
-(5, 'Engine-Independent', 'Projects built with custom architecture independent of standard engines.');
-=======
 INSERT INTO games (id, name, author, description) VALUES
 (1, 'Teeworlds', 'Robyt3', 'Teeworlds is a free online multiplayer game, available for all major operating systems. Battle with up to 16 players in a variety of game modes, including Team Deathmatch and Capture The Flag. You can even design your own maps!'),
 (2, 'Sonic Robo Blast 2', 'LJSonik', 'Sonic Robo Blast 2 is a 3D open-source Sonic the Hedgehog fangame built using a modified version of the Doom Legacy port of Doom. SRB2 is closely inspired by the original Sonic games from the Sega Genesis, and attempts to recreate the design in 3D. While SRB2 isn\'t fully completed, it already features tons of levels, enemies, speed, and quite a lot of the fun that the original Sonic games provided.'),
@@ -85,26 +31,11 @@ INSERT INTO versions (id, id_game, caption, type, description, is_primary, relea
 (50, 1, 'v0.7.5', 'release', 'Fixed using correct array measurements when placing egg doodads', 1, '2025-11-11', 'linux', 'https://drive.google.com/uc?id=1ghoYSIfmhuAoBW4GIW0rgL0i7WjEZmxJ&export=download', 'teeworlds-0.7.5-win64\\teeworlds', null, 'stable'),
 (2, 1, 'v0.7.3.1', 'release', 'Fix platform-specific client libraries for Linux', 0, '2025-05-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.3.1/teeworlds-0.7.3.1-win64.zip', 'teeworlds-0.7.3.1-win64\\teeworlds.exe', null, 'stable'),
 (40, 1, 'v0.7.2.1', 'release', 'Small fixes', 0, '2025-03-10', 'windows', 'https://github.com/teeworlds/teeworlds/releases/download/0.7.2/teeworlds-0.7.2-win64.zip', 'teeworlds-0.7.2-win64\\teeworlds.exe', null, 'stable'),
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 -- Wersje dla Sonic Robo Blast 2 (ID 2)
 (3, 2, 'v1.22.1.5', 'release', 'Fixed nothing', 1, '2025-11-11', 'windows', 'https://github.com/STJr/SRB2/releases/download/SRB2_release_2.2.15/SRB2-v2215-Full.zip', 'Sonic-2-2-15.exe', null, 'stable'),
 (41, 2, 'v2.2.8', 'release', 'Fixed nothing', 0, '2024-05-11', 'windows', 'https://github.com/STJr/SRB2/releases/download/SRB2_release_2.2.8/SRB2-v2.2.8-Full.zip', 'Sonic-2-2-8.exe', null, 'stable'),
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
--- 5. Dodawanie obrazów (Assetów)
-INSERT IGNORE INTO images (id, id_game, download_url, type, sort_index) VALUES
-(9, 4, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','icon',0),
-(10, 5, 'https://drive.google.com/uc?id=1yCbBx7WG7NWqXaqUm8Ti7QRAhy1X_Wnd&export=download','icon',0),
-(11, 6, 'https://drive.google.com/uc?id=1jzexuK2J_oEIHvkDfyrky5G_xE9FzqF&export=download', 'icon', 0),
-(12, 7, 'https://drive.google.com/uc?id=1-SU_jwne0QwjMuciW4c83FG5ZBTDrT8D&export=download','icon',0),
-(13, 8, 'https://drive.google.com/uc?id=1tAa5xbpbviIi5xhB8VIKoKELq8I50k7k&export=download','icon',0),
-(14, 9, 'https://drive.google.com/uc?id=12JW5hJlSFo9G-Xymtk3vYUjLRTetEVMD&export=download','icon',0);
-=======
->>>>>>> Stashed changes
 -- Wersje dla Canabalt (ID 3)
 (4, 3, 'v1.1.1', 'release', 'Fixed bleeding', 1, '2025-11-11', 'windows', 'https://github.com/ninjamuffin99/canabalt-hf/releases/download/bleeding/canabalt-windows-2024-07-11-main.zip', 'Canabalt-1-1-1.exe', null, 'stable'),
 (51, 3, 'v1.1.1', 'release', 'Fixed bleeding', 1, '2025-11-11', 'linux', 'https://drive.google.com/uc?id=1D0Xiq0YnRv2DDDYgeQNdLsnlN_ZtfHtc&export=download', 'Canabalt-1-1-1', null, 'stable'),
@@ -216,26 +147,15 @@ INSERT IGNORE INTO images (id, id_game, download_url, type, sort_index) VALUES
  server in the AuthorizationServer directory. Only client has changed in this update.',1, '2025-04-18', 'windows', 'https://github.com/Space-Eternity-3/Space-Eternity-3/releases/download/release%2FRelease-2.3b/SE3-Release-2.3b-win32-x86_64.zip', 'space-eternity-2-3.exe', null, 'stable');
 
 
->>>>>>> Stashed changes
-
-
 
 INSERT INTO images (id, id_game, download_url, type, sort_index) VALUES
 (1, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','icon',0),
-<<<<<<< Updated upstream
-(7, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','banner',0),
-(8, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','screenshot',0),
-(9, 1, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','screenshot',0),
-=======
->>>>>>> Stashed changes
 (2, 2, 'https://drive.google.com/uc?id=1yCbBx7WG7NWqXaqUm8Ti7QRAhy1X_Wnd&export=download','icon',0),
 (3, 3, 'https://drive.google.com/uc?id=1jzexuK2J_oEIHvkDfyrky5G_xE9FzqF&export=download', 'icon', 0),
 (4, 4, 'https://drive.google.com/uc?id=1-SU_jwne0QwjMuciW4c83FG5ZBTDrT8D&export=download','icon',0),
 (5, 5, 'https://drive.google.com/uc?id=1tAa5xbpbviIi5xhB8VIKoKELq8I50k7k&export=download','icon',0),
-<<<<<<< Updated upstream
-(6, 6, 'https://drive.google.com/uc?id=12JW5hJlSFo9G-Xymtk3vYUjLRTetEVMD&export=download','icon',0);
-=======
 (6, 6, 'https://drive.google.com/uc?id=12JW5hJlSFo9G-Xymtk3vYUjLRTetEVMD&export=download','icon',0),
+(9, 4, 'https://drive.google.com/uc?id=19IpyVBOhjIRE4tbLcYhzQ6bhXFzEJn1X&export=download','icon',0),
 (10,7, 'https://drive.google.com/uc?id=1NAKrmSbWcYbe2IPoDkvoF1aUsIA6mK2W&export=download','icon',0),
 (11,15,'https://drive.google.com/uc?id=1TaPj57gCrtEm3Mk-yQQYiBQ4aXtcM-ZS&export=download','icon',0),
 (12,14,'https://drive.google.com/uc?id=1kiLA0oBllV4yeKwQsEVrt-cvBtOH6cgQ&export=download','icon',0),
@@ -269,9 +189,6 @@ INSERT INTO images (id, id_game, download_url, type, sort_index) VALUES
 (40,18,'https://drive.google.com/uc?id=1qKHm5skSpHzXxa3O965amDtFsOwgBUNN&export=download','icon',0),
 (41,18,'https://drive.google.com/uc?id=1q1WYAw3noxk68eCtS1H0SA70Bq8CCT_s&export=download','banner',0),
 (42,18,'https://drive.google.com/uc?id=1_oxuyoZ99PtgezCnUSpYxxeQGqZElf0m&export=download','screenshot',0);
-
-
->>>>>>> Stashed changes
 
 INSERT INTO tags (id, name, description) VALUES
 (1, 'Action', 'Fast-paced games requiring quick reflexes'),
@@ -333,17 +250,6 @@ INSERT INTO games_tags (id_game, id_tag) VALUES
 (10, 1), (10, 9), (10, 37), (10, 40),  -- SuperTuxKart
 (11, 2), (11, 7), (11, 12), (11, 21),  -- Cataclysm: DDA
 (12, 1), (12, 9), (12, 14), (12, 28),  -- Xonotic
-<<<<<<< Updated upstream
-(13, 1), (13, 9), (13, 13), (13, 27),  -- Zero-K
-(14, 1), (14, 12), (14, 13), (14, 26), -- The Battle for Wesnoth
-(15, 7), (15, 13), (15, 26), (15, 30), -- Unciv
-(16, 4), (16, 7), (16, 14), (16, 16),  -- Velas
-(17, 1), (17, 13), (17, 26), (17, 40), -- Hedgewars
-(18, 1), (18, 9), (18, 13), (18, 27),  -- Warzone 2100
-(19, 1), (19, 4), (19, 16), (19, 22);  -- Mari0
-=======
 (14, 1), (14, 12), (14, 13), (14, 26), -- The Battle for Wesnoth
 (15, 7), (15, 13), (15, 26), (15, 30), -- Unciv
 (18,1), (18,27), (18,9); -- Space eternity 3
->>>>>>> Stashed changes
->>>>>>> Stashed changes

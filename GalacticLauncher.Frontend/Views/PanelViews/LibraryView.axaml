@@ -93,12 +93,6 @@
                         VerticalAlignment="Center"
 						ClipToBounds="True">
 					<TextBox Classes="galaxyTextBox"
-<<<<<<< Updated upstream:GalacticLauncher.Frontend/Views/PanelViews/LibraryView.axaml
-                             Text="{Binding SearchTags}"/>
-=======
-<<<<<<< Updated upstream:GalacticLauncher.Frontend/Views/MainPanelViews/LibraryView.axaml
-                             Text="{Binding SearchTags, Mode=TwoWay}"/>
-=======
                              Text="{Binding SearchTags}"/>
 				</Border>
 
@@ -171,8 +165,6 @@
 							
 						</Panel>
 					</ScrollViewer>
->>>>>>> Stashed changes:GalacticLauncher.Frontend/Views/PanelViews/LibraryView.axaml
->>>>>>> Stashed changes:GalacticLauncher.Frontend/Views/MainPanelViews/LibraryView.axaml
 				</Border>
 
 				<ScrollViewer HorizontalScrollBarVisibility="Disabled"
