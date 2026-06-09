@@ -288,8 +288,17 @@
 		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
 		<Setter Property="FontStyle" Value="Normal"/>
 		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
+<<<<<<< Updated upstream
 		<Setter Property="FontSize" Value="15"/>
+<<<<<<< Updated upstream
 		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+=======
+		<Setter Property="Background" Value="{StaticResource TagDarkBlue}"/>
+=======
+		<Setter Property="FontSize" Value="18"/>
+		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="CornerRadius" Value="20"/>
 		<Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -321,6 +330,14 @@
 		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
 	</Style>
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+	<Style Selector="Button.tagButton TextBlock">
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="10,0,0,0"/>
+=======
+>>>>>>> Stashed changes
 	<Style Selector="Button.tagButton:disabled /template/ ContentPresenter">
 		<Setter Property="Background" Value="{StaticResource TagDarkBlue}"/>
 		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
@@ -499,7 +516,11 @@
 									</Grid>
 									<TextBlock FontFamily="{DynamicResource Roboto}"
 												FontStyle="Normal"
+<<<<<<< Updated upstream
 												FontSize="12"
+=======
+												FontSize="15"
+>>>>>>> Stashed changes
 											    Margin="0,0,0,5"
 												TextTrimming="CharacterEllipsis"
 												Text="{Binding GameAuthor, StringFormat='AUTHOR: {0}'}"
@@ -528,7 +549,11 @@
 
 													<Button.Styles>
 														<Style Selector="Button.tagButton">
+<<<<<<< Updated upstream
 															<Setter Property="FontSize" Value="12"/>
+=======
+															<Setter Property="FontSize" Value="15"/>
+>>>>>>> Stashed changes
 															<Setter Property="Height" Value="22"/>
 															<Setter Property="Padding" Value="4,0,4,0"/>
 															<Setter Property="MinHeight" Value="0"/>
@@ -554,7 +579,11 @@
 
 									<TextBlock FontFamily="{DynamicResource Roboto}"
 												FontStyle="Normal"
+<<<<<<< Updated upstream
 												FontSize="12"
+=======
+												FontSize="15"
+>>>>>>> Stashed changes
 											    Margin="0,5,0,5"
 												TextTrimming="CharacterEllipsis"
 												Text="{Binding GameDescription}"
@@ -579,6 +608,10 @@
 			<Setter Property="BorderBrush" Value="{DynamicResource GalaxyGradient}"/>
 			<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
 		</Style>
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 	</Style>
 	
 </Styles>

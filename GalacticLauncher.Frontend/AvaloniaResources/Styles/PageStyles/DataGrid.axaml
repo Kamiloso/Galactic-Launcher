@@ -14,7 +14,11 @@
 		<Setter Property="Background" Value="{StaticResource AmostBlack}"/>
 		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
 		<Setter Property="FontFamily" Value="{DynamicResource Rajdhani}"/>
+<<<<<<< Updated upstream
 		<Setter Property="FontSize" Value="12"/>
+=======
+		<Setter Property="FontSize" Value="15"/>
+>>>>>>> Stashed changes
 		<Setter Property="BorderThickness" Value="0"/>
 	</Style>
 
@@ -22,7 +26,11 @@
 	<Style Selector="DataGridCell">
 		<Setter Property="Foreground" Value="{StaticResource LightBlue}"/>
 		<Setter Property="Background" Value="{StaticResource DarkestNight}"/>
+<<<<<<< Updated upstream
 		<Setter Property="FontSize" Value="12"/>
+=======
+		<Setter Property="FontSize" Value="15"/>
+>>>>>>> Stashed changes
 		<Setter Property="Focusable" Value="False"/>
 		<Setter Property="MinHeight" Value="60"/>
 		<Setter Property="VerticalAlignment" Value="Stretch"/>

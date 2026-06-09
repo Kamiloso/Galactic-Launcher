@@ -93,7 +93,86 @@
                         VerticalAlignment="Center"
 						ClipToBounds="True">
 					<TextBox Classes="galaxyTextBox"
+<<<<<<< Updated upstream:GalacticLauncher.Frontend/Views/PanelViews/LibraryView.axaml
                              Text="{Binding SearchTags}"/>
+=======
+<<<<<<< Updated upstream:GalacticLauncher.Frontend/Views/MainPanelViews/LibraryView.axaml
+                             Text="{Binding SearchTags, Mode=TwoWay}"/>
+=======
+                             Text="{Binding SearchTags}"/>
+				</Border>
+
+				<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+								  VerticalScrollBarVisibility="Auto"
+								  AllowAutoHide="False"
+								  Grid.Row="4"
+								 MaxHeight="100">
+					<ItemsControl ItemsSource="{Binding SelectedTags}"
+						  Grid.Row="4"
+						  Margin="0,0,0,10">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel Orientation="Horizontal"/>
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Button Classes="tagButton active"
+										Command="{Binding $parent[ItemsControl].DataContext.UnselectTagCommand}"
+										CommandParameter="{Binding}"
+										FontSize="18"
+										Height="27">
+
+									<TextBlock Text="{Binding Name}"/>
+								</Button>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</ScrollViewer>
+
+				<Border Classes="TagsBorder"
+						Padding="10,10,10,10"
+						Margin="0,10,0,10"
+						ClipToBounds="True"
+						Grid.Row="5"
+						MinHeight="170">
+
+					<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+								  VerticalScrollBarVisibility="Auto"
+								  AllowAutoHide="False">
+						<Panel>
+							<ItemsControl ItemsSource="{Binding AvailableTags}">
+								<ItemsControl.ItemsPanel>
+									<ItemsPanelTemplate>
+										<WrapPanel Orientation="Horizontal"/>
+									</ItemsPanelTemplate>
+								</ItemsControl.ItemsPanel>
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Button Classes="tagButton inactive"
+												Command="{Binding $parent[ItemsControl].DataContext.SelectTagCommand}"
+												CommandParameter="{Binding}"
+												FontSize="15"
+												Height="27"
+												MaxWidth="100">
+											<TextBlock Text="{Binding Name}"/>
+										</Button>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						<TextBlock Text="NO TAGS FOUND"
+								   IsVisible="{Binding !AvailableTags.Count}"
+								   FontFamily="{DynamicResource Roboto}"
+								   FontSize="10"
+								   FontWeight="Bold"
+								   Foreground="{StaticResource GreyBlue}"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"/>
+							
+						</Panel>
+					</ScrollViewer>
+>>>>>>> Stashed changes:GalacticLauncher.Frontend/Views/PanelViews/LibraryView.axaml
+>>>>>>> Stashed changes:GalacticLauncher.Frontend/Views/MainPanelViews/LibraryView.axaml
 				</Border>
 
 				<ScrollViewer HorizontalScrollBarVisibility="Disabled"

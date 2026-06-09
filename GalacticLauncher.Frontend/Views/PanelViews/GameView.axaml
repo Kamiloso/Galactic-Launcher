@@ -83,7 +83,11 @@
 										HorizontalAlignment="Stretch"
 										TextTrimming="CharacterEllipsis"
 										TextWrapping="Wrap"
+<<<<<<< Updated upstream
 										FontSize="15"
+=======
+										FontSize="18"
+>>>>>>> Stashed changes
 										Foreground="{StaticResource GreyBlue}"
 										Text="{Binding Author, StringFormat='AUTHOR: {0}'}"
 										Grid.Row="1"
@@ -131,7 +135,11 @@
 							 <TextBlock Classes="searchHeader"
 										HorizontalAlignment="Right"
 										VerticalAlignment="Center"
+<<<<<<< Updated upstream
 										FontSize="15"
+=======
+										FontSize="18"
+>>>>>>> Stashed changes
 										Text="{Binding SelectedVersion.Caption, StringFormat='VERSION: {0}'}"
 										Grid.Row="1"
 										Foreground="{StaticResource GreyBlue}"
@@ -231,7 +239,11 @@
 										HorizontalAlignment="Stretch"
 										TextTrimming="CharacterEllipsis"
 										TextWrapping="Wrap"
+<<<<<<< Updated upstream
 										FontSize="15"
+=======
+										FontSize="18"
+>>>>>>> Stashed changes
 										Text="{Binding Description}"
 										Grid.Column="0"
 										Foreground="{StaticResource GreyBlue}">
@@ -532,7 +544,11 @@
 							 <ItemsControl ItemsSource="{Binding Screenshots}">
 								 <ItemsControl.ItemsPanel>
 									 <ItemsPanelTemplate>
+<<<<<<< Updated upstream
 										 <WrapPanel Orientation="Horizontal"/>
+=======
+										 <StackPanel Orientation="Vertical"/>
+>>>>>>> Stashed changes
 									 </ItemsPanelTemplate>
 								 </ItemsControl.ItemsPanel>
 
@@ -542,15 +558,24 @@
 												 ClipToBounds="True"
 												 BorderBrush="{DynamicResource GalaxyGradient}"
 												 BorderThickness="1"
+<<<<<<< Updated upstream
 												 Width="240"
 												 Height="135"
+=======
+												 Width="740"
+												 Height="460"
+>>>>>>> Stashed changes
 												 Margin="5"
 												 Background="{StaticResource DarkestNight}">
 											 <Panel>
 												 <TextBlock Text="{Binding StatusMessage}"
 															HorizontalAlignment="Center"
 															VerticalAlignment="Center"
+<<<<<<< Updated upstream
 															FontSize="14"
+=======
+															FontSize="18"
+>>>>>>> Stashed changes
 															Foreground="{StaticResource GreyBlue}"
 															TextAlignment="Center"
 															TextWrapping="Wrap"
