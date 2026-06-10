@@ -1,2 +1,2 @@
 @echo off
-python main.py -dev
+python main.py --dev

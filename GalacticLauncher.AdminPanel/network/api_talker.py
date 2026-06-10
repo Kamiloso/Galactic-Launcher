@@ -1,11 +1,12 @@
 import time
 
+from getpass import getpass
 from requests.models import Response
 from requests.exceptions import HTTPError, ConnectionError, Timeout, RequestException
 from typing import Callable
 
-from display.ask import ask_credentials
-from network.api_error import ApiError
+from errors.api_error import ApiError
+from errors.abort_error import AbortError
 from network.http_client import HttpClient
 
 http = HttpClient()
@@ -39,32 +40,53 @@ def admin_req_admin(username: str, password: str) -> dict:
     return response.json()
 
 
-def admin_get_history_page(page: int) -> list[dict] | None:
+def admin_get_history_page(page: int) -> list[dict]:
     response = _perform_admin_connection(
         lambda: http.post(f"/admin/get-history-page?page={page}", json={
             "token": current_token
         }))
-    return response.json() if response is not None else None
+    return response.json()
 
 
-def admin_create_game(game: dict) -> bool:
-    response = _perform_admin_connection(
+def admin_create_game(game: dict) -> None:
+    _perform_admin_connection(
         lambda: http.post("/admin/create-game", json={
             "token": current_token,
             "body": game
         }))
-    return response is not None
 
 
-def admin_delete_game(game_id: int) -> bool:
-    response = _perform_admin_connection(
+def admin_delete_game(game_id: int) -> None:
+    _perform_admin_connection(
         lambda: http.post(f"/admin/delete-game?id={game_id}", json={
             "token": current_token
         }))
-    return response is not None
 
 
-def _perform_admin_connection(request: Callable[[], Response]) -> Response | None:
+def admin_create_tag(tag: dict) -> None:
+    _perform_admin_connection(
+        lambda: http.post("/admin/create-tag", json={
+            "token": current_token,
+            "body": tag
+        }))
+
+
+def admin_delete_tag(tag_id: int) -> None:
+    _perform_admin_connection(
+        lambda: http.post(f"/admin/delete-tag?id={tag_id}", json={
+            "token": current_token
+        }))
+
+
+def admin_update_game_tree(game_tree: dict) -> None:
+    _perform_admin_connection(
+        lambda: http.post("/admin/update-game-tree", json={
+            "token": current_token,
+            "body": game_tree
+        }))
+
+
+def _perform_admin_connection(request: Callable[[], Response]) -> Response:
     while True:
         try:
             return _perform_connection(request)
@@ -73,13 +95,14 @@ def _perform_admin_connection(request: Callable[[], Response]) -> Response | Non
             if err.status_code == 401: # Unauthorized - ask for credentials and retry
                 global current_token
 
-                username, password = ask_credentials()
+                print("\nProvide your admin credentials...")
+                username = input("Username: ")
+                password = getpass("Password: ")
 
                 token_obj = admin_req_admin(username, password)
 
                 if not token_obj["authenticated"]:
-                    print("Invalid credentials.")
-                    return None
+                    raise AbortError("Invalid credentials.")
                 
                 current_token = token_obj["token"]
             
@@ -99,7 +122,7 @@ def _perform_connection(request: Callable[[], Response], retry=0) -> Response:
         if status_code == 429 and retry < 4:
             next_retry = retry + 1
 
-            print(f"Too many requests! Trying again... ({next_retry} / 4)")
+            print(f"Too many requests! Retrying... ({next_retry}/4)")
             time.sleep(2 ** retry) # 1, 2, 4, 8 seconds
             return _perform_connection(request, next_retry)
 

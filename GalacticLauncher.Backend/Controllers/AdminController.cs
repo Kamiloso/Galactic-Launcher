@@ -60,6 +60,7 @@ public class AdminController(
             EnsureValidToken(adminBox.Token, out string username);
 
             LogAuto(new { Username = username, GameData = adminBox.Body },
+                importance: LogLevel.Information,
                 toHistory: true,
                 idGame: adminBox.Body.Id);
 
@@ -90,6 +91,7 @@ public class AdminController(
             finally
             {
                 LogAuto(new { Username = username, Game = adminBox.Body },
+                    importance: LogLevel.Information,
                     toHistory: true,
                     idGame: idGame);
             }
@@ -108,6 +110,7 @@ public class AdminController(
             EnsureValidToken(adminBox.Token, out string username);
 
             LogAuto(new { Username = username, Id = id },
+                importance: LogLevel.Information,
                 toHistory: true,
                 idGame: id);
 
@@ -126,6 +129,7 @@ public class AdminController(
             EnsureValidToken(adminBox.Token, out string username);
 
             LogAuto(new { Username = username, Tag = adminBox.Body },
+                importance: LogLevel.Information,
                 toHistory: true);
 
             return dataUpdateService.CreateTag(adminBox.Body);
@@ -144,6 +148,7 @@ public class AdminController(
             EnsureValidToken(adminBox.Token, out string username);
 
             LogAuto(new { Username = username, Id = id },
+                importance: LogLevel.Information,
                 toHistory: true);
 
             return dataUpdateService.DeleteTagById(id);
@@ -162,6 +167,7 @@ public class AdminController(
             EnsureValidToken(adminBox.Token, out string username);
 
             LogAuto(new { Username = username, Page = page },
+                importance: LogLevel.Information,
                 toHistory: false); // don't log history into history
 
             return historyService.GetHistoryEntries(page);

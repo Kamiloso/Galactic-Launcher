@@ -21,7 +21,7 @@ internal class HistoryRepository(DbSession session) : IHistoryRepository
         await _db.ExecuteAsync("""
             INSERT INTO history
                 (info, timestamp, id_game) VALUES
-                (@Info, @Timestamp, (SELECT id FROM games WHERE id = @IdGame))
+                (@Info, @Timestamp, @IdGame)
             """,
             history,
             transaction: session.Transaction);

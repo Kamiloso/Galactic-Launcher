@@ -63,6 +63,5 @@ CREATE TABLE history (
     id bigint primary key auto_increment not null,
     info text not null,
     timestamp datetime not null default current_timestamp,
-    id_game bigint default null,
-    foreign key(id_game) references games(id) on delete cascade
+    id_game bigint default null -- no relation to preserve id_game on delete
     );

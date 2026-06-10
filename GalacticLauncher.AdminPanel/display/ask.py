@@ -1,90 +1,68 @@
-from getpass import getpass
+from errors.abort_error import AbortError
+from utils import Utils
+
+from display.input import *
 
 
-def ask_credentials() -> tuple[str, str]:
-    print("\nAdmin credentials required...")
-    username = input("Username: ")
-    password = getpass("Password: ")
-    return username, password
-
-
-def ask_main_menu() -> str:
-    print("\nMain Menu - Choose an option...")
-    print("1 - Show all games")
-    print("2 - Show game tree")
-    print("3 - Show all tags")
-    print("4 - Show history")
-    print("5 - Add game")
-    print("6 - Remove game")
-    print("7 - Add tag")
-    print("8 - Remove tag")
-    print("9 - Modify game tree")
-    print("10 - Exit")
-
-    chdict = {
-        "1": "display_games",
-        "2": "display_game_data",
-        "3": "display_tags",
-        "4": "display_history",
-        "5": "add_game",
-        "6": "remove_game",
-        "7": "add_tag",
-        "8": "remove_tag",
-        "9": "modify_game_tree",
-        "10": "app_exit"
-    }
-
-    while True:
-        choice = input("> ")
-
-        if choice in chdict:
-            return chdict[choice]
+def ask_choice() -> str | None:
+    try:
+        return input_string("Select an option:")
+        
+    except AbortError:
+        return None
 
 
 def ask_history_page() -> int:
-    print("\nEnter history page number (starting from 0)...")
-
-    while True:
-        choice = input("> ")
-
-        try:
-            return int(choice)
-
-        except ValueError:
-            pass
+    return input_number(
+        "Enter history page number starting from 0:", (0, Utils.MAX_INT_32))
 
 
-def ask_select_game(games: list[dict], mode: str | None=None) -> int | None:
-    if (len(games) == 0):
-        return None
+def ask_select_obj(objs: list[dict], type: str, mode: str) -> int:
+    if (len(objs) == 0):
+        raise AbortError(f"No {type}s available.")
+    
+    selected_id = input_number(
+        f"Choose {type} ID to {mode}:", (1, Utils.MAX_INT_32))
+    
+    if not any(obj['id'] == selected_id for obj in objs):
+        raise AbortError(f"Invalid {type} ID.")
+    
+    return selected_id
 
-    if mode is not None:
-        message = f"\nChoose game ID to {mode}..."
-    else:
-        message = f"\nChoose game ID..."
 
-    print(f"\n{message} ('-1' or 'exit' to cancel)")
-
-    while True:
-        choice = input("> ")
-
-        if choice == "-1" or choice == "exit":
-            return None
-
-        if any(choice == str(game['id']) for game in games):
-            return int(choice)
+def ask_select_objs(objs: list[dict], type: str, mode: str) -> list[int]:
+    if (len(objs) == 0):
+        raise AbortError(f"No {type}s available.")
+    
+    choice = input_string(f"Enter {type} IDs to {mode}:")
+    
+    try:
+        selected_ids = [int(id.strip()) for id in choice.split()]
+        for id in selected_ids:
+            if not any(obj['id'] == id for obj in objs):
+                raise ValueError
+        return selected_ids
+    
+    except ValueError:
+        raise AbortError(f"Invalid {type} IDs.")
 
 
 def ask_new_game() -> dict:
-    print("\nEnter new game information...")
+    print("\nEnter new game information:")
     
-    name = input("Name: ")
-    author = input("Author: ")
-    description = input("Description: ")
-
     return {
         "id": 0,
-        "name": name,
-        "author": author,
-        "description": description
+        "name": input_string("Enter game name..."),
+        "author": input_string("Enter game author..."),
+        "description": input_string("Enter game description...")
+    }
+
+
+def ask_new_tag() -> dict:
+    print("\nEnter new tag information:")
+    
+    return {
+        "id": 0,
+        "name": input_string("Enter tag name..."),
+        "description": input_string("Enter tag description...")
     }
