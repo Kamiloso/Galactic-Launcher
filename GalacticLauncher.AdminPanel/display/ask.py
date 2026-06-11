@@ -1,68 +1,64 @@
-from errors.abort_error import AbortError
+from typing import Callable
+
+from display.input import Input
 from utils import Utils
 
-from display.input import *
+from model.enums import *
+from errors import *
 
 
-def ask_choice() -> str | None:
-    try:
-        return input_string("Select an option:")
+class Ask:
+
+    @staticmethod
+    def menu_choice() -> str | None:
+        try:
+            return Input.string("Select an option")
+            
+        except AbortError:
+            return None
+
+
+    @staticmethod
+    def history_page() -> int:
+        return Input.number(
+            "Enter history page starting from 0", (0, Utils.MAX_INT_32))
+
+
+    @staticmethod
+    def select_obj(objs: list[dict], type: str, mode: str) -> int:
+        if (len(objs) == 0):
+            raise AbortError(f"No {type}s available.")
         
-    except AbortError:
-        return None
+        selected_id = Input.number(
+            f"Select {type} ID to {mode}", (1, Utils.MAX_INT_64))
+        
+        if not any(obj['id'] == selected_id for obj in objs):
+            raise AbortError(f"Invalid {type} ID.")
+        
+        return selected_id
 
 
-def ask_history_page() -> int:
-    return input_number(
-        "Enter history page number starting from 0:", (0, Utils.MAX_INT_32))
+    @staticmethod
+    def select_objs(objs: list[dict], type: str, mode: str) -> list[int]:
+        if (len(objs) == 0):
+            raise AbortError(f"No {type}s available.")
+        
+        selected_ids = Input.number_list(
+            f"Select {type} IDs to {mode}", (1, Utils.MAX_INT_64))
 
-
-def ask_select_obj(objs: list[dict], type: str, mode: str) -> int:
-    if (len(objs) == 0):
-        raise AbortError(f"No {type}s available.")
-    
-    selected_id = input_number(
-        f"Choose {type} ID to {mode}:", (1, Utils.MAX_INT_32))
-    
-    if not any(obj['id'] == selected_id for obj in objs):
-        raise AbortError(f"Invalid {type} ID.")
-    
-    return selected_id
-
-
-def ask_select_objs(objs: list[dict], type: str, mode: str) -> list[int]:
-    if (len(objs) == 0):
-        raise AbortError(f"No {type}s available.")
-    
-    choice = input_string(f"Enter {type} IDs to {mode}:")
-    
-    try:
-        selected_ids = [int(id.strip()) for id in choice.split()]
         for id in selected_ids:
             if not any(obj['id'] == id for obj in objs):
-                raise ValueError
+                raise AbortError(f"Invalid {type} ID: {id}")
+        
         return selected_ids
-    
-    except ValueError:
-        raise AbortError(f"Invalid {type} IDs.")
 
 
-def ask_new_game() -> dict:
-    print("\nEnter new game information:")
-    
-    return {
-        "id": 0,
-        "name": input_string("Enter game name..."),
-        "author": input_string("Enter game author..."),
-        "description": input_string("Enter game description...")
-    }
-
-
-def ask_new_tag() -> dict:
-    print("\nEnter new tag information:")
-    
-    return {
-        "id": 0,
-        "name": input_string("Enter tag name..."),
-        "description": input_string("Enter tag description...")
-    }
+    @staticmethod
+    def modify_optionally(
+        prompt_confirm: str,
+        prompt_ask: str,
+        modify: Callable[[str], None]
+    ) -> None:
+        
+        if Input.confirm(prompt_confirm):
+            modify(prompt_ask)

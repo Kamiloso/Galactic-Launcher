@@ -6,6 +6,7 @@ class TableBuilder:
         self.multiline_mode = multiline_mode
         self.add_row(header)
 
+
     def add_row(self, row: list):
         if len(row) < self.clen:
             row = row + [""] * (self.clen - len(row))
@@ -16,6 +17,7 @@ class TableBuilder:
             self.column_widths[j] = max(self.column_widths[j], max_line_len)
         
         self.rowlists.append(row)
+
 
     def build(self) -> str:
         result = [
@@ -36,14 +38,17 @@ class TableBuilder:
 
         result.append(self._format_outside_sep())
         return "\n".join(result)
+    
 
     def _format_inside_sep(self, char: str = '-') -> str:
         base_sep = "| " + " | ".join([char * self.column_widths[j] for j in range(self.clen)]) + " |"
         return base_sep.replace(" ", char)
 
+
     def _format_outside_sep(self) -> str:
         total_inner_width = sum(self.column_widths) + 3 * self.clen - 1
         return "+" + ("-" * total_inner_width) + "+"
+
 
     def _format_row(self, row: list) -> str:
         cell_lines = [str(row[j]).split('\n') for j in range(self.clen)]

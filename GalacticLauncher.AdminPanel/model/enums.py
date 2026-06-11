@@ -1,4 +1,6 @@
 class VersionType:
+    VALUES = ["Unknown", "Alpha", "Beta", "Release", "Snapshot"]
+    
     @staticmethod
     def to_string(n: int) -> str:
         return {
@@ -11,14 +13,16 @@ class VersionType:
     @staticmethod
     def to_int(s: str) -> int:
         return {
-            "Alpha": 1,
-            "Beta": 2,
-            "Release": 3,
-            "Snapshot": 4,
-        }.get(s, 0)
+            "alpha": 1,
+            "beta": 2,
+            "release": 3,
+            "snapshot": 4,
+        }.get(s.lower(), 0)
 
 
 class ImageType:
+    VALUES = ["Unknown", "Icon", "Banner", "Screenshot"]
+
     @staticmethod
     def to_string(n: int) -> str:
         return {
@@ -30,13 +34,15 @@ class ImageType:
     @staticmethod
     def to_int(s: str) -> int:
         return {
-            "Icon": 1,
-            "Banner": 2,
-            "Screenshot": 3,
-        }.get(s, 0)
+            "icon": 1,
+            "banner": 2,
+            "screenshot": 3,
+        }.get(s.lower(), 0)
 
 
 class Platform:
+    VALUES = ["Unknown", "Windows", "Linux", "MacSilicon", "MacIntel"]
+
     @staticmethod
     def to_string(n: int) -> str:
         return {
@@ -49,14 +55,16 @@ class Platform:
     @staticmethod
     def to_int(s: str) -> int:
         return {
-            "Windows": 1,
-            "Linux": 2,
-            "MacSilicon": 3,
-            "MacIntel": 4,
-        }.get(s, 0)
+            "windows": 1,
+            "linux": 2,
+            "macsilicon": 3,
+            "macintel": 4,
+        }.get(s.lower(), 0)
 
 
 class AlertLevel:
+    VALUES = ["Unknown", "Stable", "Alert", "Danger"]
+
     @staticmethod
     def to_string(n: int) -> str:
         return {
@@ -68,7 +76,7 @@ class AlertLevel:
     @staticmethod
     def to_int(s: str) -> int:
         return {
-            "Stable": 1,
-            "Alert": 2,
-            "Danger": 3,
-        }.get(s, 0)
+            "stable": 1,
+            "alert": 2,
+            "danger": 3,
+        }.get(s.lower(), 0)

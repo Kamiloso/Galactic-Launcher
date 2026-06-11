@@ -1,22 +1,19 @@
-from display.ask import *
-from display.show import *
-from network.api_talker import *
-from errors.soft_exit_error import SoftExitError
-from utils import Utils
+from model.create import Create
+from network.api_talker import ApiTalker
+from display.ask import Ask
+from display.show import Show
+from model.data import Data
 
-from .menu_utils import run_menu
+from .menu_helpers import handle_menu, prepare_menu
 from .edit_menu import run_edit_menu
 
-from model.data import build_game_tree
+from errors import *
 
 
 def run_main_menu() -> bool:
-    Utils.sys_clear()
+    prepare_menu()
 
-    if (Utils.DEV_MODE()):
-        print(f"Running in DEV MODE...")
-
-    return run_menu("MAIN MENU", [
+    return handle_menu("MAIN MENU", [
         ("Display games", _display_games),
         ("Add game", _add_game),
         ("Remove game", _remove_game),
@@ -25,66 +22,72 @@ def run_main_menu() -> bool:
         ("Add tag", _add_tag),
         ("Remove tag", _remove_tag),
         ("Display history", _display_history),
-    ])
+        ("Input instructions", _input_instructions),
+    ], exit_mode="quit")
+
 
 # --- Display ---
 
 def _display_games():
-    games = download_all_games()
-    show_games(games)
+    games = ApiTalker.download_all_games()
+    Show.games(games)
 
 
 def _display_tags():
-    tags = download_all_tags()
-    show_tags(tags)
+    tags = ApiTalker.download_all_tags()
+    Show.tags(tags)
 
 
 def _display_history():
-    page = ask_history_page()
-    history_list = admin_get_history_page(page)
-    games = download_all_games()
-    show_history(history_list, games)
+    page = Ask.history_page()
+    history_list = ApiTalker.get_history_page(page)
+    games = ApiTalker.download_all_games()
+    Show.history(history_list, games)
+
+
+def _input_instructions():
+    Show.input_instructions()
 
 
 # --- Modifications ---
 
 def _add_game():
-    game = ask_new_game()
-    admin_create_game(game)
-    show_done()
+    game = Create.new_game()
+    ApiTalker.create_game(game)
+    Show.done()
 
 
 def _remove_game():
-    games = download_all_games()
-    show_games(games)
-    game_id = ask_select_obj(games, "game", "remove")
-    admin_delete_game(game_id)
-    show_done()
+    games = ApiTalker.download_all_games()
+    Show.games(games)
+    game_id = Ask.select_obj(games, "game", "remove")
+    ApiTalker.delete_game(game_id)
+    Show.done()
 
 
 def _add_tag():
-    tag = ask_new_tag()
-    admin_create_tag(tag)
-    show_done()
+    tag = Create.new_tag()
+    ApiTalker.create_tag(tag)
+    Show.done()
 
 
 def _remove_tag():
-    tags = download_all_tags()
-    show_tags(tags)
-    tag_id = ask_select_obj(tags, "tag", "remove")
-    admin_delete_tag(tag_id)
-    show_done()
+    tags = ApiTalker.download_all_tags()
+    Show.tags(tags)
+    tag_id = Ask.select_obj(tags, "tag", "remove")
+    ApiTalker.delete_tag(tag_id)
+    Show.done()
 
 
-# --- Advanced Modifications ---
+# --- Edit Menu ---
 
 def _edit_game():
-    games = download_all_games()
-    show_games(games)
-    game_id = ask_select_obj(games, "game", "edit")
+    games = ApiTalker.download_all_games()
+    Show.games(games)
+    game_id = Ask.select_obj(games, "game", "edit")
 
-    game_data = download_game_data(game_id)
-    game_tree = build_game_tree(game_data)
+    game_data = ApiTalker.download_game_data(game_id)
+    game_tree = Data.build_game_tree(game_data)
 
     while run_edit_menu(game_tree): pass
     raise SoftExitError

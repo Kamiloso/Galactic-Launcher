@@ -1,11 +1,18 @@
 import os
 import sys
+import re
+
+from datetime import date
 
 class Utils:
     BORDER = "-" * 60
     BORDER_HALF = "-" * 30
 
+    MIN_INT_32 = -2_147_483_648
     MAX_INT_32 = 2_147_483_647
+
+    MIN_INT_64 = -9_223_372_036_854_775_808
+    MAX_INT_64 = 9_223_372_036_854_775_807
 
     PRD_CERT_THUMBPRINT = "990a6a6647d286c7f22badf4a1bcf534b64eb372f8daee4802fccc023cb04467"
     DEV_CERT_THUMBPRINT = "8d2df4330cc5662ea74196ab3c1958c51f0ce45ce9143f2bb8e77fc4d6126005"
@@ -35,43 +42,66 @@ class Utils:
         else:
             os.system('read -n 1 -s -r -p "Press any key to continue..."')
 
+    @staticmethod
+    def date_to_str(date: date) -> str:
+        return date.strftime("%Y-%m-%d")
+
 
 class TextUtils:
     @staticmethod
     def break_string(src_line: str, max_width: int) -> str:
-        words = src_line.strip().split()
-        if not words:
-            return ""
-
-        lines = []
-        current_line = []
-        current_length = 0
-
-        for word in words:
-            if len(word) > max_width:
-                if current_line:
-                    lines.append(" ".join(current_line))
-                    current_line = []
-                    current_length = 0
+        if max_width <= 0:
+            raise ValueError("Max width must be greater than 0.")
+            
+        lines_out = []
+        
+        paragraphs = src_line.split('\n')
+        
+        for p in paragraphs:
+            if not p:
+                lines_out.append("")
+                continue
                 
-                for i in range(0, len(word), max_width):
-                    chunk = word[i:i + max_width]
-                    if len(chunk) == max_width:
-                        lines.append(chunk)
-                    else:
-                        current_line.append(chunk)
-                        current_length = len(chunk)
-            else:
-                space_padding = 1 if current_line else 0
-                if current_length + space_padding + len(word) <= max_width:
-                    current_line.append(word)
-                    current_length += space_padding + len(word)
+            tokens = re.split(r'([ \t]+)', p)
+            current_line = ""
+            pending_space = ""
+            
+            for i, token in enumerate(tokens):
+                if not token:
+                    continue
+                
+                is_space = (i % 2 != 0)
+                
+                if is_space:
+                    pending_space += token
                 else:
-                    lines.append(" ".join(current_line))
-                    current_line = [word]
-                    current_length = len(word)
-
-        if current_line:
-            lines.append(" ".join(current_line))
-
-        return "\n".join(lines)
+                    word = token
+                    
+                    if len(current_line) + len(pending_space) + len(word) <= max_width:
+                        current_line += pending_space + word
+                        pending_space = ""
+                    else:
+                        if current_line:
+                            lines_out.append(current_line)
+                            current_line = ""
+                            pending_space = ""
+                            
+                            if len(word) <= max_width:
+                                current_line = word
+                            else:
+                                while len(word) > max_width:
+                                    lines_out.append(word[:max_width])
+                                    word = word[max_width:]
+                                current_line = word
+                        else:
+                            text_to_add = pending_space + word
+                            while len(text_to_add) > max_width:
+                                lines_out.append(text_to_add[:max_width])
+                                text_to_add = text_to_add[max_width:]
+                            current_line = text_to_add
+                            pending_space = ""
+            
+            if current_line or pending_space:
+                lines_out.append(current_line + pending_space)
+                
+        return "\n".join(lines_out)

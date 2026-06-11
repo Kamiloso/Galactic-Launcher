@@ -14,16 +14,12 @@ from utils import Utils
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-def cert_thumbprint() -> str:
-    if Utils.DEV_MODE():
-        return Utils.DEV_CERT_THUMBPRINT
-    return Utils.PRD_CERT_THUMBPRINT
+def _CERT_THUMBPRINT() -> str:
+    return Utils.DEV_CERT_THUMBPRINT if Utils.DEV_MODE() else Utils.PRD_CERT_THUMBPRINT
 
 
-def endpoint() -> str:
-    if Utils.DEV_MODE():
-        return Utils.DEV_ENDPOINT
-    return Utils.PRD_ENDPOINT
+def _ENDPOINT() -> str:
+    return Utils.DEV_ENDPOINT if Utils.DEV_MODE() else Utils.PRD_ENDPOINT
 
 
 class PinnedConnection(HTTPSConnection):
@@ -37,7 +33,7 @@ class PinnedConnection(HTTPSConnection):
             raise ssl.SSLError("Connection dennied. No certificate provided by the server.")
 
         fingerprint = hashlib.sha256(cert_der).hexdigest().lower()
-        expected = cert_thumbprint().replace(":", "").lower()
+        expected = _CERT_THUMBPRINT().replace(":", "").lower()
 
         if fingerprint != expected:
             raise ssl.SSLError(f"Certificate pinning error! Expected: {expected}, received: {fingerprint}")
@@ -65,7 +61,7 @@ class HttpClient:
         self.session.mount('https://', PinnedAdapter())
 
     def _build_url(self, path: str) -> str:
-        base = endpoint().rstrip('/')
+        base = _ENDPOINT().rstrip('/')
         p = path.lstrip('/')
         return f"{base}/{p}"
 
