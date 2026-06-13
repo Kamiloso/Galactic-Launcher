@@ -70,7 +70,7 @@ internal class AdminService(AppConfig config) : IAdminService
     {
         if (_sessions.TryGetValue(token, out var session))
         {
-            if (session.Expiration > DateTime.UtcNow + GRACE_PERIOD)
+            if (session.Expiration + GRACE_PERIOD > DateTime.UtcNow)
             {
                 username = session.Username;
                 return true;
@@ -87,7 +87,7 @@ internal class AdminService(AppConfig config) : IAdminService
 
         foreach (var kvp in _sessions)
         {
-            if (kvp.Value.Expiration <= now)
+            if (kvp.Value.Expiration + GRACE_PERIOD <= now)
             {
                 _sessions.TryRemove(kvp.Key, out _);
             }
