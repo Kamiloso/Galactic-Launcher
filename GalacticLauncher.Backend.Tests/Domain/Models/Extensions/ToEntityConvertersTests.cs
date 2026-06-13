@@ -1,47 +1,124 @@
-﻿using GalacticLauncher.Core.Models;
-using GalacticLauncher.Backend.Domain.Models;
-using GalacticLauncher.Backend.Domain.Models.Extensions;
+﻿using GalacticLauncher.Backend.Domain.Models.Extensions;
+using GalacticLauncher.Backend.Tests.Helpers;
+using GalacticLauncher.Core;
+using GalacticLauncher.Core.Models;
+using Version = GalacticLauncher.Core.Models.Version;
 
 namespace GalacticLauncher.Backend.Tests.Domain.Models.Extensions;
 
-[TestFixture]
 public class ToEntityConvertersTests
 {
-    [Test]
-    public void ToEntity_Tag_MapsPropertiesCorrectly()
+    [Fact]
+    public void GameTree_ToEntityDeconstruct_PropagatesGameIdToChildren()
     {
-        var domainTag = new Tag
-        {
-            Id = 789,
-            Name = "Sci-Fi",
-            Description = "Science Fiction Games"
+        var dummyVersion = new Version 
+        { 
+            Id = 1, 
+            Caption = "v1.0",
+            Type = VersionType.Release,
+            Description = "Test",
+            CliArgs = "",
+            IsPrimary = true,
+            ReleaseDate = DateOnly.FromDateTime(DateTime.Now),
+            Platform = Platform.Windows,
+            DownloadUrl = "http://test",
+            ExecLocation = "run.exe",
+            Sha256Hash = null,
+            Alert = AlertLevel.Stable
         };
 
-        TagEntity result = domainTag.ToEntity();
+        var dummyImage = new Image 
+        { 
+            Id = 2, 
+            DownloadUrl = "http://test",
+            Type = ImageType.Screenshot,
+            SortIndex = 0
+        };
 
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.Id, Is.EqualTo(domainTag.Id));
-        Assert.That(result.Name, Is.EqualTo(domainTag.Name));
-        Assert.That(result.Description, Is.EqualTo(domainTag.Description));
+        var tree = TestDataHelper.CreateDummyGameTree() with
+        {
+            Versions = [dummyVersion],
+            Images = [dummyImage],
+            TagIds = [10, 20]
+        };
+
+        var (gameEntity, versions, images, tagIds) = tree.ToEntityDeconstruct();
+
+        Assert.Equal(tree.Id, gameEntity.Id);
+        
+        Assert.Single(versions);
+        Assert.Equal(tree.Id, versions.First().IdGame); 
+        
+        Assert.Single(images);
+        Assert.Equal(tree.Id, images.First().IdGame); 
+        
+        Assert.Equal(2, tagIds.Count());
+        Assert.Contains(10L, tagIds);
     }
 
-    [Test]
-    public void ToEntity_History_MapsPropertiesCorrectly()
+    [Fact]
+    public void GameRaw_ToEntity_MapsPropertiesCorrectly()
     {
-        var domainHistory = new History
+        var raw = TestDataHelper.CreateDummyGameRaw();
+
+        var entity = raw.ToEntity();
+
+        Assert.Equal(raw.Id, entity.Id);
+        Assert.Equal(raw.Name, entity.Name);
+        Assert.Equal(raw.Author, entity.Author);
+        Assert.Equal(raw.Description, entity.Description);
+    }
+
+    [Fact]
+    public void Version_ToEntity_ConvertsEnumsToLowerCaseInvariantStrings()
+    {
+        var version = new Version
         {
-            Id = 123,
-            Info = "Test history log",
-            Timestamp = new DateTime(2026, 1, 1, 12, 0, 0, DateTimeKind.Utc),
-            IdGame = 456
+            Id = 1,
+            Caption = "v1.0",
+            Type = VersionType.Release,
+            Description = "Test",
+            CliArgs = "",
+            IsPrimary = true,
+            ReleaseDate = DateOnly.FromDateTime(DateTime.Now),
+            Platform = Platform.Windows,
+            DownloadUrl = "http://test",
+            ExecLocation = "run.exe",
+            Sha256Hash = null,
+            Alert = AlertLevel.Danger
+        };
+        
+        var parentId = 99L;
+
+        var entity = version.ToEntity(parentId);
+
+        Assert.Equal("release", entity.Type);
+        Assert.Equal("windows", entity.Platform);
+        Assert.Equal("danger", entity.Alert);
+        Assert.Equal(parentId, entity.IdGame);
+    }
+
+    [Fact]
+    public void Version_ToEntity_InvalidEnum_FallsBackToDefaultString()
+    {
+        var version = new Version
+        {
+            Id = 1,
+            Caption = "v1.0",
+            Type = (VersionType)999,
+            Description = "Test",
+            CliArgs = "",
+            IsPrimary = true,
+            ReleaseDate = DateOnly.FromDateTime(DateTime.Now),
+            Platform = Platform.Windows,
+            DownloadUrl = "http://test",
+            ExecLocation = "run.exe",
+            Sha256Hash = null,
+            Alert = AlertLevel.Stable
         };
 
-        HistoryEntity result = domainHistory.ToEntity();
+        var entity = version.ToEntity(1);
 
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.Id, Is.EqualTo(domainHistory.Id));
-        Assert.That(result.Info, Is.EqualTo(domainHistory.Info));
-        Assert.That(result.Timestamp, Is.EqualTo(domainHistory.Timestamp));
-        Assert.That(result.IdGame, Is.EqualTo(domainHistory.IdGame));
+        Assert.Equal(default(VersionType).ToString().ToLowerInvariant(), entity.Type);
     }
 }
