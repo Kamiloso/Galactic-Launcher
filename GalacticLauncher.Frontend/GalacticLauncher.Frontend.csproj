@@ -90,4 +90,7 @@
 	    <DependentUpon>HomeView.axaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="GalacticLauncher.Frontend.Tests" />
+	</ItemGroup>
 </Project>

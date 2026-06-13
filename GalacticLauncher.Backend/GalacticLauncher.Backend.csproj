@@ -17,5 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GalacticLauncher.Core\GalacticLauncher.Core.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <InternalsVisibleTo Include="GalacticLauncher.Backend.Tests" />
+  </ItemGroup>
 </Project>
