@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GalacticLauncher.Frontend.Views.PanelViews.GameView"
              xmlns:vm="using:GalacticLauncher.Frontend.ViewModels.Panels"
-			 xmlns:imageVM="clr-namespace:GalacticLauncher.Frontend.ViewModels.ImageLoad"
+			 xmlns:imageVM="clr-namespace:GalacticLauncher.Frontend.ViewModels.ImageControls"
              x:DataType="vm:GameViewModel">
 
 	<!--Game view-->

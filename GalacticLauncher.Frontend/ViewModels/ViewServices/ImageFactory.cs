@@ -1,5 +1,5 @@
 ﻿using GalacticLauncher.Frontend.Services;
-using GalacticLauncher.Frontend.ViewModels.ImageLoad;
+using GalacticLauncher.Frontend.ViewModels.ImageControls;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 

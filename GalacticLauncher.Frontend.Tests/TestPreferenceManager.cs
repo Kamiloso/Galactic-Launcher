@@ -20,7 +20,15 @@ namespace GalacticLauncher.Frontend.Tests.Services.Data
         [Fact]
         public void Constructor_ShouldGenerateNewGuid_WhenGuidIsMissingInRepository()
         {
-            _memoryRepositoryMock.Setup(r => r["guid"]).Returns((string)null!);
+            string? savedGuid = null;
+
+            _memoryRepositoryMock
+                .Setup(r => r["guid"])
+                .Returns(() => savedGuid!);
+
+            _memoryRepositoryMock
+                .SetupSet(r => r["guid"] = It.IsAny<string>())
+                .Callback<string, string>((key, value) => savedGuid = value);
 
             var manager = CreateManager();
 

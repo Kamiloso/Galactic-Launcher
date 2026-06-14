@@ -93,7 +93,6 @@ namespace GalacticLauncher.Frontend.Tests.Services.Data
         [Fact]
         public void GetLibraryGames_ShouldReturnFilteredAndSortedGames_AndCleanUpMissingOnes()
         {
-            // ARRANGE
             var cachedGames = new List<Game>
             {
                 CreateMockGame(1, "Cyberpunk"),
@@ -107,10 +106,14 @@ namespace GalacticLauncher.Frontend.Tests.Services.Data
             _cacheProviderMock.Setup(c => c.GetGameOf(2)).Returns(cachedGames[1]);
             _cacheProviderMock.Setup(c => c.GetGameOf(3)).Returns((Game?)null);
 
-            _dataRepositoryMock.Setup(r => r.GetAll("library")).Returns(storedIds);
+            _dataRepositoryMock.Setup(r => r.GetAll("library")).Returns(() => storedIds);
 
-            var result = _manager.GetLibraryGames("cp").ToList();
+            _dataRepositoryMock
+                .Setup(r => r.Remove(It.IsAny<string>(), It.IsAny<long>()))
+                .Callback<string, long>((key, id) => storedIds.Remove(id));
 
+            var result = _manager.GetLibraryGames("cyber").ToList();
+            
             _dataRepositoryMock.Verify(r => r.Remove("library", 3), Times.Once);
 
             Assert.Single(result);

@@ -154,7 +154,7 @@ namespace GalacticLauncher.Frontend.Tests.Services.Executables
             string? result = system.FindExecFilePath(execInfo);
 
             Assert.NotNull(result);
-            Assert.Equal(fullExecFilePath, result);
+            Assert.Equal(Path.GetFullPath(fullExecFilePath), Path.GetFullPath(result));
         }
 
         [Fact]

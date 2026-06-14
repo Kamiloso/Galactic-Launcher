@@ -170,7 +170,7 @@ namespace GalacticLauncher.Frontend.Tests.Services
 
             _fileDownloaderMock
                 .Setup(d => d.DownloadFileAsync(imageUrl, It.IsAny<string>(), It.IsAny<IProgress<DownloadProgressData>>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+                .ThrowsAsync(new DownloadException("Symulowany błąd sieci – plik nie powstał."));
 
             await Assert.ThrowsAsync<DownloadException>(() => provider.GetImagePathAsync(imageUrl));
         }

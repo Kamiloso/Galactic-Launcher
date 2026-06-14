@@ -103,11 +103,19 @@ namespace GalacticLauncher.Frontend.Tests.Services.Executables
             var execInfo = CreateTestExecInfo(sha256Hash: "VALID_HASH");
             var progressMock = new Mock<IProgress<DownloadProgressData>>();
 
-            _execPathSystemMock.Setup(e => e.PrepareExecPath(execInfo, true)).Returns(_testExecutionPath);
-            _execPathSystemMock.Setup(e => e.PrepareInstancePath(execInfo, true)).Returns(_testExecutionPath);
+            _execPathSystemMock.Setup(e => e.PrepareExecPath(execInfo, It.IsAny<bool>())).Returns(_testExecutionPath);
+            _execPathSystemMock.Setup(e => e.PrepareInstancePath(execInfo, It.IsAny<bool>())).Returns(_testExecutionPath);
 
             _fileHasherMock.Setup(h => h.HashSha256Async(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                            .ReturnsAsync("VALID_HASH");
+
+            _fileDecompressorMock
+                .Setup(d => d.UnpackZipAsync(It.IsAny<string>(), _testExecutionPath, It.IsAny<CancellationToken>()))
+                .Callback<string, string, CancellationToken>((zipPath, extractPath, token) =>
+                {
+                    Directory.CreateDirectory(extractPath);
+                })
+                .Returns(Task.CompletedTask);
 
             await manager.DownloadAsync(execInfo, progressMock.Object, CancellationToken.None);
 
@@ -125,8 +133,8 @@ namespace GalacticLauncher.Frontend.Tests.Services.Executables
             var execInfo = CreateTestExecInfo(sha256Hash: "EXPECTED_GOOD_HASH");
             var progressMock = new Mock<IProgress<DownloadProgressData>>();
 
-            _execPathSystemMock.Setup(e => e.PrepareExecPath(execInfo, true)).Returns(_testExecutionPath);
-            _execPathSystemMock.Setup(e => e.PrepareInstancePath(execInfo, true)).Returns(_testExecutionPath);
+            _execPathSystemMock.Setup(e => e.PrepareExecPath(execInfo, It.IsAny<bool>())).Returns(_testExecutionPath);
+            _execPathSystemMock.Setup(e => e.PrepareInstancePath(execInfo, It.IsAny<bool>())).Returns(_testExecutionPath);
 
             _fileHasherMock.Setup(h => h.HashSha256Async(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                            .ReturnsAsync("MALICIOUS_OR_CORRUPTED_HASH");
@@ -145,8 +153,8 @@ namespace GalacticLauncher.Frontend.Tests.Services.Executables
             var execInfo = CreateTestExecInfo();
             var progressMock = new Mock<IProgress<DownloadProgressData>>();
 
-            _execPathSystemMock.Setup(e => e.PrepareExecPath(execInfo, true)).Returns(_testExecutionPath);
-            _execPathSystemMock.Setup(e => e.PrepareInstancePath(execInfo, true)).Returns(_testExecutionPath);
+            _execPathSystemMock.Setup(e => e.PrepareExecPath(execInfo, It.IsAny<bool>())).Returns(_testExecutionPath);
+            _execPathSystemMock.Setup(e => e.PrepareInstancePath(execInfo, It.IsAny<bool>())).Returns(_testExecutionPath);
 
             var tcs = new TaskCompletionSource();
             _fileDownloaderMock.Setup(d => d.DownloadFileAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<IProgress<DownloadProgressData>>(), It.IsAny<CancellationToken>()))

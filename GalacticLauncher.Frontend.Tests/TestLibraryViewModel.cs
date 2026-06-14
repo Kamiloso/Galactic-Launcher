@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Reflection;
+using Castle.Core.Logging;
 using GalacticLauncher.Core.Models;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
+using GalacticLauncher.Frontend.ViewModels.ImageControls;
 using GalacticLauncher.Frontend.ViewModels.Panels;
+using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using Moq;
 
 namespace GalacticLauncher.Frontend.Tests.ViewModels.Panels
@@ -13,25 +16,17 @@ namespace GalacticLauncher.Frontend.Tests.ViewModels.Panels
         private readonly Mock<ICacheRefresher> _cacheRefresherMock = new();
         private readonly Mock<IGameListManager> _gameListManagerMock = new();
         private readonly Mock<ICacheProvider> _cacheProviderMock = new();
-        private readonly Mock _gameButtonFactoryMock;
+        private readonly Mock<IGameButtonFactory> _gameButtonFactoryMock = new();
 
         public LibraryViewModelTests()
         {
-            Assembly frontendAssembly = typeof(LibraryViewModel).Assembly;
-            Type factoryType = frontendAssembly.GetType("GalacticLauncher.Frontend.ViewModels.ViewServices.IGameButtonFactory")
-                ?? throw new Exception("Could'nt find interface IGameButtonFactory.");
-
-            var mockType = typeof(Mock<>).MakeGenericType(factoryType);
-            _gameButtonFactoryMock = (Mock)Activator.CreateInstance(mockType)!;
-
-            Type buttonType = frontendAssembly.GetType("GalacticLauncher.Frontend.ViewModels.ImageControls.GameButtonLibraryViewModel")
-                ?? throw new Exception("Could'nt find type GameButtonLibraryViewModel.");
-
-            Func<object> factoryCallback = () => Activator.CreateInstance(buttonType)!;
-
-            dynamic dynamicMock = _gameButtonFactoryMock;
-            dynamicMock.Setup(It.IsAny<System.Linq.Expressions.Expression>())
-                       .Returns(factoryCallback);
+            _gameButtonFactoryMock
+                .Setup(f => f.CreateAndStartLoadingLibrary(It.IsAny<long>()))
+                .Returns((long id) =>
+                {
+                    var buttonMock = new Mock<GameButtonLibraryViewModel>();
+                    return buttonMock.Object;
+                });
         }
 
         private LibraryViewModel CreateViewModel()
@@ -39,7 +34,7 @@ namespace GalacticLauncher.Frontend.Tests.ViewModels.Panels
             return new LibraryViewModel(
                 _cacheRefresherMock.Object,
                 _gameListManagerMock.Object,
-                (dynamic)_gameButtonFactoryMock.Object,
+                _gameButtonFactoryMock.Object,
                 _cacheProviderMock.Object
             );
         }

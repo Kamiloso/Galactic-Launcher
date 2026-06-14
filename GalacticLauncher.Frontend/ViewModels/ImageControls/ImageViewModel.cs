@@ -4,7 +4,7 @@ using GalacticLauncher.Frontend.Domain.Exceptions;
 using GalacticLauncher.Frontend.Services;
 using System.Threading.Tasks;
 
-namespace GalacticLauncher.Frontend.ViewModels.ImageLoad;
+namespace GalacticLauncher.Frontend.ViewModels.ImageControls;
 
 internal partial class ImageViewModel(IImageProvider imageProvider) : ObservableObject
 {
