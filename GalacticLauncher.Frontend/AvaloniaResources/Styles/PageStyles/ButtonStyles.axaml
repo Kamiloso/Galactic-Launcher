@@ -292,11 +292,10 @@
 		<Setter Property="FontSize" Value="18"/>
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="CornerRadius" Value="20"/>
-		<Setter Property="HorizontalAlignment" Value="Stretch"/>
 		<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		<Setter Property="VerticalContentAlignment" Value="Center"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="Padding" Value="10,5,10,5"/>
+		<Setter Property="Padding" Value="10,0,10,0"/>
 		<Setter Property="Height" Value="30"/>
 		<Setter Property="Margin" Value="3,3,3,3"/>
 	</Style>
@@ -323,7 +322,6 @@
 
 	<Style Selector="Button.tagButton TextBlock">
 		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="Margin" Value="10,0,0,0"/>
 	</Style>
 	
 	<Style Selector="Button.tagButton:disabled /template/ ContentPresenter">
@@ -331,6 +329,9 @@
 		<Setter Property="Foreground" Value="{StaticResource GreyBlue}"/>
 		<Setter Property="BorderBrush" Value="{StaticResource GreyBlue}"/>
 		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
 	</Style>
 
 
@@ -504,7 +505,7 @@
 									</Grid>
 									<TextBlock FontFamily="{DynamicResource Roboto}"
 												FontStyle="Normal"
-												FontSize="15"
+												FontSize="14"
 											    Margin="0,0,0,5"
 												TextTrimming="CharacterEllipsis"
 												Text="{Binding GameAuthor, StringFormat='AUTHOR: {0}'}"
@@ -533,7 +534,7 @@
 
 													<Button.Styles>
 														<Style Selector="Button.tagButton">
-															<Setter Property="FontSize" Value="15"/>
+															<Setter Property="FontSize" Value="14"/>
 															<Setter Property="Height" Value="22"/>
 															<Setter Property="Padding" Value="4,0,4,0"/>
 															<Setter Property="MinHeight" Value="0"/>
@@ -559,7 +560,7 @@
 
 									<TextBlock FontFamily="{DynamicResource Roboto}"
 												FontStyle="Normal"
-												FontSize="15"
+												FontSize="14"
 											    Margin="0,5,0,5"
 												TextTrimming="CharacterEllipsis"
 												Text="{Binding GameDescription}"

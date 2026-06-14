@@ -9,7 +9,7 @@ public interface IExecRunner
     Process? RunProcess(string execPath, string cli);
 }
 
-internal class ExecRunner : IExecRunner
+public class ExecRunner : IExecRunner
 {
     public Process? RunProcess(string execPath, string cli)
     {

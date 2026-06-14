@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.ImageControls;
 
-internal partial class GameButtonHomeViewModel(
+public partial class GameButtonHomeViewModel(
     IImageProvider imageProvider,
     INavigator navigator) : GameButtonViewModel(imageProvider, navigator)
 {

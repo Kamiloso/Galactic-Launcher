@@ -6,7 +6,7 @@ using GalacticLauncher.Frontend.ViewModels.Dialogs;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-internal interface IDialogs
+public interface IDialogs
 {
     event Action<object?>? OnDialogChanged;
 
@@ -33,7 +33,7 @@ internal interface IDialogs
         Progress<DownloadProgressData> progress);
 }
 
-internal class Dialogs : IDialogs
+public class Dialogs : IDialogs
 {
     public event Action<object?>? OnDialogChanged;
 

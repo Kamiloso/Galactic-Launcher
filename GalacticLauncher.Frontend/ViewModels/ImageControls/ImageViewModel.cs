@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.ImageLoad;
 
-internal partial class ImageViewModel(IImageProvider imageProvider) : ObservableObject
+public partial class ImageViewModel(IImageProvider imageProvider) : ObservableObject
 {
     protected const string EMPTY_STATUS = "";
     protected const string LOADING_IMAGE = "LOADING IMAGE...";

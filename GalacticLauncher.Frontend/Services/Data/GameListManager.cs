@@ -34,7 +34,7 @@ public interface IGameListManager
     void RemoveFromFavorite(long gameId);
 }
 
-internal class GameListManager(
+public class GameListManager(
     IDataRepository dataRepository,
     ICacheProvider cacheProvider) : IGameListManager
 {
