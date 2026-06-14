@@ -13,7 +13,7 @@ public interface IErrorHandler
     void HandleApiError(int code, bool showNoInternet = false);
 }
 
-internal class ErrorHandler : IErrorHandler
+public class ErrorHandler : IErrorHandler
 {
     public event Action<string, string>? OnInfo;
     public event Action<string, string>? OnWarning;

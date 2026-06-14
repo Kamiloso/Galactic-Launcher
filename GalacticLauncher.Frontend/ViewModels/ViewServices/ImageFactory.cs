@@ -3,7 +3,7 @@ using GalacticLauncher.Frontend.ViewModels.ImageLoad;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-internal interface IImageFactory
+public interface IImageFactory
 {
     ImageViewModel CreateAndStartLoadingImage(string? imageURL);
 }

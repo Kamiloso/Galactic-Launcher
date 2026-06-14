@@ -12,7 +12,7 @@ using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.ImageControls;
 
-internal partial class GameButtonLibraryViewModel : GameButtonViewModel
+public partial class GameButtonLibraryViewModel : GameButtonViewModel
 {
     [ObservableProperty]
     private string _gameTitle = EMPTY_STATUS;

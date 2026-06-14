@@ -22,7 +22,7 @@ public interface ICacheRefresher
     Task RefreshGameDataAsync(long id);
 }
 
-internal class CacheRefresher(
+public class CacheRefresher(
     IBackendTalker backendTalker,
     ICacheRepository cacheRepository,
     IErrorHandler errorHandler) : ICacheRefresher

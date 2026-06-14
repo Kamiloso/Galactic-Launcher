@@ -9,7 +9,7 @@ public interface ILastGameManager
     void SetLastGame(long? gameId);
 }
 
-internal class LastGameManager(
+public class LastGameManager(
     ICacheRepository cacheRepository,
     IDataRepository dataRepository) : ILastGameManager
 {

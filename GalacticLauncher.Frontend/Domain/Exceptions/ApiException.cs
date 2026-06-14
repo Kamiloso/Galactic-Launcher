@@ -6,7 +6,7 @@ namespace GalacticLauncher.Frontend.Domain.Exceptions;
 /// <summary>
 /// Represents a problem that occurred during an API call to the backend.
 /// </summary>
-internal class ApiException(string message, int statusCode, Exception? innerException = null)
+public class ApiException(string message, int statusCode, Exception? innerException = null)
     : Exception(message, innerException)
 {
     public int StatusCode { get; } = statusCode;

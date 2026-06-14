@@ -16,7 +16,7 @@ public interface ICacheProvider
     IEnumerable<Tag> GetTagsOf(long id);
 }
 
-internal class CacheProvider(
+public class CacheProvider(
     ICacheRepository cacheRepository) : ICacheProvider
 {
     public Game? GetGameOf(long id)
