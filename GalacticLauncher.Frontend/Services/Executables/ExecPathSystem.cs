@@ -12,7 +12,7 @@ public interface IExecPathSystem
     string? FindExecFilePath(ExecInfo execInfo);
 }
 
-public class ExecPathSystem : IExecPathSystem
+internal class ExecPathSystem : IExecPathSystem
 {
     public string PrepareGamePath(GameInfo gameInfo, bool ensure)
     {

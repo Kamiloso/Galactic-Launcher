@@ -18,7 +18,7 @@ public interface IPreferenceManager
     void SetGameBool(long gameId, string filterName, bool value);
 }
 
-public class PreferenceManager : IPreferenceManager
+internal class PreferenceManager : IPreferenceManager
 {
     private const string MKEY_THEME = "galactic";
     private const string MKEY_EXPANDED = "expanded";

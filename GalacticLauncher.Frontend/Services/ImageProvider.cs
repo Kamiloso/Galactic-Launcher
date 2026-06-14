@@ -16,7 +16,7 @@ public interface IImageProvider
     Task<string> GetImagePathAsync(string url);
 }
 
-public class ImageProvider(IFileDownloader fileDownloader) : IImageProvider
+internal class ImageProvider(IFileDownloader fileDownloader) : IImageProvider
 {
     private const string IMG_FOLDER = "Images";
 

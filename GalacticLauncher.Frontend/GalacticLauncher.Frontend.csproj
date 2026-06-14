@@ -91,8 +91,6 @@
 	  </Compile>
 	</ItemGroup>
 	<ItemGroup>
-		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-			<_Parameter1>GalacticLauncher.UnitTests-frontend</_Parameter1>
-		</AssemblyAttribute>
+		<InternalsVisibleTo Include="GalacticLauncher.Frontend.Tests" />
 	</ItemGroup>
 </Project>

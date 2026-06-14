@@ -6,13 +6,13 @@ using GalacticLauncher.Frontend.ViewModels.ImageControls;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-public interface IGameButtonFactory
+internal interface IGameButtonFactory
 {
     GameButtonHomeViewModel CreateAndStartLoading(long gameId);
     GameButtonLibraryViewModel CreateAndStartLoadingLibrary(long gameId);
 }
 
-public class GameButtonFactory(
+internal class GameButtonFactory(
     ICacheProvider cacheProvider,
     IImageProvider imageProvider,
     IGameListManager gameListManager,

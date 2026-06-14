@@ -33,7 +33,7 @@ public interface IDialogs
         Progress<DownloadProgressData> progress);
 }
 
-public class Dialogs : IDialogs
+internal class Dialogs : IDialogs
 {
     public event Action<object?>? OnDialogChanged;
 

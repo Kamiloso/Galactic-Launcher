@@ -15,7 +15,7 @@ public interface IGamePlayService
     Task<bool> Delete(ExecInfo execInfo);
 }
 
-public class GamePlayService(
+internal class GamePlayService(
     IExecManager execManager,
     ITelemetryCollector telemetryCollector,
     IDialogs dialogs,

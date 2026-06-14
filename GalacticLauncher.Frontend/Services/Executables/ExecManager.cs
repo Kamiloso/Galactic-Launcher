@@ -22,7 +22,7 @@ public interface IExecManager
     Process Play(ExecInfo execInfo);
 }
 
-public class ExecManager(
+internal class ExecManager(
     IExecPathSystem execPathSystem,
     IExecRunner execRunner,
     IFileDownloader fileDownloader,

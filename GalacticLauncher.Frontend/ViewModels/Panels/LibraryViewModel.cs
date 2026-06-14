@@ -13,7 +13,7 @@ using GalacticLauncher.Frontend.Infrastructure;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-public partial class LibraryViewModel : ObservableObject, INavigationAware
+internal partial class LibraryViewModel : ObservableObject, INavigationAware
 {
     [ObservableProperty]
     private string? _searchGames;

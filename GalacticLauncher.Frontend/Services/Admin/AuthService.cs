@@ -17,7 +17,7 @@ public interface IAuthService
     TimeSpan TimeToExpiration();
 }
 
-public class AuthService(
+internal class AuthService(
     IErrorHandler errorHandler,
     IBackendTalker backendTalker) : IAuthService
 {

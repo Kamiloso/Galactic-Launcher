@@ -80,7 +80,7 @@ namespace GalacticLauncher.Frontend.Tests.ViewModels.Panels
         [InlineData(LibraryViewModel.LibraryViewMode.YourGames, true, false, false)]
         [InlineData(LibraryViewModel.LibraryViewMode.Favorites, false, true, false)]
         [InlineData(LibraryViewModel.LibraryViewMode.MoreGames, false, false, true)]
-        public void ChangeView_Should_UpdateProperties_Correctly(
+        internal void ChangeView_Should_UpdateProperties_Correctly(
             LibraryViewModel.LibraryViewMode targetMode,
             bool expectedIsYourGames,
             bool expectedIsFavorite,

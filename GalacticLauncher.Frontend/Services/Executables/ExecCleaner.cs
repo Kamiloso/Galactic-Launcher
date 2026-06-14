@@ -10,7 +10,7 @@ namespace GalacticLauncher.Frontend.Services.Executables;
 
 public interface IExecCleaner { }
 
-public class ExecCleaner : IExecCleaner
+internal class ExecCleaner : IExecCleaner
 {
     private readonly ICacheProvider _cacheProvider;
     private readonly IExecPathSystem _execPathSystem;

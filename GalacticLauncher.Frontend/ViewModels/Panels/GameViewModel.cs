@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace GalacticLauncher.Frontend.ViewModels.Panels;
 
-public partial class GameViewModel : ObservableObject, INavigationAware
+internal partial class GameViewModel : ObservableObject, INavigationAware
 {
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(InLibrary))]

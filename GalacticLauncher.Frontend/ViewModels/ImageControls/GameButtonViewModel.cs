@@ -7,7 +7,7 @@ using GalacticLauncher.Frontend.ViewModels.ViewServices;
 
 namespace GalacticLauncher.Frontend.ViewModels.ImageControls;
 
-public abstract partial class GameButtonViewModel(
+internal abstract partial class GameButtonViewModel(
     IImageProvider imageProvider,
     INavigator navigator) : ImageViewModel(imageProvider)
 {
