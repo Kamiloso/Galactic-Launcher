@@ -1,0 +1,14 @@
+On Windows:
+-------------
+
+1. Start Docker Desktop.
+
+2. Run "GalacticLauncher.MySql/manager.bat" script (or run "python manager.py" in CLI).
+
+3. Using menu, create a database container. When it is ready, run "fill.sql" script to fill the database with the test data.
+
+4. Open "GalacticLauncher.sln" preferrably with Visual Studio 2022+ and .NET 8.0
+
+5. Run the backend
+
+6. Run the frontend
