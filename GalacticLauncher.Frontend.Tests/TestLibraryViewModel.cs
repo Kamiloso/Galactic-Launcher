@@ -2,6 +2,7 @@
 using System.Reflection;
 using Castle.Core.Logging;
 using GalacticLauncher.Core.Models;
+using GalacticLauncher.Frontend.Services;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.ViewModels.ImageControls;
@@ -17,6 +18,8 @@ namespace GalacticLauncher.Frontend.Tests.ViewModels.Panels
         private readonly Mock<IGameListManager> _gameListManagerMock = new();
         private readonly Mock<ICacheProvider> _cacheProviderMock = new();
         private readonly Mock<IGameButtonFactory> _gameButtonFactoryMock = new();
+        private readonly Mock<IImageProvider> _imageProviderMock = new();
+        private readonly Mock<INavigator> _navigatorMock = new();
 
         public LibraryViewModelTests()
         {
@@ -24,8 +27,20 @@ namespace GalacticLauncher.Frontend.Tests.ViewModels.Panels
                 .Setup(f => f.CreateAndStartLoadingLibrary(It.IsAny<long>()))
                 .Returns((long id) =>
                 {
-                    var buttonMock = new Mock<GameButtonLibraryViewModel>();
-                    return buttonMock.Object;
+                    var buttonMock = new Mock<GameButtonLibraryViewModel>(
+                        _imageProviderMock.Object,
+                        _gameListManagerMock.Object,
+                        _cacheProviderMock.Object,
+                        _navigatorMock.Object
+                    );
+
+                    buttonMock.CallBase = true;
+
+                    var buttonInstance = buttonMock.Object;
+
+                    buttonInstance.GameId = id;
+
+                    return buttonInstance;
                 });
         }
 
