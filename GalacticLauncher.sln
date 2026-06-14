@@ -10,6 +10,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalacticLauncher.Frontend", "GalacticLauncher.Frontend\GalacticLauncher.Frontend.csproj", "{DBFFC2DF-2405-49F0-8ABF-5F0DBDC3BD9A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalacticLauncher.Backend.Tests", "GalacticLauncher.Backend.Tests\GalacticLauncher.Backend.Tests.csproj", "{2D3D0725-0A02-4298-A14F-12FCE4F60132}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalacticLauncher.Frontend.Tests", "GalacticLauncher.Frontend.Tests\GalacticLauncher.Frontend.Tests.csproj", "{B824216C-D45F-470F-8DCB-5191DCCEF3B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,8 +70,23 @@ Global
 		{2D3D0725-0A02-4298-A14F-12FCE4F60132}.Release|x64.Build.0 = Release|Any CPU
 		{2D3D0725-0A02-4298-A14F-12FCE4F60132}.Release|x86.ActiveCfg = Release|Any CPU
 		{2D3D0725-0A02-4298-A14F-12FCE4F60132}.Release|x86.Build.0 = Release|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Debug|x64.Build.0 = Debug|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Debug|x86.Build.0 = Debug|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Release|x64.ActiveCfg = Release|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Release|x64.Build.0 = Release|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Release|x86.ActiveCfg = Release|Any CPU
+		{B824216C-D45F-470F-8DCB-5191DCCEF3B2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA07A3CA-8CCD-487D-8058-D96E7CE2F900}
 	EndGlobalSection
 EndGlobal

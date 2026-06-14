@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GalacticLauncher.Frontend.Services;
-using GalacticLauncher.Frontend.ViewModels.ImageLoad;
+using GalacticLauncher.Frontend.ViewModels.ImageControls;
 using GalacticLauncher.Frontend.ViewModels.Panels;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 

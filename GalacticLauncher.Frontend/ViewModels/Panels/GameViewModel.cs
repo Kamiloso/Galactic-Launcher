@@ -8,7 +8,7 @@ using GalacticLauncher.Frontend.Infrastructure;
 using GalacticLauncher.Frontend.Services.Cache;
 using GalacticLauncher.Frontend.Services.Data;
 using GalacticLauncher.Frontend.Services.Executables;
-using GalacticLauncher.Frontend.ViewModels.ImageLoad;
+using GalacticLauncher.Frontend.ViewModels.ImageControls;
 using GalacticLauncher.Frontend.ViewModels.ViewServices;
 using System;
 using System.Collections.Generic;

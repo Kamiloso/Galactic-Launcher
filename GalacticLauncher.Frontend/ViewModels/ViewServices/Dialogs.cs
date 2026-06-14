@@ -6,7 +6,7 @@ using GalacticLauncher.Frontend.ViewModels.Dialogs;
 
 namespace GalacticLauncher.Frontend.ViewModels.ViewServices;
 
-internal interface IDialogs
+public interface IDialogs
 {
     event Action<object?>? OnDialogChanged;
 
