@@ -8,6 +8,7 @@ dotnet clean
 
 if "%~1"=="" (
     set "windows=1"
+    set "windows-arm=1"
     set "linux=1"
     set "linux-arm=1"
     set "mac-intel=1"
@@ -18,7 +19,7 @@ if "%~1"=="" (
 :check
 set "_a=%~1"
 if defined _a (
-    for %%n in (windows, linux, linux-arm, mac-intel, mac-silicon) do (
+    for %%n in (windows, windows-arm, linux, linux-arm, mac-intel, mac-silicon) do (
         if "%_a%"=="%%n" set "%%n=1"
     )
     shift
@@ -27,8 +28,9 @@ if defined _a (
 
 :build
 setlocal EnableDelayedExpansion
-for %%n in (windows, linux, linux-arm, mac-intel, mac-silicon) do (
+for %%n in (windows, windows-arm, linux, linux-arm, mac-intel, mac-silicon) do (
     if "%%n"=="windows" set "dirb=Windows" & set "cmpflag=win-x64"
+    if "%%n"=="windows-arm" set "dirb=Windows_ARM" & set "cmpflag=win-arm64"
     if "%%n"=="linux" set "dirb=Linux" & set "cmpflag=linux-x64"
     if "%%n"=="linux-arm" set "dirb=Linux_ARM" & set "cmpflag=linux-arm64"
     if "%%n"=="mac-intel" set "dirb=Mac_Intel" & set "cmpflag=osx-x64"
